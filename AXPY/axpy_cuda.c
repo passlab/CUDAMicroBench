@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   int num_runs = 10;
   /* cuda version */
   double elapsed = read_timer_ms();
-  for (i=0; i<num_runs; i++) axpy_cuda(x, y, n, a);
+  for (i=0; i<num_runs; i++) axpy_cuda(x, y_cuda, n, a);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
 
   REAL checkresult = check(y_cuda, y, n);
