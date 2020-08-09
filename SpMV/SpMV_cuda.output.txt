@@ -1,0 +1,41 @@
+int num_rows = 100;
+int nnz = 400;
+About 6.8 times faster
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   68.94%  356.19us         5  71.237us  70.719us  71.710us  matvec_cudakernel_1perThread(float*, float*, float*, int)
+                   16.46%  85.056us        25  3.4020us  1.4080us  10.240us  [CUDA memcpy HtoD]
+                   10.14%  52.383us         5  10.476us  10.399us  10.656us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
+                    4.47%  23.072us        10  2.3070us  2.2080us  2.4640us  [CUDA memcpy DtoH]
+      API calls:   97.21%  424.31ms        35  12.123ms  11.037us  422.44ms  cudaMalloc
+                    1.10%  4.8051ms         4  1.2013ms  1.1353ms  1.3837ms  cuDeviceTotalMem
+                    0.81%  3.5352ms       388  9.1110us     387ns  331.28us  cuDeviceGetAttribute
+                    0.43%  1.8861ms        35  53.887us  8.3670us  311.25us  cudaFree
+                    0.26%  1.1483ms        35  32.807us  13.100us  97.753us  cudaMemcpy
+                    0.12%  507.16us        10  50.715us  15.763us  280.80us  cudaLaunchKernel
+                    0.06%  283.69us         4  70.922us  68.114us  77.517us  cuDeviceGetName
+                    0.00%  18.319us         4  4.5790us  3.6430us  6.1300us  cuDeviceGetPCIBusId
+                    0.00%  5.9150us         8     739ns     453ns  1.4360us  cuDeviceGet
+                    0.00%  3.6230us         3  1.2070us     643ns  2.1800us  cuDeviceGetCount
+                    0.00%  2.6170us         4     654ns     503ns     874ns  cuDeviceGetUuid
+
+int num_rows = 1000;
+int nnz = 400;
+About 136 times fater
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   62.30%  5.1306ms         5  1.0261ms  1.0245ms  1.0293ms  matvec_cudakernel_1perThread(float*, float*, float*, int)
+                   36.88%  3.0366ms        25  121.47us  1.6640us  882.00us  [CUDA memcpy HtoD]
+                    0.46%  37.694us         5  7.5380us  7.3270us  7.8400us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
+                    0.36%  29.823us        10  2.9820us  2.8790us  3.1680us  [CUDA memcpy DtoH]
+      API calls:   93.21%  275.55ms        35  7.8728ms  4.3010us  272.23ms  cudaMalloc
+                    3.12%  9.2343ms        35  263.84us  11.198us  1.2443ms  cudaMemcpy
+                    1.53%  4.5337ms         4  1.1334ms  1.1297ms  1.1374ms  cuDeviceTotalMem
+                    1.20%  3.5559ms       388  9.1640us     390ns  331.99us  cuDeviceGetAttribute
+                    0.70%  2.0750ms        35  59.286us  3.0900us  217.08us  cudaFree
+                    0.12%  357.97us        10  35.797us  7.1220us  248.96us  cudaLaunchKernel
+                    0.10%  285.57us         4  71.393us  68.570us  78.554us  cuDeviceGetName
+                    0.01%  17.516us         4  4.3790us  3.3360us  6.2730us  cuDeviceGetPCIBusId
+                    0.00%  5.8490us         8     731ns     467ns  1.2360us  cuDeviceGet
+                    0.00%  3.5200us         3  1.1730us     540ns  2.1400us  cuDeviceGetCount
+                    0.00%  2.5400us         4     635ns     566ns     764ns  cuDeviceGetUuid
