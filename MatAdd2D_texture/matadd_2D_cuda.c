@@ -15,7 +15,7 @@ double read_timer_ms() {
     return (double) tm.time * 1000.0 + (double) tm.millitm;
 }
 
-#define VEC_LEN 10240//use a fixed number for now
+#define VEC_LEN 1024//use a fixed number for now
 
 
 /* zero out the entire vector */
@@ -75,20 +75,20 @@ REAL check(REAL*A, REAL*B, int n)
 
 int main(int argc, char *argv[])
 {
-	int M=VEC_LEN,N=VEC_LEN;
+  	int M=VEC_LEN,N=VEC_LEN;
 
-	REAL *h_matrixA = (REAL*)malloc(M * N * sizeof(REAL));
-	REAL *h_matrixB = (REAL*)malloc(M * N * sizeof(REAL));
-	REAL *h_result = (REAL*)malloc(M * N * sizeof(REAL));
- 	REAL *result_serial = (REAL*)malloc(M * N * sizeof(REAL));
+  	REAL *h_matrixA = (REAL*)malloc(M * N * sizeof(REAL));
+  	REAL *h_matrixB = (REAL*)malloc(M * N * sizeof(REAL));
+  	REAL *h_result = (REAL*)malloc(M * N * sizeof(REAL));
+   	REAL *result_serial = (REAL*)malloc(M * N * sizeof(REAL));
  
-  init_matrix(h_matrixA, M, N);
-  init_matrix(h_matrixB, M, N);
+    init_matrix(h_matrixA, M, N);
+    init_matrix(h_matrixB, M, N);
  
-  int i;
-  int num_runs = 5;
-  mat_add_serial(h_matrixA, h_matrixB, M, N, result_serial);
-  for (i=0; i<num_runs; i++) matadd(h_matrixA, h_matrixB, M, N, h_result);
-  printf("check:%f\n", check(result_serial,h_result,M*N));
+    int i;
+    int num_runs = 5;
+    mat_add_serial(h_matrixA, h_matrixB, M, N, result_serial);
+    for (i=0; i<num_runs; i++) matadd(h_matrixA, h_matrixB, M, N, h_result);
+    printf("check:%f\n", check(result_serial,h_result,M*N));
   
 }
