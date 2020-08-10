@@ -15,7 +15,7 @@ double read_timer_ms() {
     return (double) tm.time * 1000.0 + (double) tm.millitm;
 }
 
-#define VEC_LEN 1024//use a fixed number for now
+#define VEC_LEN 10240//use a fixed number for now
 
 
 /* zero out the entire vector */
@@ -85,25 +85,10 @@ int main(int argc, char *argv[])
   init_matrix(h_matrixA, M, N);
   init_matrix(h_matrixB, M, N);
  
- 
-	/*for(int j=0;j<(M*N);j++)
-	{
-		h_matrixA[j]=2;//(REAL)rand()/(REAL)RAND_MAX;
-		h_matrixB[j]=5;//(REAL)rand()/(REAL)RAND_MAX;
-	}*/
-
-	/*printf("Matrix 1\n");
-	printMatrix(h_matrixA, M, N);
-	printf("Matrix 2\n");
-	printMatrix(h_matrixB, M, N);*/
   int i;
   int num_runs = 5;
   mat_add_serial(h_matrixA, h_matrixB, M, N, result_serial);
   for (i=0; i<num_runs; i++) matadd(h_matrixA, h_matrixB, M, N, h_result);
   printf("check:%f\n", check(result_serial,h_result,M*N));
   
- 	//printf("Matrix Sum\n");
-	//printMatrix(h_result, M, N);
-
-
 }
