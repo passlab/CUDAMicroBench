@@ -33,17 +33,13 @@ __global__ static void add_texture(float *d_Result, int d_M, int d_N)
 
 void matadd(float * h_matrixA, float * h_matrixB, int M, int N, float * h_result) {
       cudaChannelFormatDesc channelDesc = cudaCreateChannelDesc<float>();
-      int d_M, d_N;
-	float *d_matrixA = NULL, *d_matrixB = NULL, *d_result = NULL;
+    	float *d_matrixA = NULL, *d_matrixB = NULL, *d_result = NULL;
 	cudaMalloc(&d_matrixA, M * N * sizeof(float));
 	cudaMalloc(&d_matrixB, M * N * sizeof(float));
 	cudaMalloc(&d_result, M * N * sizeof(float));
 
 	cudaMemcpy(d_matrixA, h_matrixA, M * N * sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_matrixB, h_matrixB, M * N * sizeof(float), cudaMemcpyHostToDevice);
-	cudaMemcpyToSymbol(d_M,&M,sizeof(float),0);
-	cudaMemcpyToSymbol(d_N,&N,sizeof(float),0);
-
 	cudaBindTexture2D(0, texMatrixA, d_matrixA, channelDesc, N, M, M * sizeof(float));
 	cudaBindTexture2D(0, texMatrixB, d_matrixB, channelDesc, N, M, M * sizeof(float));
 
