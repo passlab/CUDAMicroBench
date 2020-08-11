@@ -79,7 +79,4 @@ void spmv_cuda(const int num_rows, const int *ptr, const int * indices, const RE
   cudaFree(d_y);
   cudaFree(d_y_normal);
   cudaFree(d_matrix);
-
-
-
 }
