@@ -1,12 +1,10 @@
-// Experimental test input for Accelerator directives
-//  simplest scalar*vector operations
-// Liao 1/15/2013
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <sys/timeb.h>
-#include "SpMM_csc.h"
+#include "SpMM.h"
 #include <time.h>
 
 double read_timer_ms() {
@@ -15,19 +13,13 @@ double read_timer_ms() {
     return (double) tm.time * 1000.0 + (double) tm.millitm;
 }
 
+//define the size of the sparse matrix, and the number of non-zero elements
 int num_rows = 100;
 int nnzA = 1024;
 int nnzB = 1024;
 
-void zero(REAL *A, int n)
-{
-    int i;
-    for (i = 0; i < n; i++) {
-        A[i] = 0.0;
-    }
-}
-
-void init_data(REAL *data, int *indices, REAL *matrix)
+//initialize the data array and the indices array for csr format
+void init_data_csr(REAL *data, int *indices, REAL *matrix)
 {
   int tmp = 0;
 	for (int i = 0; i < num_rows; i++) {
@@ -40,6 +32,7 @@ void init_data(REAL *data, int *indices, REAL *matrix)
   }
 }
 
+//initialize the data array and the indices array for csc format
 void init_data_csc(REAL *data, int *indices, REAL *matrix)
 {
   int tmp = 0;
@@ -53,7 +46,7 @@ void init_data_csc(REAL *data, int *indices, REAL *matrix)
   }
 }
 
-
+//initialize the sparse matrix
 void init_matrix(REAL * matrix, int nnz) {
     REAL d[num_rows*num_rows];
     int i,j,n,a,b,t;
@@ -74,7 +67,8 @@ void init_matrix(REAL * matrix, int nnz) {
     }
 }
 
-void init_ptr(int *ptr, REAL * matrix, int nnz)
+//initialize the ptr array for csr format
+void init_ptr_csr(int *ptr, REAL * matrix, int nnz)
 {
   int tmp = 0;
   ptr[num_rows] = nnz;
@@ -95,6 +89,7 @@ void init_ptr(int *ptr, REAL * matrix, int nnz)
   }
 }
 
+//initialize the ptr array for csc format
 void init_ptr_csc(int *ptr, REAL * matrix, int nnz)
 {
 
@@ -124,7 +119,30 @@ void init_ptr_csc(int *ptr, REAL * matrix, int nnz)
   }
 }
 
-void spmv_csc_serial( const int num_rows, const int *ptrA, const int * indicesA, const float *dataA, const int *ptrB, const int * indicesB, const float *dataB, float *result_serial, int nnzA, int nnzB){
+void spmm_csr_serial( const int num_rows, const int *ptrA, const int *
+indicesA, const float *dataA, const int *ptrB, const int * indicesB,
+const float *dataB,
+                      float *result_serial, int nnzA, int nnzB){
+    for(int row = 0; row < num_rows; row++){
+
+        int row_start = ptrA[row];
+        int row_end = ptrA[row+1];
+
+        for(int k =0; k<num_rows; k++){ //iterate over B column
+          float dot = 0;
+          for ( int i = row_start; i < row_end; i++) {
+            for(int j = 0; j < nnzB; j++) { //nnz should be number of non-zero element of B
+              if (indicesB[j] == k && j >= ptrB[indicesA[i]] && j < ptrB[indicesA[i]+1]) {
+                dot += dataA[i] * dataB[j];
+              }
+            }
+          }
+        result_serial[row*num_rows+k] = dot;
+        }
+    }
+}
+
+void spmm_csc_serial( const int num_rows, const int *ptrA, const int * indicesA, const float *dataA, const int *ptrB, const int * indicesB, const float *dataB, float *result_serial, int nnzA, int nnzB){
     for(int row = 0; row < num_rows; row++){
         int row_start = ptrA[row];
         int row_end = ptrA[row+1];
@@ -145,7 +163,8 @@ void spmv_csc_serial( const int num_rows, const int *ptrA, const int * indicesA,
 }
 
 void matmul_serial(float *A, float *B, float *C) {
-	  float dummy = 0;
+	float dummy = 0;
+
     int i,j,k;
     volatile float temp;
     for (i = 0; i < num_rows; i++) {
@@ -204,59 +223,78 @@ REAL check(REAL*A, REAL*B, int n)
 
 int main(int argc, char *argv[])
 {
-  int *ptrA, * indicesA;
-  int *ptrB, * indicesB;
-  float * dataA, * dataB, * result_serial, *result_cuda, *result_serial_normal;
+  int *ptrA_csr, * indicesA_csr;
+  int *ptrB_csr, * indicesB_csr, *ptrB_csc, * indicesB_csc;
+  float * dataA_csr, * dataB_csr, * dataB_csc, * result_serial_csr, * result_serial_csc, *result_cuda_csr, *result_cuda_csc, *result_serial_normal;
   float *matrixA, *matrixB;
   
-  ptrA = (int *) malloc((num_rows+1) * sizeof(int));
-  indicesA = (int *) malloc(nnzA * sizeof(int));
-  dataA = (float *) malloc(nnzA * sizeof(float));
+  ptrA_csr = (int *) malloc((num_rows+1) * sizeof(int));
+  indicesA_csr = (int *) malloc(nnzA * sizeof(int));
+  dataA_csr = (float *) malloc(nnzA * sizeof(float));
   
-  ptrB = (int *) malloc((num_rows+1) * sizeof(int));
-  indicesB = (int *) malloc(nnzB * sizeof(int));
-  dataB = (float *) malloc(nnzB * sizeof(float));
+  ptrB_csr = (int *) malloc((num_rows+1) * sizeof(int));
+  indicesB_csr = (int *) malloc(nnzB * sizeof(int));
+  dataB_csr = (float *) malloc(nnzB * sizeof(float));
+  
+  ptrB_csc = (int *) malloc((num_rows+1) * sizeof(int));
+  indicesB_csc = (int *) malloc(nnzB * sizeof(int));
+  dataB_csc = (float *) malloc(nnzB * sizeof(float));
   
 
-  result_serial = (float *) malloc(num_rows * num_rows * sizeof(float));
-  result_cuda = (float *) malloc(num_rows * num_rows * sizeof(float));
+  result_serial_csr = (float *) malloc(num_rows * num_rows * sizeof(float));
+  result_cuda_csr = (float *) malloc(num_rows * num_rows * sizeof(float));
+  
+  result_serial_csc = (float *) malloc(num_rows * num_rows * sizeof(float));
+  result_cuda_csc = (float *) malloc(num_rows * num_rows * sizeof(float));
+  
   result_serial_normal = (float *) malloc(num_rows * num_rows * sizeof(float));
 
   matrixA = (float *) malloc(num_rows * num_rows * sizeof(float));
   matrixB = (float *) malloc(num_rows * num_rows * sizeof(float));
   
   srand48(1<<12);
-  init_matrix(matrixA,nnzA);
-  init_matrix(matrixB,nnzB);
+    init_matrix(matrixA,nnzA);
+    init_matrix(matrixB,nnzB);
    
-  init_data(dataA,indicesA, matrixA);
-  init_data_csc(dataB,indicesB, matrixB);
-  init_ptr(ptrA, matrixA,nnzA);
-  init_ptr_csc(ptrB, matrixB,nnzB);
+    init_data_csr(dataA_csr,indicesA_csr, matrixA);
+    init_data_csr(dataB_csr,indicesB_csr, matrixB);
+    init_data_csc(dataB_csc,indicesB_csc, matrixB);
+    init_ptr_csr(ptrA_csr, matrixA,nnzA);
+    init_ptr_csr(ptrB_csr, matrixB,nnzB);
+    init_ptr_csc(ptrB_csc, matrixB,nnzB);
 
   int i;
   int num_runs = 5;
-  /* cuda version */
+
   double elapsed = read_timer_ms();
   //for (i=0; i<num_runs; i++) 
-  spmv_csc_serial( num_rows, ptrA, indicesA, dataA, ptrB, indicesB, dataB, result_cuda, nnzA,nnzB);
+  spmm_csr_serial( num_rows, ptrA_csr, indicesA_csr, dataA_csr, ptrB_csr, indicesB_csr, dataB_csr, result_serial_csr, nnzA,nnzB);
+  spmm_csc_serial( num_rows, ptrA_csr, indicesA_csr, dataA_csr, ptrB_csc, indicesB_csc, dataB_csc, result_serial_csc, nnzA,nnzB);
   matmul_serial( matrixA, matrixB, result_serial_normal);
   //for (i=0; i<num_runs; i++) 
-  spmm_csr_cuda( num_rows, ptrA, indicesA, dataA, ptrB, indicesB, dataB, result_serial, nnzA,nnzB);
+  spmm_csr_cuda( num_rows, ptrA_csr, indicesA_csr, dataA_csr, ptrB_csr, indicesB_csr, dataB_csr, result_cuda_csr, nnzA,nnzB);
+  spmm_csc_cuda( num_rows, ptrA_csr, indicesA_csr, dataA_csr, ptrB_csc, indicesB_csc, dataB_csc, result_cuda_csc, nnzA,nnzB);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
 
-  printf("check(serial versions):%f\n",check(result_serial,result_serial_normal,(num_rows*num_rows)));
-  printf("check(serial vs cuda):%f\n",check(result_cuda,result_serial_normal,(num_rows*num_rows)));
+  printf("check(serial vs serial_csr):%f\n",check(result_serial_csr,result_serial_normal,(num_rows*num_rows)));
+  printf("check(serial vs serial_csc):%f\n",check(result_serial_csc,result_serial_normal,(num_rows*num_rows)));
+  printf("check(serial vs cuda_csr):%f\n",check(result_cuda_csr,result_serial_normal,(num_rows*num_rows)));
+  printf("check(serial vs cuda_csc):%f\n",check(result_cuda_csc,result_serial_normal,(num_rows*num_rows)));
 
-  free(ptrA);
-  free(indicesA);
-  free(dataA);
-  free(ptrB);
-  free(indicesB);
-  free(dataB);
+  free(ptrA_csr);
+  free(indicesA_csr);
+  free(dataA_csr);
+  free(ptrB_csr);
+  free(indicesB_csr);
+  free(dataB_csr);
+  free(ptrB_csc);
+  free(indicesB_csc);
+  free(dataB_csc);
 
-  free(result_serial);
-  free(result_cuda);
+  free(result_serial_csr);
+  free(result_cuda_csr);
+  free(result_serial_csc);
+  free(result_cuda_csc);
   free(result_serial_normal);
   free(matrixA);
   free(matrixB);
