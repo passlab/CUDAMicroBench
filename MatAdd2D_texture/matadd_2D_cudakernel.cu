@@ -75,9 +75,9 @@ void matadd(float * h_matrixA, float * h_matrixB, int M, int N, float * h_result
     blocks.y=((N/BLOCK_SIZE) + (((N)%BLOCK_SIZE)==0?0:1));
 
     add<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result,M,N);
-    add_const<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result);
-    add_texture<<<blocks,threadsperblock>>>(d_result,M,N);
-    add_texture_constant<<<blocks,threadsperblock>>>(d_result);
+    //add_const<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result);
+    //add_texture<<<blocks,threadsperblock>>>(d_result,M,N);
+    //add_texture_constant<<<blocks,threadsperblock>>>(d_result);
 
     cudaDeviceSynchronize();
     cudaMemcpy(h_result,d_result,M * N * sizeof(float), cudaMemcpyDeviceToHost);

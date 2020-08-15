@@ -15,7 +15,7 @@ __global__ void spmv_csr_kernel(const int num_rows, const int *ptr, const int * 
     }
 }
 
-__global__ void matvec_cudakernel_1perThread(REAL* matrix, REAL* vector, REAL *y, int num_rows)
+__global__ void spmv_cudakernel_1perThread(REAL* matrix, REAL* vector, REAL *y, int num_rows)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < num_rows) {
@@ -27,7 +27,7 @@ __global__ void matvec_cudakernel_1perThread(REAL* matrix, REAL* vector, REAL *y
     }
 }
 
-__global__ void matvec_cudakernel_1perThread_check_and_compute(REAL* matrix, REAL* vector, REAL *y, int num_rows)
+__global__ void spmv_cudakernel_1perThread_check_and_compute(REAL* matrix, REAL* vector, REAL *y, int num_rows)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i < num_rows) {
@@ -66,8 +66,8 @@ void spmv_cuda(const int num_rows, const int *ptr, const int * indices, const RE
 
 
   spmv_csr_kernel<<<256,256>>>(num_rows,d_ptr, d_indices, d_data, d_x, d_y);
-  matvec_cudakernel_1perThread<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
-  matvec_cudakernel_1perThread_check_and_compute<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
+  spmv_cudakernel_1perThread<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
+  spmv_cudakernel_1perThread_check_and_compute<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaMemcpy(y_normal, d_y_normal, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
 
