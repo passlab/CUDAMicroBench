@@ -1,0 +1,31 @@
+int num_rows = 100;
+int nnz = 1024;
+
+This result is tested on carina.
+spmm_csr_kernel: two matrix are all in csr format
+spmm_csc_kernel: one matrix is in csr format and the other one is in csc format
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+xyi2@cci-carina:~/CUDAMemBench/SpMM$ nvprof ./SpMM_cuda
+==13149== NVPROF is profiling process 13149, command: ./SpMM_cuda
+check(serial vs serial_csr):0.000000
+check(serial vs serial_csc):0.000000
+check(serial vs cuda_csr):0.000317
+check(serial vs cuda_csc):0.000317
+==13149== Profiling application: ./SpMM_cuda
+==13149== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   98.03%  45.375ms         1  45.375ms  45.375ms  45.375ms  spmm_csr_kernel(int, int const *, int const *, float const *, int const *, int const *, float const *, float*, int, int)
+                    1.90%  881.59us         1  881.59us  881.59us  881.59us  spmm_csc_kernel(int, int const *, int const *, float const *, int const *, int const *, float const *, float*, int, int)
+                    0.05%  22.880us        12  1.9060us  1.5360us  2.3040us  [CUDA memcpy HtoD]
+                    0.02%  8.4800us         2  4.2400us  4.1280us  4.3520us  [CUDA memcpy DtoH]
+      API calls:   84.84%  281.72ms        14  20.123ms  4.0300us  281.49ms  cudaMalloc
+                   14.02%  46.544ms        14  3.3246ms  11.672us  45.435ms  cudaMemcpy
+                    0.60%  1.9966ms        97  20.583us     116ns  1.7096ms  cuDeviceGetAttribute
+                    0.38%  1.2628ms         1  1.2628ms  1.2628ms  1.2628ms  cuDeviceTotalMem
+                    0.12%  413.29us        14  29.520us  2.9440us  178.00us  cudaFree
+                    0.02%  54.052us         2  27.026us  19.429us  34.623us  cudaLaunchKernel
+                    0.01%  43.929us         1  43.929us  43.929us  43.929us  cuDeviceGetName
+                    0.00%  3.8450us         1  3.8450us  3.8450us  3.8450us  cuDeviceGetPCIBusId
+                    0.00%  3.2570us         3  1.0850us     300ns  2.5470us  cuDeviceGetCount
+                    0.00%  1.0560us         2     528ns     152ns     904ns  cuDeviceGet
+                    0.00%     229ns         1     229ns     229ns     229ns  cuDeviceGetUuid

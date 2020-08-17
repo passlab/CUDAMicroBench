@@ -1,0 +1,109 @@
+Test on Carina
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/AXPY_texture$ nvprof ./axpy_cuda 1024000
+Usage: axpy <n>
+==11064== NVPROF is profiling process 11064, command: ./axpy_cuda 1024000
+axpy(1024000): checksum: 1.20051e+09, time: 65.30ms
+==11064== Profiling application: ./axpy_cuda 1024000
+==11064== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   65.75%  22.154ms        20  1.1077ms  1.0654ms  1.1632ms  [CUDA memcpy HtoD]
+                   33.25%  11.202ms        10  1.1202ms  1.1033ms  1.1675ms  [CUDA memcpy DtoH]
+                    0.52%  175.01us        10  17.500us  17.184us  17.664us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    0.48%  163.01us        10  16.300us  15.840us  17.024us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   86.09%  339.99ms        20  17.000ms  148.79us  336.92ms  cudaMalloc
+                   12.27%  48.457ms        30  1.6152ms  1.3366ms  2.0444ms  cudaMemcpy
+                    0.86%  3.3937ms        20  169.68us  141.49us  221.15us  cudaFree
+                    0.46%  1.8143ms         1  1.8143ms  1.8143ms  1.8143ms  cuDeviceTotalMem
+                    0.15%  582.99us        97  6.0100us     177ns  233.70us  cuDeviceGetAttribute
+                    0.12%  485.21us        20  24.260us  12.410us  66.143us  cudaLaunchKernel
+                    0.02%  84.125us        10  8.4120us  6.5400us  21.015us  cudaBindTexture
+                    0.01%  54.018us         1  54.018us  54.018us  54.018us  cuDeviceGetName
+                    0.01%  29.990us        10  2.9990us  2.8220us  3.1920us  cudaUnbindTexture
+                    0.00%  4.8690us         1  4.8690us  4.8690us  4.8690us  cuDeviceGetPCIBusId
+                    0.00%  4.4830us         3  1.4940us     493ns  3.2910us  cuDeviceGetCount
+                    0.00%  1.2530us         2     626ns     226ns  1.0270us  cuDeviceGet
+                    0.00%     334ns         1     334ns     334ns     334ns  cuDeviceGetUuid
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/AXPY_texture$ nvprof ./axpy_cuda 4096000
+Usage: axpy <n>
+==11078== NVPROF is profiling process 11078, command: ./axpy_cuda 4096000
+axpy(4096000): checksum: 4.79786e+09, time: 71.00ms
+==11078== Profiling application: ./axpy_cuda 4096000
+==11078== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   71.09%  92.262ms        20  4.6131ms  4.0561ms  5.7972ms  [CUDA memcpy HtoD]
+                   27.90%  36.206ms        10  3.6206ms  3.5394ms  4.1142ms  [CUDA memcpy DtoH]
+                    0.52%  674.04us        10  67.404us  66.975us  68.447us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    0.49%  631.90us        10  63.189us  62.240us  64.319us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   68.35%  315.14ms        20  15.757ms  176.82us  305.18ms  cudaMalloc
+                   30.23%  139.37ms        30  4.6456ms  4.0353ms  6.1942ms  cudaMemcpy
+                    0.76%  3.5237ms        20  176.18us  153.37us  215.21us  cudaFree
+                    0.39%  1.8160ms         1  1.8160ms  1.8160ms  1.8160ms  cuDeviceTotalMem
+                    0.13%  581.59us        97  5.9950us     175ns  233.65us  cuDeviceGetAttribute
+                    0.11%  504.60us        20  25.230us  12.859us  76.477us  cudaLaunchKernel
+                    0.02%  69.336us        10  6.9330us  5.9830us  10.922us  cudaBindTexture
+                    0.01%  53.825us         1  53.825us  53.825us  53.825us  cuDeviceGetName
+                    0.01%  30.486us        10  3.0480us  2.7120us  4.0250us  cudaUnbindTexture
+                    0.00%  3.7590us         1  3.7590us  3.7590us  3.7590us  cuDeviceGetPCIBusId
+                    0.00%  3.0050us         3  1.0010us     175ns  2.3440us  cuDeviceGetCount
+                    0.00%  1.4480us         2     724ns     238ns  1.2100us  cuDeviceGet
+                    0.00%     367ns         1     367ns     367ns     367ns  cuDeviceGetUuid
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/AXPY_texture$ nvprof ./axpy_cuda 10240000
+Usage: axpy <n>
+==11092== NVPROF is profiling process 11092, command: ./axpy_cuda 10240000
+axpy(10240000): checksum: 1.19193e+10, time: 91.40ms
+==11092== Profiling application: ./axpy_cuda 10240000
+==11092== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   72.34%  237.93ms        20  11.896ms  11.089ms  15.098ms  [CUDA memcpy HtoD]
+                   26.70%  87.815ms        10  8.7815ms  8.3882ms  9.9490ms  [CUDA memcpy DtoH]
+                    0.49%  1.5963ms        10  159.63us  157.89us  160.99us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    0.47%  1.5414ms        10  154.14us  152.90us  155.29us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   50.46%  338.55ms        30  11.285ms  8.9597ms  15.486ms  cudaMemcpy
+                   48.36%  324.50ms        20  16.225ms  210.94us  306.79ms  cudaMalloc
+                    0.72%  4.8589ms        20  242.95us  143.10us  327.82us  cudaFree
+                    0.26%  1.7399ms         1  1.7399ms  1.7399ms  1.7399ms  cuDeviceTotalMem
+                    0.09%  596.66us        20  29.833us  10.095us  69.417us  cudaLaunchKernel
+                    0.09%  571.19us        97  5.8880us     176ns  227.18us  cuDeviceGetAttribute
+                    0.01%  79.550us        10  7.9550us  6.1400us  10.667us  cudaBindTexture
+                    0.01%  52.715us         1  52.715us  52.715us  52.715us  cuDeviceGetName
+                    0.00%  31.260us        10  3.1260us  2.4930us  3.7770us  cudaUnbindTexture
+                    0.00%  3.5270us         3  1.1750us     203ns  2.7980us  cuDeviceGetCount
+                    0.00%  3.2890us         1  3.2890us  3.2890us  3.2890us  cuDeviceGetPCIBusId
+                    0.00%  1.2420us         2     621ns     205ns  1.0370us  cuDeviceGet
+                    0.00%     311ns         1     311ns     311ns     311ns  cuDeviceGetUuid
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/AXPY_texture$ nvprof ./axpy_cuda 20480000
+Usage: axpy <n>
+==11105== NVPROF is profiling process 11105, command: ./axpy_cuda 20480000
+axpy(20480000): checksum: 2.37394e+10, time: 128.80ms
+==11105== Profiling application: ./axpy_cuda 20480000
+==11105== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   62.87%  444.81ms        20  22.241ms  20.131ms  34.616ms  [CUDA memcpy HtoD]
+                   36.25%  256.45ms        10  25.645ms  24.891ms  27.455ms  [CUDA memcpy DtoH]
+                    0.44%  3.1321ms        10  313.21us  310.56us  315.36us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    0.43%  3.0586ms        10  305.86us  304.45us  307.71us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   69.48%  723.09ms        30  24.103ms  20.386ms  35.613ms  cudaMemcpy
+                   29.71%  309.16ms        20  15.458ms  263.12us  291.52ms  cudaMalloc
+                    0.52%  5.3710ms        20  268.55us  171.66us  438.26us  cudaFree
+                    0.17%  1.8104ms         1  1.8104ms  1.8104ms  1.8104ms  cuDeviceTotalMem
+                    0.06%  599.74us        97  6.1820us     205ns  242.42us  cuDeviceGetAttribute
+                    0.05%  476.92us        20  23.845us  9.8020us  60.845us  cudaLaunchKernel
+                    0.01%  75.146us        10  7.5140us  5.1220us  20.018us  cudaBindTexture
+                    0.00%  51.588us         1  51.588us  51.588us  51.588us  cuDeviceGetName
+                    0.00%  41.639us        10  4.1630us  2.4270us  15.147us  cudaUnbindTexture
+                    0.00%  4.3420us         1  4.3420us  4.3420us  4.3420us  cuDeviceGetPCIBusId
+                    0.00%  3.1550us         3  1.0510us     268ns  2.4300us  cuDeviceGetCount
+                    0.00%  1.2880us         2     644ns     232ns  1.0560us  cuDeviceGet
+                    0.00%     355ns         1     355ns     355ns     355ns  cuDeviceGetUuid

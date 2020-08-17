@@ -75,7 +75,14 @@ REAL check(REAL*A, REAL*B, int n)
 
 int main(int argc, char *argv[])
 {
-  	int M=VEC_LEN,N=VEC_LEN;
+    int N;
+    N = VEC_LEN;
+    fprintf(stderr, "Usage: MatAdd <N*M>\n");
+    if (argc >= 2) {
+      N = atoi(argv[1]);
+    }
+  
+  	int M=N;
 
   	REAL *h_matrixA = (REAL*)malloc(M * N * sizeof(REAL));
   	REAL *h_matrixB = (REAL*)malloc(M * N * sizeof(REAL));

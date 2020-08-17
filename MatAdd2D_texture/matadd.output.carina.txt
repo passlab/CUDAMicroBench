@@ -1,0 +1,140 @@
+Test on Carina
+
+matrix_size:1024*1024
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/MatAdd2D_texture$ nvprof ./matadd_2D_cuda 1024
+Usage: MatAdd <N*M>
+==11736== NVPROF is profiling process 11736, command: ./matadd_2D_cuda 1024
+check:0.000000
+==11736== Profiling application: ./matadd_2D_cuda 1024
+==11736== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   61.21%  8.7289ms        20  436.44us  1.3440us  1.0204ms  [CUDA memcpy HtoD]
+                   34.54%  4.9260ms         5  985.19us  828.12us  1.5897ms  [CUDA memcpy DtoH]
+                    1.11%  158.82us         5  31.763us  31.264us  32.064us  add_texture_constant(float*)
+                    1.07%  152.64us         5  30.527us  30.016us  31.775us  add_texture(float*, int, int)
+                    1.05%  149.12us         5  29.823us  29.472us  30.720us  add(float*, float*, float*, int, int)
+                    1.02%  145.21us         5  29.042us  28.799us  29.280us  add_const(float*, float*, float*)
+      API calls:   90.14%  229.85ms        15  15.323ms  110.47us  228.11ms  cudaMalloc
+                    7.65%  19.511ms        15  1.3007ms  944.16us  2.9170ms  cudaMemcpy
+                    0.72%  1.8301ms        15  122.01us  108.28us  157.41us  cudaFree
+                    0.72%  1.8298ms         1  1.8298ms  1.8298ms  1.8298ms  cuDeviceTotalMem
+                    0.24%  613.07us        97  6.3200us     177ns  249.54us  cuDeviceGetAttribute
+                    0.19%  484.62us        10  48.462us  9.1810us  90.396us  cudaMemcpyToSymbol
+                    0.18%  449.00us         5  89.799us  79.442us  95.033us  cudaDeviceSynchronize
+                    0.12%  294.85us        20  14.742us  8.8510us  35.959us  cudaLaunchKernel
+                    0.02%  55.212us         1  55.212us  55.212us  55.212us  cuDeviceGetName
+                    0.02%  39.938us        10  3.9930us  1.2750us  14.999us  cudaBindTexture2D
+                    0.00%  11.690us        10  1.1690us     505ns  2.0640us  cudaUnbindTexture
+                    0.00%  4.5220us         1  4.5220us  4.5220us  4.5220us  cuDeviceGetPCIBusId
+                    0.00%  3.4430us         3  1.1470us     183ns  2.5690us  cuDeviceGetCount
+                    0.00%  1.2530us         2     626ns     303ns     950ns  cuDeviceGet
+                    0.00%     766ns         4     191ns     179ns     201ns  cudaCreateChannelDesc
+                    0.00%     509ns         1     509ns     509ns     509ns  cuDeviceGetUuid
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+matrix_size:10240*10240
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/MatAdd2D_texture$ nvprof ./matadd_2D_cuda 10240
+Usage: MatAdd <N*M>
+==11749== NVPROF is profiling process 11749, command: ./matadd_2D_cuda 10240
+check:0.000000
+==11749== Profiling application: ./matadd_2D_cuda 10240
+==11749== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   56.48%  1.22195s        20  61.098ms  1.3440us  162.23ms  [CUDA memcpy HtoD]
+                   39.47%  854.01ms         5  170.80ms  130.52ms  280.51ms  [CUDA memcpy DtoH]
+                    1.04%  22.425ms         5  4.4850ms  4.3701ms  4.5640ms  add(float*, float*, float*, int, int)
+                    1.03%  22.314ms         5  4.4627ms  4.3494ms  4.5435ms  add_const(float*, float*, float*)
+                    0.99%  21.401ms         5  4.2801ms  4.2200ms  4.3209ms  add_texture(float*, int, int)
+                    0.99%  21.330ms         5  4.2661ms  4.1930ms  4.3205ms  add_texture_constant(float*)
+      API calls:   86.43%  2.08551s        15  139.03ms  104.71ms  281.90ms  cudaMemcpy
+                    9.46%  228.30ms        15  15.220ms  441.65us  213.78ms  cudaMalloc
+                    3.62%  87.298ms         5  17.460ms  17.109ms  17.701ms  cudaDeviceSynchronize
+                    0.37%  8.8708ms        15  591.39us  406.34us  1.1492ms  cudaFree
+                    0.06%  1.5365ms         1  1.5365ms  1.5365ms  1.5365ms  cuDeviceTotalMem
+                    0.02%  549.65us        97  5.6660us     178ns  221.07us  cuDeviceGetAttribute
+                    0.02%  437.34us        10  43.734us  10.294us  86.732us  cudaMemcpyToSymbol
+                    0.01%  356.11us        20  17.805us  9.6870us  55.023us  cudaLaunchKernel
+                    0.00%  66.584us        10  6.6580us  1.3220us  23.631us  cudaBindTexture2D
+                    0.00%  51.961us         1  51.961us  51.961us  51.961us  cuDeviceGetName
+                    0.00%  16.604us        10  1.6600us     493ns  3.0370us  cudaUnbindTexture
+                    0.00%  4.1900us         1  4.1900us  4.1900us  4.1900us  cuDeviceGetPCIBusId
+                    0.00%  2.9050us         3     968ns     173ns  2.2750us  cuDeviceGetCount
+                    0.00%  1.3200us         4     330ns     193ns     712ns  cudaCreateChannelDesc
+                    0.00%  1.2100us         2     605ns     225ns     985ns  cuDeviceGet
+                    0.00%     471ns         1     471ns     471ns     471ns  cuDeviceGetUuid
+                    
+------------------------------------------------------------------------------------------------------------------------------------------------
+matrix_size:20480*20480
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/MatAdd2D_texture$ nvprof ./matadd_2D_cuda 20480
+Usage: MatAdd <N*M>
+==12052== NVPROF is profiling process 12052, command: ./matadd_2D_cuda 20480
+check:0.000000
+==12052== Profiling application: ./matadd_2D_cuda 20480
+==12052== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   57.15%  5.05164s        20  252.58ms  1.3440us  746.56ms  [CUDA memcpy HtoD]
+                   38.61%  3.41225s         5  682.45ms  518.91ms  1.12401s  [CUDA memcpy DtoH]
+                    1.06%  94.097ms         5  18.819ms  18.457ms  20.241ms  add(float*, float*, float*, int, int)
+                    1.06%  93.989ms         5  18.798ms  18.430ms  20.210ms  add_const(float*, float*, float*)
+                    1.06%  93.298ms         5  18.660ms  18.373ms  19.586ms  add_texture(float*, int, int)
+                    1.06%  93.249ms         5  18.650ms  18.364ms  19.585ms  add_texture_constant(float*)
+      API calls:   92.43%  8.47339s        15  564.89ms  445.64ms  1.12540s  cudaMemcpy
+                    4.08%  374.43ms         5  74.886ms  73.575ms  79.583ms  cudaDeviceSynchronize
+                    3.13%  286.61ms        15  19.107ms  1.3767ms  260.36ms  cudaMalloc
+                    0.33%  29.798ms        15  1.9865ms  1.2987ms  3.8591ms  cudaFree
+                    0.02%  1.8294ms         1  1.8294ms  1.8294ms  1.8294ms  cuDeviceTotalMem
+                    0.01%  578.46us        97  5.9630us     174ns  229.92us  cuDeviceGetAttribute
+                    0.01%  479.16us        20  23.957us  10.441us  87.646us  cudaLaunchKernel
+                    0.00%  398.69us        10  39.868us  10.611us  79.537us  cudaMemcpyToSymbol
+                    0.00%  93.468us        10  9.3460us  1.5270us  21.276us  cudaBindTexture2D
+                    0.00%  49.479us         1  49.479us  49.479us  49.479us  cuDeviceGetName
+                    0.00%  36.166us        10  3.6160us     747ns  17.148us  cudaUnbindTexture
+                    0.00%  4.3640us         1  4.3640us  4.3640us  4.3640us  cuDeviceGetPCIBusId
+                    0.00%  2.0340us         3     678ns     223ns  1.3630us  cuDeviceGetCount
+                    0.00%  1.2720us         2     636ns     235ns  1.0370us  cuDeviceGet
+                    0.00%     873ns         4     218ns     178ns     329ns  cudaCreateChannelDesc
+                    0.00%     395ns         1     395ns     395ns     395ns  cuDeviceGetUuid
+ 
+ ------------------------------------------------------------------------------------------------------------------------------------------------
+matrix_size:40960*40960
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/MatAdd2D_texture$ nvprof ./matadd_2D_cuda 40960
+Usage: MatAdd <N*M>
+==12065== NVPROF is profiling process 12065, command: ./matadd_2D_cuda 40960
+check:0.000000
+==12065== Profiling application: ./matadd_2D_cuda 40960
+==12065== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   62.76%  31.4689s        20  1.57344s  1.3440us  8.89088s  [CUDA memcpy HtoD]
+                   33.57%  16.8331s         5  3.36662s  2.08640s  7.64563s  [CUDA memcpy DtoH]
+                    0.94%  471.61ms         5  94.322ms  94.106ms  95.048ms  add_texture(float*, int, int)
+                    0.94%  470.46ms         5  94.093ms  93.990ms  94.366ms  add_texture_constant(float*)
+                    0.91%  453.92ms         5  90.784ms  89.268ms  96.724ms  add(float*, float*, float*, int, int)
+                    0.89%  447.61ms         5  89.522ms  89.002ms  91.215ms  add_const(float*, float*, float*)
+      API calls:   91.18%  48.3123s        15  3.22082s  1.69713s  8.89224s  cudaMemcpy
+                    5.19%  2.75070s        15  183.38ms  5.2958ms  599.72ms  cudaMalloc
+                    3.48%  1.84337s         5  368.67ms  366.48ms  377.28ms  cudaDeviceSynchronize
+                    0.14%  74.047ms        15  4.9365ms  4.8585ms  5.1160ms  cudaFree
+                    0.00%  1.8066ms         1  1.8066ms  1.8066ms  1.8066ms  cuDeviceTotalMem
+                    0.00%  561.84us        97  5.7920us     176ns  229.96us  cuDeviceGetAttribute
+                    0.00%  554.93us        20  27.746us  11.551us  99.109us  cudaLaunchKernel
+                    0.00%  340.33us        10  34.032us  10.936us  66.470us  cudaMemcpyToSymbol
+                    0.00%  161.91us        10  16.191us  2.2380us  40.092us  cudaBindTexture2D
+                    0.00%  50.388us         1  50.388us  50.388us  50.388us  cuDeviceGetName
+                    0.00%  29.928us        10  2.9920us     913ns  7.0650us  cudaUnbindTexture
+                    0.00%  3.9040us         1  3.9040us  3.9040us  3.9040us  cuDeviceGetPCIBusId
+                    0.00%  3.1570us         3  1.0520us     246ns  2.4220us  cuDeviceGetCount
+                    0.00%  1.7980us         4     449ns     341ns     728ns  cudaCreateChannelDesc
+                    0.00%  1.2650us         2     632ns     208ns  1.0570us  cuDeviceGet
+                    0.00%     371ns         1     371ns     371ns     371ns  cuDeviceGetUuid
