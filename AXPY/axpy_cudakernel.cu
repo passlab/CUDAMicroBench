@@ -53,3 +53,39 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
   cudaFree(d_x);
   cudaFree(d_y);
 }
+
+void axpy_cuda_test_alignment(REAL* x, REAL* y, int n, REAL a) {
+  REAL *d_x, *d_y;
+  n = n - 8;
+  cudaMalloc(&d_x, n*sizeof(REAL));
+  cudaMalloc(&d_y, n*sizeof(REAL));
+
+  cudaMemcpy(d_x, x, n*sizeof(REAL), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_y, y, n*sizeof(REAL), cudaMemcpyHostToDevice);
+
+  // Perform axpy elements
+  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  axpy_cudakernel_block<<<1024, 256>>>(d_x, d_y, n, a);
+  axpy_cudakernel_cyclic<<<1024, 256>>>(d_x, d_y, n, a);
+  
+  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(&d_x[1], &d_y[1], n, a);
+  axpy_cudakernel_block<<<1024, 256>>>(&d_x[1], &d_y[1], n, a);
+  axpy_cudakernel_cyclic<<<1024, 256>>>(&d_x[1], &d_y[1], n, a);
+  
+  /*
+  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(&d_x[2], &d_y[2], n, a);
+  axpy_cudakernel_block<<<1024, 256>>>(&d_x[2], &d_y[2], n, a);
+  axpy_cudakernel_cyclic<<<1024, 256>>>(&d_x[2], &d_y[2], n, a);
+  ....
+  
+  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(&d_x[7], &d_y[7], n, a);
+  axpy_cudakernel_block<<<1024, 256>>>(&d_x[7], &d_y[7], n, a);
+  axpy_cudakernel_cyclic<<<1024, 256>>>(&d_x[7], &d_y[7], n, a);
+  */
+
+  cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
+  cudaFree(d_x);
+  cudaFree(d_y);
+}
+
+
