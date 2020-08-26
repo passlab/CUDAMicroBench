@@ -5,16 +5,25 @@ void
 axpy_cudakernel_1perThread(REAL* x, REAL* y, int n, REAL a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < n) y[i] += a*x[i];
+    if (i > 1 &&i < n) y[i] += a*x[i];
 }
 
 __global__ 
 void
 axpy_cudakernel_1perThread_misaligned(REAL* x, REAL* y, int n, REAL a)
 {
-    int i = blockDim.x * blockIdx.x + threadIdx.x + 17;
+    int i = blockDim.x * blockIdx.x + threadIdx.x + 2;
     if (i < n) y[i] += a*x[i];
 }
+
+__global__ 
+void
+axpy_cudakernel_1perThread_warmup(REAL* x, REAL* y, int n, REAL a)
+{
+    int i = blockDim.x * blockIdx.x + threadIdx.x;
+    if (i < n) y[i] += a*x[i];
+}
+
 
 void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
   REAL *d_x, *d_y;
@@ -23,10 +32,13 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
 
   cudaMemcpy(d_x, x, n*sizeof(REAL), cudaMemcpyHostToDevice);
   cudaMemcpy(d_y, y, n*sizeof(REAL), cudaMemcpyHostToDevice);
-
+  
+  //warm up
+  axpy_cudakernel_1perThread_warmup<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
   // Perform axpy elements
-  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
   axpy_cudakernel_1perThread_misaligned<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  
 
   cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaFree(d_x);
