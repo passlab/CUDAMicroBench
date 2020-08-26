@@ -1,0 +1,53 @@
+#include "sum.h"
+
+__global__ void axpy_cudakernel(const REAL *x, REAL *result) {
+  __shared__ REAL cache[ThreadsPerBlock];
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int cacheIndex = threadIdx.x;
+  cache[cacheIndex] = x[tid];
+  __syncthreads();
+  for (int i = blockDim.x / 2; i > 0; i /= 2) {
+    if (cacheIndex < i) {
+      cache[cacheIndex] += cache[cacheIndex + i];
+    }
+    __syncthreads();
+  }
+  if (cacheIndex == 0)
+  result[blockIdx.x] = cache[cacheIndex];
+}
+
+__global__ void axpy_cudakernel_1perThread_bc(const REAL *x, REAL *result) {
+  __shared__ REAL cache[ThreadsPerBlock];
+  int tid = blockIdx.x * blockDim.x + threadIdx.x;
+  int cacheIndex = threadIdx.x;
+  cache[cacheIndex] = x[tid];
+  __syncthreads();
+  for (int i = 1; i < blockDim.x; i *= 2) {
+    int index = 2 * i * cacheIndex;
+    if (index < blockDim.x) {
+      cache[index] += cache[index + i];
+    }
+    __syncthreads();
+  }
+  if (cacheIndex == 0)
+  result[blockIdx.x] = cache[cacheIndex];
+}
+
+void axpy_cuda(int n, REAL *x, REAL *result) {
+  REAL *d_x;
+  REAL *d_result;
+  d_result = (REAL*)malloc(((n+255)/256) * sizeof(int));
+
+  cudaMalloc(&d_x, n*sizeof(REAL));
+  cudaMalloc(&d_result, ((n+255)/256) * sizeof(REAL));
+
+  cudaMemcpy(d_x, x, n*sizeof(REAL), cudaMemcpyHostToDevice);
+
+  axpy_cudakernel<<<(n+255)/256, 256>>>(d_x, d_result);
+  axpy_cudakernel_1perThread_bc<<<(n+255)/256, 256>>>(d_x, d_result);
+
+  cudaMemcpy(result, d_result, ((n+255)/256) * sizeof(REAL), cudaMemcpyDeviceToHost);
+  cudaFree(d_x);
+  cudaFree(d_result);
+}
+
