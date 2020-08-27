@@ -31,7 +31,7 @@ void init(REAL *A, int n)
 {
     int i;
     for (i = 0; i < n; i++) {
-        A[i] = (double)drand48();
+        A[i] = (float)drand48();
     }
 }
 

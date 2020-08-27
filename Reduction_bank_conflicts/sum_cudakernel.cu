@@ -36,8 +36,6 @@ __global__ void axpy_cudakernel_1perThread_bc(const REAL *x, REAL *result) {
 void axpy_cuda(int n, REAL *x, REAL *result) {
   REAL *d_x;
   REAL *d_result;
-  d_result = (REAL*)malloc(((n+255)/256) * sizeof(int));
-
   cudaMalloc(&d_x, n*sizeof(REAL));
   cudaMalloc(&d_result, ((n+255)/256) * sizeof(REAL));
 
