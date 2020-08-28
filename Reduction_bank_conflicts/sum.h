@@ -5,7 +5,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void axpy_cuda(int n, REAL *x, REAL *result);
+extern void sum_cuda(int n, REAL *x, REAL *result);
 #ifdef __cplusplus
 }
 #endif

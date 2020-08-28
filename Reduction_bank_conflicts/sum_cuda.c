@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
   int num_runs = 10;
   /* cuda version */
   double elapsed = read_timer_ms();
-  for (i=0; i<num_runs; i++) axpy_cuda(n, x, result_cuda);
+  for (i=0; i<num_runs; i++) sum_cuda(n, x, result_cuda);
   
  	for (int i = 1; i < ((VEC_LEN + ThreadsPerBlock - 1) / ThreadsPerBlock); ++i)
   result_cuda[0] += result_cuda[i];
