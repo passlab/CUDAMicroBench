@@ -7,7 +7,7 @@ __global__ void warmingup(float *x, float *y, float *z) {
         z[tid] = x[tid] + y[tid];
 
     } else {
-        z[tid] = x[tid] * y[tid];
+        z[tid] = x[tid] + y[tid];
     }
 }
 
@@ -17,7 +17,7 @@ __global__ void warpDivergence(float *x, float *y, float *z) {
         z[tid] = x[tid] + y[tid];
 
     } else {
-        z[tid] = x[tid] * y[tid];
+        z[tid] = x[tid] + y[tid];
     }
 }
 
@@ -26,7 +26,7 @@ __global__ void noWarpDivergence(float *x, float *y, float *z) {
     if ((tid / warpSize) % 2 == 0) {
         z[tid] = x[tid] + y[tid];
     } else {
-        z[tid] = x[tid] * y[tid];
+        z[tid] = x[tid] + y[tid];
     }
 }
 void warpDivergenceTest_cuda(REAL* x, REAL* y, REAL *warp_divergence, REAL *no_warp_divergence, int n) {
