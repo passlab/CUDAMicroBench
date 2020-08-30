@@ -1,0 +1,809 @@
+Test on Carina
+
+Array Size: 134217728
+Stride range from 1, 2, 4, 8, 16, ......134217728
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+xyi2@cci-carina:~/CUDAMemBench/LowAccessDensity2$ sh test.sh
+Usage: Low Access Test <n>
+==6812== NVPROF is profiling process 6812, command: ./LowAccessDensityTest_cuda 1 134217728
+Low Access Test(134217728): check: 0, time: 418.80ms
+Low Access Test(134217728): check_unified: 0, time: 623.00ms
+==6812== Profiling application: ./LowAccessDensityTest_cuda 1 134217728
+==6812== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   63.31%  3.48652s        22  158.48ms  65.333ms  474.36ms  [CUDA memcpy HtoD]
+                   32.00%  1.76218s        12  146.85ms  48.160ms  394.57ms  [CUDA memcpy DtoH]
+                    4.70%  258.77ms        12  21.564ms  1.3823ms  243.55ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+      API calls:   92.58%  5.52804s        34  162.59ms  49.709ms  600.31ms  cudaMemcpy
+                    6.19%  369.72ms        23  16.075ms  556.81us  347.14ms  cudaMalloc
+                    0.83%  49.705ms        23  2.1611ms  497.06us  31.355ms  cudaFree
+                    0.35%  20.695ms         1  20.695ms  20.695ms  20.695ms  cudaMallocManaged
+                    0.03%  1.8290ms         1  1.8290ms  1.8290ms  1.8290ms  cuDeviceTotalMem
+                    0.01%  746.97us        12  62.247us  23.835us  309.57us  cudaLaunchKernel
+                    0.01%  585.42us        97  6.0350us     177ns  235.72us  cuDeviceGetAttribute
+                    0.00%  60.617us         1  60.617us  60.617us  60.617us  cuDeviceGetName
+                    0.00%  4.0000us         1  4.0000us  4.0000us  4.0000us  cuDeviceGetPCIBusId
+                    0.00%  3.9160us         3  1.3050us     201ns  3.2910us  cuDeviceGetCount
+                    0.00%  1.7180us         2     859ns     324ns  1.3940us  cuDeviceGet
+                    0.00%     509ns         1     509ns     509ns     509ns  cuDeviceGetUuid
+
+==6812== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4096  43.789KB  4.0000KB  960.00KB  175.1563MB  27.00973ms  Host To Device
+     219         -         -         -           -  54.77971ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6828== NVPROF is profiling process 6828, command: ./LowAccessDensityTest_cuda 2 134217728
+Low Access Test(134217728): check: 0, time: 344.70ms
+Low Access Test(134217728): check_unified: 0, time: 589.00ms
+==6828== Profiling application: ./LowAccessDensityTest_cuda 2 134217728
+==6828== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   63.39%  2.78726s        22  126.69ms  65.558ms  324.39ms  [CUDA memcpy HtoD]
+                   29.67%  1.30461s        12  108.72ms  82.325ms  276.87ms  [CUDA memcpy DtoH]
+                    6.94%  304.96ms        12  25.413ms  1.4134ms  289.26ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+      API calls:   93.58%  4.41956s        34  129.99ms  65.818ms  568.26ms  cudaMemcpy
+                    5.06%  239.07ms        23  10.394ms  320.77us  219.33ms  cudaMalloc
+                    0.86%  40.782ms        23  1.7731ms  307.12us  26.960ms  cudaFree
+                    0.44%  20.615ms         1  20.615ms  20.615ms  20.615ms  cudaMallocManaged
+                    0.04%  1.7860ms         1  1.7860ms  1.7860ms  1.7860ms  cuDeviceTotalMem
+                    0.01%  560.55us        97  5.7780us     179ns  217.88us  cuDeviceGetAttribute
+                    0.01%  482.37us        12  40.197us  22.554us  81.941us  cudaLaunchKernel
+                    0.00%  46.788us         1  46.788us  46.788us  46.788us  cuDeviceGetName
+                    0.00%  4.7020us         1  4.7020us  4.7020us  4.7020us  cuDeviceGetPCIBusId
+                    0.00%  1.6510us         3     550ns     185ns  1.1730us  cuDeviceGetCount
+                    0.00%  1.1220us         2     561ns     229ns     893ns  cuDeviceGet
+                    0.00%     371ns         1     371ns     371ns     371ns  cuDeviceGetUuid
+
+==6828== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    5375  22.126KB  4.0000KB  896.00KB  116.1445MB  28.45530ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6841== NVPROF is profiling process 6841, command: ./LowAccessDensityTest_cuda 4 134217728
+Low Access Test(134217728): check: 0, time: 269.40ms
+Low Access Test(134217728): check_unified: 0, time: 414.00ms
+==6841== Profiling application: ./LowAccessDensityTest_cuda 4 134217728
+==6841== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   72.42%  2.40938s        22  109.52ms  32.794ms  323.79ms  [CUDA memcpy HtoD]
+                   19.34%  643.58ms        12  53.632ms  41.152ms  132.70ms  [CUDA memcpy DtoH]
+                    8.23%  273.92ms        12  22.827ms  1.4815ms  257.59ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+      API calls:   91.58%  3.35046s        34  98.543ms  33.057ms  392.28ms  cudaMemcpy
+                    6.70%  244.99ms        23  10.652ms  219.44us  224.76ms  cudaMalloc
+                    1.08%  39.473ms        23  1.7162ms  215.76us  27.004ms  cudaFree
+                    0.57%  20.732ms         1  20.732ms  20.732ms  20.732ms  cudaMallocManaged
+                    0.05%  1.8055ms         1  1.8055ms  1.8055ms  1.8055ms  cuDeviceTotalMem
+                    0.02%  563.05us        12  46.920us  25.175us  88.436us  cudaLaunchKernel
+                    0.01%  540.49us        97  5.5720us     176ns  215.15us  cuDeviceGetAttribute
+                    0.00%  46.218us         1  46.218us  46.218us  46.218us  cuDeviceGetName
+                    0.00%  4.3570us         1  4.3570us  4.3570us  4.3570us  cuDeviceGetPCIBusId
+                    0.00%  1.8140us         3     604ns     193ns  1.2980us  cuDeviceGetCount
+                    0.00%  1.1240us         2     562ns     188ns     936ns  cuDeviceGet
+                    0.00%     325ns         1     325ns     325ns     325ns  cuDeviceGetUuid
+
+==6841== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4351  20.313KB  4.0000KB  864.00KB  86.30859MB  20.72858ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6855== NVPROF is profiling process 6855, command: ./LowAccessDensityTest_cuda 8 134217728
+Low Access Test(134217728): check: 0, time: 193.70ms
+Low Access Test(134217728): check_unified: 0, time: 271.00ms
+==6855== Profiling application: ./LowAccessDensityTest_cuda 8 134217728
+==6855== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   77.95%  1.82354s        22  82.888ms  16.401ms  186.40ms  [CUDA memcpy HtoD]
+                   13.00%  304.06ms        12  25.338ms  20.313ms  52.228ms  [CUDA memcpy DtoH]
+                    9.05%  211.77ms        12  17.647ms  1.5048ms  195.21ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+      API calls:   87.61%  2.36132s        34  69.451ms  16.667ms  249.05ms  cudaMemcpy
+                    9.84%  265.23ms        23  11.532ms  170.97us  244.54ms  cudaMalloc
+                    1.68%  45.336ms        23  1.9711ms  166.09us  34.561ms  cudaFree
+                    0.77%  20.698ms         1  20.698ms  20.698ms  20.698ms  cudaMallocManaged
+                    0.07%  1.8251ms         1  1.8251ms  1.8251ms  1.8251ms  cuDeviceTotalMem
+                    0.02%  542.43us        97  5.5920us     176ns  215.25us  cuDeviceGetAttribute
+                    0.01%  368.38us        12  30.698us  23.106us  66.533us  cudaLaunchKernel
+                    0.00%  49.943us         1  49.943us  49.943us  49.943us  cuDeviceGetName
+                    0.00%  3.6300us         1  3.6300us  3.6300us  3.6300us  cuDeviceGetPCIBusId
+                    0.00%  2.1100us         3     703ns     199ns  1.3140us  cuDeviceGetCount
+                    0.00%  1.3250us         2     662ns     227ns  1.0980us  cuDeviceGet
+                    0.00%     342ns         1     342ns     342ns     342ns  cuDeviceGetUuid
+
+==6855== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6911  22.185KB  4.0000KB  784.00KB  149.7266MB  35.23888ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6868== NVPROF is profiling process 6868, command: ./LowAccessDensityTest_cuda 16 134217728
+Low Access Test(134217728): check: 0, time: 213.20ms
+Low Access Test(134217728): check_unified: 0, time: 200.00ms
+==6868== Profiling application: ./LowAccessDensityTest_cuda 16 134217728
+==6868== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   87.14%  2.13253s        22  96.933ms  8.0738ms  268.71ms  [CUDA memcpy HtoD]
+                    6.98%  170.87ms        12  14.240ms  1.5032ms  154.32ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    5.88%  143.87ms        12  11.989ms  9.8493ms  23.348ms  [CUDA memcpy DtoH]
+      API calls:   88.82%  2.46915s        34  72.622ms  8.3328ms  269.68ms  cudaMemcpy
+                    8.93%  248.14ms        23  10.789ms  145.92us  227.48ms  cudaMalloc
+                    1.40%  38.879ms        23  1.6904ms  147.38us  27.344ms  cudaFree
+                    0.74%  20.638ms         1  20.638ms  20.638ms  20.638ms  cudaMallocManaged
+                    0.07%  1.8144ms         1  1.8144ms  1.8144ms  1.8144ms  cuDeviceTotalMem
+                    0.02%  621.82us        12  51.818us  27.542us  85.307us  cudaLaunchKernel
+                    0.02%  590.34us        97  6.0850us     178ns  247.10us  cuDeviceGetAttribute
+                    0.00%  50.313us         1  50.313us  50.313us  50.313us  cuDeviceGetName
+                    0.00%  4.0730us         1  4.0730us  4.0730us  4.0730us  cuDeviceGetPCIBusId
+                    0.00%  2.0490us         3     683ns     193ns  1.4410us  cuDeviceGetCount
+                    0.00%  2.0380us         2  1.0190us     180ns  1.8580us  cuDeviceGet
+                    0.00%     309ns         1     309ns     309ns     309ns  cuDeviceGetUuid
+
+==6868== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6911  27.637KB  4.0000KB  720.00KB  186.5234MB  38.55811ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6881== NVPROF is profiling process 6881, command: ./LowAccessDensityTest_cuda 32 134217728
+Low Access Test(134217728): check: 0, time: 162.10ms
+Low Access Test(134217728): check_unified: 0, time: 171.00ms
+==6881== Profiling application: ./LowAccessDensityTest_cuda 32 134217728
+==6881== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   88.34%  1.65282s        22  75.128ms  3.9494ms  180.86ms  [CUDA memcpy HtoD]
+                    7.91%  147.96ms        12  12.330ms  1.1660ms  135.11ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    3.76%  70.266ms        12  5.8555ms  4.6487ms  12.740ms  [CUDA memcpy DtoH]
+      API calls:   86.01%  1.89299s        34  55.676ms  4.2122ms  181.81ms  cudaMemcpy
+                   10.84%  238.61ms        23  10.374ms  135.15us  217.64ms  cudaMalloc
+                    2.09%  45.890ms        23  1.9952ms  128.72us  35.833ms  cudaFree
+                    0.94%  20.625ms         1  20.625ms  20.625ms  20.625ms  cudaMallocManaged
+                    0.08%  1.8107ms         1  1.8107ms  1.8107ms  1.8107ms  cuDeviceTotalMem
+                    0.03%  551.38us        97  5.6840us     173ns  225.90us  cuDeviceGetAttribute
+                    0.02%  358.72us        12  29.893us  20.140us  70.154us  cudaLaunchKernel
+                    0.00%  51.265us         1  51.265us  51.265us  51.265us  cuDeviceGetName
+                    0.00%  4.7520us         1  4.7520us  4.7520us  4.7520us  cuDeviceGetPCIBusId
+                    0.00%  3.1700us         3  1.0560us     322ns  2.3610us  cuDeviceGetCount
+                    0.00%  1.2720us         2     636ns     236ns  1.0360us  cuDeviceGet
+                    0.00%     333ns         1     333ns     333ns     333ns  cuDeviceGetUuid
+
+==6881== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    5944  35.287KB  4.0000KB  768.00KB  204.8320MB  37.91382ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6894== NVPROF is profiling process 6894, command: ./LowAccessDensityTest_cuda 64 134217728
+Low Access Test(134217728): check: 0, time: 189.50ms
+Low Access Test(134217728): check_unified: 0, time: 170.00ms
+==6894== Profiling application: ./LowAccessDensityTest_cuda 64 134217728
+==6894== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   91.48%  1.96454s        22  89.297ms  1.8993ms  304.43ms  [CUDA memcpy HtoD]
+                    7.00%  150.36ms        12  12.530ms  995.57us  139.40ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    1.51%  32.522ms        12  2.7101ms  2.1144ms  6.5620ms  [CUDA memcpy DtoH]
+      API calls:   86.71%  2.17102s        34  63.853ms  2.1285ms  305.40ms  cudaMemcpy
+                   10.41%  260.60ms        23  11.330ms  130.13us  239.83ms  cudaMalloc
+                    1.93%  48.308ms        23  2.1004ms  122.26us  37.022ms  cudaFree
+                    0.83%  20.737ms         1  20.737ms  20.737ms  20.737ms  cudaMallocManaged
+                    0.07%  1.8011ms         1  1.8011ms  1.8011ms  1.8011ms  cuDeviceTotalMem
+                    0.02%  582.39us        12  48.532us  34.477us  79.810us  cudaLaunchKernel
+                    0.02%  570.12us        97  5.8770us     176ns  232.19us  cuDeviceGetAttribute
+                    0.00%  51.217us         1  51.217us  51.217us  51.217us  cuDeviceGetName
+                    0.00%  2.9570us         1  2.9570us  2.9570us  2.9570us  cuDeviceGetPCIBusId
+                    0.00%  2.8320us         3     944ns     195ns  2.1770us  cuDeviceGetCount
+                    0.00%  1.3260us         2     663ns     242ns  1.0840us  cuDeviceGet
+                    0.00%     307ns         1     307ns     307ns     307ns  cuDeviceGetUuid
+
+==6894== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4609  39.630KB  4.0000KB  988.00KB  178.3750MB  29.94720ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6907== NVPROF is profiling process 6907, command: ./LowAccessDensityTest_cuda 128 134217728
+Low Access Test(134217728): check: 0, time: 189.60ms
+Low Access Test(134217728): check_unified: 0, time: 144.00ms
+==6907== Profiling application: ./LowAccessDensityTest_cuda 128 134217728
+==6907== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   93.38%  1.98313s        22  90.142ms  856.95us  318.15ms  [CUDA memcpy HtoD]
+                    6.06%  128.70ms        12  10.725ms  915.77us  118.59ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.56%  11.795ms        12  982.91us  815.77us  1.8728ms  [CUDA memcpy DtoH]
+      API calls:   86.78%  2.14576s        34  63.111ms  1.0977ms  319.11ms  cudaMemcpy
+                   10.42%  257.61ms        23  11.200ms  120.85us  236.71ms  cudaMalloc
+                    1.85%  45.762ms        23  1.9896ms  115.12us  34.675ms  cudaFree
+                    0.83%  20.643ms         1  20.643ms  20.643ms  20.643ms  cudaMallocManaged
+                    0.07%  1.6579ms         1  1.6579ms  1.6579ms  1.6579ms  cuDeviceTotalMem
+                    0.03%  620.64us        97  6.3980us     174ns  252.85us  cuDeviceGetAttribute
+                    0.02%  583.96us        12  48.663us  30.790us  80.349us  cudaLaunchKernel
+                    0.00%  51.027us         1  51.027us  51.027us  51.027us  cuDeviceGetName
+                    0.00%  4.6500us         1  4.6500us  4.6500us  4.6500us  cuDeviceGetPCIBusId
+                    0.00%  1.9870us         3     662ns     236ns  1.2980us  cuDeviceGetCount
+                    0.00%     877ns         2     438ns     195ns     682ns  cuDeviceGet
+                    0.00%     312ns         1     312ns     312ns     312ns  cuDeviceGetUuid
+
+==6907== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    5509  46.106KB  4.0000KB  972.00KB  248.0469MB  39.25120ms  Host To Device
+       1         -         -         -           -  2.254784ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6920== NVPROF is profiling process 6920, command: ./LowAccessDensityTest_cuda 256 134217728
+Low Access Test(134217728): check: 0, time: 187.70ms
+Low Access Test(134217728): check_unified: 0, time: 134.00ms
+==6920== Profiling application: ./LowAccessDensityTest_cuda 256 134217728
+==6920== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   94.12%  1.96988s        22  89.540ms  342.52us  321.36ms  [CUDA memcpy HtoD]
+                    5.78%  120.99ms        12  10.083ms  908.15us  110.96ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.10%  2.0790ms        12  173.25us  170.81us  177.60us  [CUDA memcpy DtoH]
+      API calls:   87.34%  2.11598s        34  62.235ms  585.22us  322.33ms  cudaMemcpy
+                    9.78%  236.90ms        23  10.300ms  128.85us  216.05ms  cudaMalloc
+                    1.89%  45.797ms        23  1.9912ms  117.53us  34.582ms  cudaFree
+                    0.85%  20.647ms         1  20.647ms  20.647ms  20.647ms  cudaMallocManaged
+                    0.07%  1.7879ms         1  1.7879ms  1.7879ms  1.7879ms  cuDeviceTotalMem
+                    0.03%  802.02us        97  8.2680us     181ns  458.79us  cuDeviceGetAttribute
+                    0.03%  635.53us        12  52.961us  35.477us  90.689us  cudaLaunchKernel
+                    0.00%  46.335us         1  46.335us  46.335us  46.335us  cuDeviceGetName
+                    0.00%  4.0590us         1  4.0590us  4.0590us  4.0590us  cuDeviceGetPCIBusId
+                    0.00%  1.8530us         3     617ns     188ns  1.2650us  cuDeviceGetCount
+                    0.00%  1.2480us         2     624ns     262ns     986ns  cuDeviceGet
+                    0.00%     381ns         1     381ns     381ns     381ns  cuDeviceGetUuid
+
+==6920== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    5068  47.227KB  4.0000KB  888.00KB  233.7383MB  36.00835ms  Host To Device
+      23         -         -         -           -  29.85200ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6933== NVPROF is profiling process 6933, command: ./LowAccessDensityTest_cuda 512 134217728
+Low Access Test(134217728): check: 0, time: 181.10ms
+Low Access Test(134217728): check_unified: 0, time: 163.00ms
+==6933== Profiling application: ./LowAccessDensityTest_cuda 512 134217728
+==6933== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   92.60%  1.90276s        22  86.489ms  87.359us  276.69ms  [CUDA memcpy HtoD]
+                    7.36%  151.15ms        12  12.596ms  861.49us  141.66ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.05%  1.0091ms        12  84.092us  82.751us  86.879us  [CUDA memcpy DtoH]
+      API calls:   86.94%  2.07290s        34  60.968ms  315.62us  277.65ms  cudaMemcpy
+                   10.48%  249.91ms        23  10.866ms  126.03us  229.07ms  cudaMalloc
+                    1.59%  37.961ms        23  1.6505ms  116.85us  26.841ms  cudaFree
+                    0.87%  20.629ms         1  20.629ms  20.629ms  20.629ms  cudaMallocManaged
+                    0.08%  1.8096ms         1  1.8096ms  1.8096ms  1.8096ms  cuDeviceTotalMem
+                    0.02%  578.85us        12  48.237us  32.424us  77.056us  cudaLaunchKernel
+                    0.02%  575.22us        97  5.9300us     181ns  229.52us  cuDeviceGetAttribute
+                    0.00%  49.075us         1  49.075us  49.075us  49.075us  cuDeviceGetName
+                    0.00%  4.8100us         1  4.8100us  4.8100us  4.8100us  cuDeviceGetPCIBusId
+                    0.00%  1.8900us         3     630ns     200ns  1.2590us  cuDeviceGetCount
+                    0.00%  1.2600us         2     630ns     226ns  1.0340us  cuDeviceGet
+                    0.00%     321ns         1     321ns     321ns     321ns  cuDeviceGetUuid
+
+==6933== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    7407  50.322KB  4.0000KB  964.00KB  364.0078MB  55.70362ms  Host To Device
+     110         -         -         -           -  156.3232ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6946== NVPROF is profiling process 6946, command: ./LowAccessDensityTest_cuda 1024 134217728
+Low Access Test(134217728): check: 0, time: 185.90ms
+Low Access Test(134217728): check_unified: 0, time: 152.00ms
+==6946== Profiling application: ./LowAccessDensityTest_cuda 1024 134217728
+==6946== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   93.37%  1.95973s        22  89.079ms  44.896us  322.61ms  [CUDA memcpy HtoD]
+                    6.61%  138.75ms        12  11.563ms  836.09us  129.53ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.02%  512.12us        12  42.676us  42.303us  43.935us  [CUDA memcpy DtoH]
+      API calls:   87.09%  2.11315s        34  62.152ms  194.29us  323.58ms  cudaMemcpy
+                    9.88%  239.81ms        23  10.426ms  128.08us  219.05ms  cudaMalloc
+                    2.05%  49.801ms        23  2.1652ms  116.54us  38.499ms  cudaFree
+                    0.85%  20.613ms         1  20.613ms  20.613ms  20.613ms  cudaMallocManaged
+                    0.07%  1.7868ms         1  1.7868ms  1.7868ms  1.7868ms  cuDeviceTotalMem
+                    0.03%  611.51us        12  50.959us  36.152us  81.517us  cudaLaunchKernel
+                    0.02%  552.00us        97  5.6900us     178ns  222.53us  cuDeviceGetAttribute
+                    0.00%  47.396us         1  47.396us  47.396us  47.396us  cuDeviceGetName
+                    0.00%  4.1170us         1  4.1170us  4.1170us  4.1170us  cuDeviceGetPCIBusId
+                    0.00%  1.9300us         3     643ns     262ns  1.2650us  cuDeviceGetCount
+                    0.00%  1.2910us         2     645ns     224ns  1.0670us  cuDeviceGet
+                    0.00%     362ns         1     362ns     362ns     362ns  cuDeviceGetUuid
+
+==6946== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    9114  49.171KB  4.0000KB  0.9844MB  437.6406MB  65.52995ms  Host To Device
+      85         -         -         -           -  133.3107ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6960== NVPROF is profiling process 6960, command: ./LowAccessDensityTest_cuda 2048 134217728
+Low Access Test(134217728): check: 0, time: 147.30ms
+Low Access Test(134217728): check_unified: 0, time: 188.00ms
+==6960== Profiling application: ./LowAccessDensityTest_cuda 2048 134217728
+==6960== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   89.81%  1.55547s        22  70.703ms  23.999us  157.37ms  [CUDA memcpy HtoD]
+                   10.17%  176.17ms        12  14.681ms  828.41us  167.05ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.02%  269.44us        12  22.453us  22.303us  22.752us  [CUDA memcpy DtoH]
+      API calls:   85.12%  1.74450s        34  51.309ms  156.28us  167.30ms  cudaMemcpy
+                   11.59%  237.54ms        23  10.328ms  127.38us  216.55ms  cudaMalloc
+                    2.15%  44.143ms        23  1.9192ms  112.53us  34.251ms  cudaFree
+                    1.01%  20.608ms         1  20.608ms  20.608ms  20.608ms  cudaMallocManaged
+                    0.08%  1.6818ms         1  1.6818ms  1.6818ms  1.6818ms  cuDeviceTotalMem
+                    0.03%  538.35us        97  5.5500us     176ns  217.73us  cuDeviceGetAttribute
+                    0.02%  332.09us        12  27.674us  19.534us  66.845us  cudaLaunchKernel
+                    0.00%  48.938us         1  48.938us  48.938us  48.938us  cuDeviceGetName
+                    0.00%  3.7940us         1  3.7940us  3.7940us  3.7940us  cuDeviceGetPCIBusId
+                    0.00%  2.1250us         3     708ns     168ns  1.4430us  cuDeviceGetCount
+                    0.00%  1.3740us         2     687ns     289ns  1.0850us  cuDeviceGet
+                    0.00%     321ns         1     321ns     321ns     321ns  cuDeviceGetUuid
+
+==6960== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6602  12.565KB  4.0000KB  900.00KB  81.01172MB  26.47939ms  Host To Device
+       1         -         -         -           -  9.540896ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6973== NVPROF is profiling process 6973, command: ./LowAccessDensityTest_cuda 4096 134217728
+Low Access Test(134217728): check: 0, time: 185.60ms
+Low Access Test(134217728): check_unified: 0, time: 153.00ms
+==6973== Profiling application: ./LowAccessDensityTest_cuda 4096 134217728
+==6973== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   93.29%  1.95594s        22  88.906ms  13.408us  322.88ms  [CUDA memcpy HtoD]
+                    6.70%  140.58ms        12  11.715ms  821.43us  131.54ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.01%  148.32us        12  12.359us  12.192us  12.576us  [CUDA memcpy DtoH]
+      API calls:   86.88%  2.10955s        34  62.046ms  106.59us  323.85ms  cudaMemcpy
+                   10.25%  248.97ms        23  10.825ms  129.07us  228.10ms  cudaMalloc
+                    1.88%  45.685ms        23  1.9863ms  118.12us  34.398ms  cudaFree
+                    0.86%  20.778ms         1  20.778ms  20.778ms  20.778ms  cudaMallocManaged
+                    0.07%  1.8019ms         1  1.8019ms  1.8019ms  1.8019ms  cuDeviceTotalMem
+                    0.02%  592.98us        12  49.414us  32.231us  78.465us  cudaLaunchKernel
+                    0.02%  579.85us        97  5.9770us     176ns  235.12us  cuDeviceGetAttribute
+                    0.00%  52.825us         1  52.825us  52.825us  52.825us  cuDeviceGetName
+                    0.00%  3.7440us         1  3.7440us  3.7440us  3.7440us  cuDeviceGetPCIBusId
+                    0.00%  2.4380us         3     812ns     201ns  1.7080us  cuDeviceGetCount
+                    0.00%  1.2640us         2     632ns     260ns  1.0040us  cuDeviceGet
+                    0.00%     388ns         1     388ns     388ns     388ns  cuDeviceGetUuid
+
+==6973== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6075  22.261KB  4.0000KB  0.9805MB  132.0664MB  30.26515ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6986== NVPROF is profiling process 6986, command: ./LowAccessDensityTest_cuda 8192 134217728
+Low Access Test(134217728): check: 0, time: 183.60ms
+Low Access Test(134217728): check_unified: 0, time: 126.00ms
+==6986== Profiling application: ./LowAccessDensityTest_cuda 8192 134217728
+==6986== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   94.45%  1.93450s        22  87.932ms  8.1920us  263.79ms  [CUDA memcpy HtoD]
+                    5.55%  113.62ms        12  9.4683ms  819.80us  104.60ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  90.334us        12  7.5270us  7.0400us  9.5040us  [CUDA memcpy DtoH]
+      API calls:   86.92%  2.06079s        34  60.612ms  105.32us  264.76ms  cudaMemcpy
+                   10.10%  239.35ms        23  10.407ms  126.28us  218.39ms  cudaMalloc
+                    1.98%  46.945ms        23  2.0411ms  113.66us  35.923ms  cudaFree
+                    0.87%  20.722ms         1  20.722ms  20.722ms  20.722ms  cudaMallocManaged
+                    0.08%  1.8137ms         1  1.8137ms  1.8137ms  1.8137ms  cuDeviceTotalMem
+                    0.02%  547.53us        12  45.627us  32.237us  76.068us  cudaLaunchKernel
+                    0.02%  543.30us        97  5.6010us     175ns  216.85us  cuDeviceGetAttribute
+                    0.00%  46.558us         1  46.558us  46.558us  46.558us  cuDeviceGetName
+                    0.00%  4.0160us         1  4.0160us  4.0160us  4.0160us  cuDeviceGetPCIBusId
+                    0.00%  2.1450us         3     715ns     222ns  1.5930us  cuDeviceGetCount
+                    0.00%  1.1800us         2     590ns     205ns     975ns  cuDeviceGet
+                    0.00%     311ns         1     311ns     311ns     311ns  cuDeviceGetUuid
+
+==6986== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    7820  36.320KB  4.0000KB  0.9961MB  277.3750MB  49.57882ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==6999== NVPROF is profiling process 6999, command: ./LowAccessDensityTest_cuda 16384 134217728
+Low Access Test(134217728): check: 0, time: 180.70ms
+Low Access Test(134217728): check_unified: 0, time: 119.00ms
+==6999== Profiling application: ./LowAccessDensityTest_cuda 16384 134217728
+==6999== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   94.70%  1.90589s        22  86.631ms  4.7670us  312.43ms  [CUDA memcpy HtoD]
+                    5.29%  106.54ms        12  8.8785ms  819.83us  97.520ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  56.063us        12  4.6710us  4.4160us  6.1440us  [CUDA memcpy DtoH]
+      API calls:   85.44%  2.02373s        34  59.521ms  89.221us  313.40ms  cudaMemcpy
+                   11.61%  274.91ms        23  11.952ms  128.49us  254.00ms  cudaMalloc
+                    1.96%  46.373ms        23  2.0162ms  117.28us  35.362ms  cudaFree
+                    0.87%  20.623ms         1  20.623ms  20.623ms  20.623ms  cudaMallocManaged
+                    0.08%  1.7990ms         1  1.7990ms  1.7990ms  1.7990ms  cuDeviceTotalMem
+                    0.02%  572.62us        97  5.9030us     173ns  231.10us  cuDeviceGetAttribute
+                    0.02%  540.48us        12  45.040us  30.781us  68.619us  cudaLaunchKernel
+                    0.00%  51.271us         1  51.271us  51.271us  51.271us  cuDeviceGetName
+                    0.00%  4.4190us         1  4.4190us  4.4190us  4.4190us  cuDeviceGetPCIBusId
+                    0.00%  2.1820us         3     727ns     193ns  1.5090us  cuDeviceGetCount
+                    0.00%  1.2360us         2     618ns     258ns     978ns  cuDeviceGet
+                    0.00%     370ns         1     370ns     370ns     370ns  cuDeviceGetUuid
+
+==6999== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4220  46.014KB  4.0000KB  956.00KB  189.6289MB  30.75014ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7013== NVPROF is profiling process 7013, command: ./LowAccessDensityTest_cuda 32768 134217728
+Low Access Test(134217728): check: 0, time: 181.90ms
+Low Access Test(134217728): check_unified: 0, time: 86.00ms
+==7013== Profiling application: ./LowAccessDensityTest_cuda 32768 134217728
+==7013== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   96.36%  1.91646s        22  87.112ms  3.0720us  295.28ms  [CUDA memcpy HtoD]
+                    3.63%  72.258ms        12  6.0215ms  820.09us  63.233ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  39.936us        12  3.3280us  3.2000us  3.8080us  [CUDA memcpy DtoH]
+      API calls:   85.36%  2.00096s        34  58.852ms  82.698us  296.24ms  cudaMemcpy
+                   11.43%  267.88ms        23  11.647ms  132.13us  247.05ms  cudaMalloc
+                    2.21%  51.845ms        23  2.2541ms  118.21us  40.636ms  cudaFree
+                    0.88%  20.616ms         1  20.616ms  20.616ms  20.616ms  cudaMallocManaged
+                    0.08%  1.7869ms         1  1.7869ms  1.7869ms  1.7869ms  cuDeviceTotalMem
+                    0.02%  557.66us        97  5.7490us     175ns  235.52us  cuDeviceGetAttribute
+                    0.02%  528.42us        12  44.035us  33.726us  69.323us  cudaLaunchKernel
+                    0.00%  47.844us         1  47.844us  47.844us  47.844us  cuDeviceGetName
+                    0.00%  4.5390us         1  4.5390us  4.5390us  4.5390us  cuDeviceGetPCIBusId
+                    0.00%  2.0880us         3     696ns     198ns  1.5120us  cuDeviceGetCount
+                    0.00%  1.1160us         2     558ns     224ns     892ns  cuDeviceGet
+                    0.00%     359ns         1     359ns     359ns     359ns  cuDeviceGetUuid
+
+==7013== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6948  32.000KB  4.0000KB  60.000KB  217.1250MB  38.83766ms  Host To Device
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7026== NVPROF is profiling process 7026, command: ./LowAccessDensityTest_cuda 65536 134217728
+Low Access Test(134217728): check: 0, time: 182.30ms
+Low Access Test(134217728): check_unified: 0, time: 62.00ms
+==7026== Profiling application: ./LowAccessDensityTest_cuda 65536 134217728
+==7026== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   97.51%  1.92133s        22  87.333ms  2.1760us  246.74ms  [CUDA memcpy HtoD]
+                    2.49%  49.078ms        12  4.0899ms  819.93us  40.055ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  36.256us        12  3.0210us  2.9120us  3.6160us  [CUDA memcpy DtoH]
+      API calls:   86.65%  1.98253s        34  58.310ms  80.048us  247.71ms  cudaMemcpy
+                   10.32%  236.14ms        23  10.267ms  146.88us  215.44ms  cudaMalloc
+                    2.00%  45.663ms        23  1.9854ms  115.98us  34.482ms  cudaFree
+                    0.91%  20.726ms         1  20.726ms  20.726ms  20.726ms  cudaMallocManaged
+                    0.08%  1.7854ms         1  1.7854ms  1.7854ms  1.7854ms  cuDeviceTotalMem
+                    0.02%  559.33us        97  5.7660us     179ns  235.26us  cuDeviceGetAttribute
+                    0.02%  553.00us        12  46.083us  35.163us  67.600us  cudaLaunchKernel
+                    0.00%  46.547us         1  46.547us  46.547us  46.547us  cuDeviceGetName
+                    0.00%  3.9460us         1  3.9460us  3.9460us  3.9460us  cuDeviceGetPCIBusId
+                    0.00%  2.0100us         3     670ns     202ns  1.4280us  cuDeviceGetCount
+                    0.00%  1.0350us         2     517ns     210ns     825ns  cuDeviceGet
+                    0.00%     389ns         1     389ns     389ns     389ns  cuDeviceGetUuid
+
+==7026== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4096  32.000KB  4.0000KB  60.000KB  128.0000MB  22.83424ms  Host To Device
+      21         -         -         -           -  40.00746ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7039== NVPROF is profiling process 7039, command: ./LowAccessDensityTest_cuda 131072 134217728
+Low Access Test(134217728): check: 0, time: 185.60ms
+Low Access Test(134217728): check_unified: 0, time: 61.00ms
+==7039== Profiling application: ./LowAccessDensityTest_cuda 131072 134217728
+==7039== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   97.51%  1.95439s        22  88.836ms  2.0480us  304.67ms  [CUDA memcpy HtoD]
+                    2.49%  49.907ms        12  4.1589ms  922.10us  39.760ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  37.280us        12  3.1060us  2.9440us  3.8720us  [CUDA memcpy DtoH]
+      API calls:   86.32%  2.01645s        34  59.307ms  83.028us  305.63ms  cudaMemcpy
+                   10.16%  237.34ms        23  10.319ms  128.33us  216.43ms  cudaMalloc
+                    2.51%  58.688ms        23  2.5517ms  119.21us  47.325ms  cudaFree
+                    0.88%  20.606ms         1  20.606ms  20.606ms  20.606ms  cudaMallocManaged
+                    0.08%  1.7743ms         1  1.7743ms  1.7743ms  1.7743ms  cuDeviceTotalMem
+                    0.02%  582.35us        12  48.529us  32.344us  79.917us  cudaLaunchKernel
+                    0.02%  566.46us        97  5.8390us     207ns  232.58us  cuDeviceGetAttribute
+                    0.00%  50.700us         1  50.700us  50.700us  50.700us  cuDeviceGetName
+                    0.00%  2.7960us         3     932ns     250ns  2.0330us  cuDeviceGetCount
+                    0.00%  2.5090us         1  2.5090us  2.5090us  2.5090us  cuDeviceGetPCIBusId
+                    0.00%  1.5720us         2     786ns     254ns  1.3180us  cuDeviceGet
+                    0.00%     383ns         1     383ns     383ns     383ns  cuDeviceGetUuid
+
+==7039== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    2048  32.000KB  4.0000KB  60.000KB  64.00000MB  12.27850ms  Host To Device
+      19         -         -         -           -  39.72838ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7052== NVPROF is profiling process 7052, command: ./LowAccessDensityTest_cuda 262144 134217728
+Low Access Test(134217728): check: 0, time: 185.50ms
+Low Access Test(134217728): check_unified: 0, time: 55.00ms
+==7052== Profiling application: ./LowAccessDensityTest_cuda 262144 134217728
+==7052== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   97.80%  1.95373s        22  88.806ms  1.8880us  322.09ms  [CUDA memcpy HtoD]
+                    2.20%  43.857ms        12  3.6548ms  870.33us  33.981ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  37.182us        12  3.0980us  2.7840us  4.1270us  [CUDA memcpy DtoH]
+      API calls:   85.82%  2.00968s        34  59.108ms  74.056us  323.05ms  cudaMemcpy
+                   10.74%  251.41ms        23  10.931ms  130.59us  230.52ms  cudaMalloc
+                    2.43%  56.979ms        23  2.4774ms  117.62us  45.676ms  cudaFree
+                    0.88%  20.639ms         1  20.639ms  20.639ms  20.639ms  cudaMallocManaged
+                    0.08%  1.7975ms         1  1.7975ms  1.7975ms  1.7975ms  cuDeviceTotalMem
+                    0.03%  605.06us        12  50.421us  37.810us  103.44us  cudaLaunchKernel
+                    0.02%  537.51us        97  5.5410us     179ns  213.71us  cuDeviceGetAttribute
+                    0.00%  49.463us         1  49.463us  49.463us  49.463us  cuDeviceGetName
+                    0.00%  4.5440us         1  4.5440us  4.5440us  4.5440us  cuDeviceGetPCIBusId
+                    0.00%  2.2400us         3     746ns     191ns  1.5780us  cuDeviceGetCount
+                    0.00%  1.2970us         2     648ns     199ns  1.0980us  cuDeviceGet
+                    0.00%     326ns         1     326ns     326ns     326ns  cuDeviceGetUuid
+
+==7052== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    1024  32.000KB  4.0000KB  60.000KB  32.00000MB  6.099360ms  Host To Device
+      19         -         -         -           -  33.96541ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7065== NVPROF is profiling process 7065, command: ./LowAccessDensityTest_cuda 524288 134217728
+Low Access Test(134217728): check: 0, time: 184.80ms
+Low Access Test(134217728): check_unified: 0, time: 51.00ms
+==7065== Profiling application: ./LowAccessDensityTest_cuda 524288 134217728
+==7065== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   97.99%  1.94797s        22  88.544ms  1.8240us  318.27ms  [CUDA memcpy HtoD]
+                    2.01%  40.005ms        12  3.3338ms  870.36us  30.430ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  35.072us        12  2.9220us  2.7840us  3.2960us  [CUDA memcpy DtoH]
+      API calls:   86.15%  1.99897s        34  58.793ms  70.382us  319.24ms  cudaMemcpy
+                   10.31%  239.14ms        23  10.397ms  126.98us  218.18ms  cudaMalloc
+                    2.52%  58.480ms        23  2.5426ms  115.87us  47.469ms  cudaFree
+                    0.89%  20.727ms         1  20.727ms  20.727ms  20.727ms  cudaMallocManaged
+                    0.08%  1.7858ms         1  1.7858ms  1.7858ms  1.7858ms  cuDeviceTotalMem
+                    0.03%  618.11us        97  6.3720us     177ns  259.81us  cuDeviceGetAttribute
+                    0.02%  521.10us        12  43.425us  32.245us  68.128us  cudaLaunchKernel
+                    0.00%  48.159us         1  48.159us  48.159us  48.159us  cuDeviceGetName
+                    0.00%  4.2870us         1  4.2870us  4.2870us  4.2870us  cuDeviceGetPCIBusId
+                    0.00%  1.7620us         3     587ns     244ns  1.1130us  cuDeviceGetCount
+                    0.00%  1.2290us         2     614ns     209ns  1.0200us  cuDeviceGet
+                    0.00%     343ns         1     343ns     343ns     343ns  cuDeviceGetUuid
+
+==7065== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+     512  32.000KB  4.0000KB  60.000KB  16.00000MB  3.004128ms  Host To Device
+      19         -         -         -           -  30.42195ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7078== NVPROF is profiling process 7078, command: ./LowAccessDensityTest_cuda 1048567 134217728
+Low Access Test(134217728): check: 0, time: 182.60ms
+Low Access Test(134217728): check_unified: 0, time: 40.00ms
+==7078== Profiling application: ./LowAccessDensityTest_cuda 1048567 134217728
+==7078== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   98.55%  1.92257s        22  87.389ms  1.8230us  309.71ms  [CUDA memcpy HtoD]
+                    1.45%  28.222ms        12  2.3519ms  870.33us  18.647ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  34.976us        12  2.9140us  2.7840us  3.2960us  [CUDA memcpy DtoH]
+      API calls:   85.60%  1.96285s        34  57.731ms  69.599us  310.68ms  cudaMemcpy
+                   11.32%  259.65ms        23  11.289ms  137.21us  238.70ms  cudaMalloc
+                    2.04%  46.827ms        23  2.0360ms  117.64us  35.606ms  cudaFree
+                    0.90%  20.625ms         1  20.625ms  20.625ms  20.625ms  cudaMallocManaged
+                    0.08%  1.7911ms         1  1.7911ms  1.7911ms  1.7911ms  cuDeviceTotalMem
+                    0.02%  563.59us        97  5.8100us     180ns  218.81us  cuDeviceGetAttribute
+                    0.02%  556.21us        12  46.351us  34.229us  74.649us  cudaLaunchKernel
+                    0.00%  49.118us         1  49.118us  49.118us  49.118us  cuDeviceGetName
+                    0.00%  4.5420us         1  4.5420us  4.5420us  4.5420us  cuDeviceGetPCIBusId
+                    0.00%  1.9030us         3     634ns     195ns  1.3110us  cuDeviceGetCount
+                    0.00%  1.2590us         2     629ns     220ns  1.0390us  cuDeviceGet
+                    0.00%     333ns         1     333ns     333ns     333ns  cuDeviceGetUuid
+
+==7078== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+     270  30.340KB  4.0000KB  60.000KB  8.000000MB  1.592960ms  Host To Device
+      10         -         -         -           -  18.64243ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7091== NVPROF is profiling process 7091, command: ./LowAccessDensityTest_cuda 2097152 134217728
+Low Access Test(134217728): check: 0, time: 183.10ms
+Low Access Test(134217728): check_unified: 0, time: 34.00ms
+==7091== Profiling application: ./LowAccessDensityTest_cuda 2097152 134217728
+==7091== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   98.85%  1.92964s        22  87.711ms  1.7600us  307.05ms  [CUDA memcpy HtoD]
+                    1.14%  22.327ms        12  1.8606ms  824.37us  13.006ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  36.768us        12  3.0640us  2.6560us  5.1200us  [CUDA memcpy DtoH]
+      API calls:   86.16%  1.96296s        34  57.734ms  73.875us  308.02ms  cudaMemcpy
+                   10.99%  250.48ms        23  10.890ms  128.58us  229.53ms  cudaMalloc
+                    1.81%  41.244ms        23  1.7932ms  115.10us  30.165ms  cudaFree
+                    0.91%  20.764ms         1  20.764ms  20.764ms  20.764ms  cudaMallocManaged
+                    0.08%  1.7920ms         1  1.7920ms  1.7920ms  1.7920ms  cuDeviceTotalMem
+                    0.02%  559.80us        97  5.7710us     187ns  236.02us  cuDeviceGetAttribute
+                    0.02%  534.19us        12  44.515us  29.725us  80.104us  cudaLaunchKernel
+                    0.00%  49.451us         1  49.451us  49.451us  49.451us  cuDeviceGetName
+                    0.00%  5.1100us         1  5.1100us  5.1100us  5.1100us  cuDeviceGetPCIBusId
+                    0.00%  1.9050us         3     635ns     198ns  1.4030us  cuDeviceGetCount
+                    0.00%  1.1580us         2     579ns     214ns     944ns  cuDeviceGet
+                    0.00%     315ns         1     315ns     315ns     315ns  cuDeviceGetUuid
+
+==7091== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+     128  32.000KB  4.0000KB  60.000KB  4.000000MB  749.0880us  Host To Device
+       5         -         -         -           -  13.00205ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7104== NVPROF is profiling process 7104, command: ./LowAccessDensityTest_cuda 4194304 134217728
+Low Access Test(134217728): check: 0, time: 145.50ms
+Low Access Test(134217728): check_unified: 0, time: 29.00ms
+==7104== Profiling application: ./LowAccessDensityTest_cuda 4194304 134217728
+==7104== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   98.96%  1.54022s        22  70.010ms  1.7600us  155.46ms  [CUDA memcpy HtoD]
+                    1.04%  16.134ms        12  1.3445ms  820.28us  7.1047ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  33.344us        12  2.7780us  2.6240us  3.3600us  [CUDA memcpy DtoH]
+      API calls:   81.86%  1.56738s        34  46.099ms  93.021us  156.41ms  cudaMemcpy
+                   15.03%  287.83ms        23  12.514ms  136.35us  266.75ms  cudaMalloc
+                    1.89%  36.257ms        23  1.5764ms  109.47us  26.461ms  cudaFree
+                    1.08%  20.647ms         1  20.647ms  20.647ms  20.647ms  cudaMallocManaged
+                    0.09%  1.8089ms         1  1.8089ms  1.8089ms  1.8089ms  cuDeviceTotalMem
+                    0.03%  550.22us        97  5.6720us     178ns  222.04us  cuDeviceGetAttribute
+                    0.02%  291.89us        12  24.324us  16.191us  62.084us  cudaLaunchKernel
+                    0.00%  50.695us         1  50.695us  50.695us  50.695us  cuDeviceGetName
+                    0.00%  3.7470us         1  3.7470us  3.7470us  3.7470us  cuDeviceGetPCIBusId
+                    0.00%  3.2350us         3  1.0780us     293ns  2.5240us  cuDeviceGetCount
+                    0.00%  1.1470us         2     573ns     284ns     863ns  cuDeviceGet
+                    0.00%     342ns         1     342ns     342ns     342ns  cuDeviceGetUuid
+
+==7104== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+      64  32.000KB  4.0000KB  60.000KB  2.000000MB  372.2880us  Host To Device
+       3         -         -         -           -  7.100000ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7117== NVPROF is profiling process 7117, command: ./LowAccessDensityTest_cuda 8388608 134217728
+Low Access Test(134217728): check: 0, time: 183.80ms
+Low Access Test(134217728): check_unified: 0, time: 26.00ms
+==7117== Profiling application: ./LowAccessDensityTest_cuda 8388608 134217728
+==7117== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.34%  1.93870s        22  88.123ms  1.7600us  304.53ms  [CUDA memcpy HtoD]
+                    0.66%  12.833ms        12  1.0694ms  819.80us  3.8096ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  33.024us        12  2.7520us  2.6560us  2.9440us  [CUDA memcpy DtoH]
+      API calls:   86.30%  1.96358s        34  57.752ms  74.680us  305.49ms  cudaMemcpy
+                   10.98%  249.78ms        23  10.860ms  131.19us  228.77ms  cudaMalloc
+                    1.68%  38.139ms        23  1.6582ms  118.86us  26.885ms  cudaFree
+                    0.91%  20.646ms         1  20.646ms  20.646ms  20.646ms  cudaMallocManaged
+                    0.09%  2.0128ms         1  2.0128ms  2.0128ms  2.0128ms  cuDeviceTotalMem
+                    0.03%  589.33us        97  6.0750us     173ns  243.30us  cuDeviceGetAttribute
+                    0.03%  584.13us        12  48.677us  34.531us  71.072us  cudaLaunchKernel
+                    0.00%  50.604us         1  50.604us  50.604us  50.604us  cuDeviceGetName
+                    0.00%  4.4430us         1  4.4430us  4.4430us  4.4430us  cuDeviceGetPCIBusId
+                    0.00%  2.4770us         3     825ns     244ns  1.7930us  cuDeviceGetCount
+                    0.00%  1.1600us         2     580ns     199ns     961ns  cuDeviceGet
+                    0.00%     419ns         1     419ns     419ns     419ns  cuDeviceGetUuid
+
+==7117== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+      32  32.000KB  4.0000KB  60.000KB  1.000000MB  176.9920us  Host To Device
+       2         -         -         -           -  3.804608ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7130== NVPROF is profiling process 7130, command: ./LowAccessDensityTest_cuda 16777216 134217728
+Low Access Test(134217728): check: 0, time: 185.60ms
+Low Access Test(134217728): check_unified: 0, time: 24.00ms
+==7130== Profiling application: ./LowAccessDensityTest_cuda 16777216 134217728
+==7130== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.43%  1.95879s        22  89.036ms  1.7280us  322.39ms  [CUDA memcpy HtoD]
+                    0.57%  11.283ms        12  940.23us  820.02us  2.2576ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  24.736us        12  2.0610us  1.8560us  3.2320us  [CUDA memcpy DtoH]
+      API calls:   86.79%  1.98211s        34  58.297ms  69.507us  323.36ms  cudaMemcpy
+                   10.59%  241.78ms        23  10.512ms  129.49us  221.09ms  cudaMalloc
+                    1.58%  36.194ms        23  1.5736ms  117.45us  24.737ms  cudaFree
+                    0.91%  20.727ms         1  20.727ms  20.727ms  20.727ms  cudaMallocManaged
+                    0.08%  1.7455ms         1  1.7455ms  1.7455ms  1.7455ms  cuDeviceTotalMem
+                    0.02%  563.53us        12  46.960us  33.704us  77.010us  cudaLaunchKernel
+                    0.02%  543.26us        97  5.6000us     179ns  215.51us  cuDeviceGetAttribute
+                    0.00%  54.668us         1  54.668us  54.668us  54.668us  cuDeviceGetName
+                    0.00%  4.7290us         1  4.7290us  4.7290us  4.7290us  cuDeviceGetPCIBusId
+                    0.00%  2.2230us         3     741ns     185ns  1.3810us  cuDeviceGetCount
+                    0.00%  1.1580us         2     579ns     240ns     918ns  cuDeviceGet
+                    0.00%     500ns         1     500ns     500ns     500ns  cuDeviceGetUuid
+
+==7130== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+      16  32.000KB  4.0000KB  60.000KB  512.0000KB  92.16000us  Host To Device
+       1         -         -         -           -  2.253696ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7143== NVPROF is profiling process 7143, command: ./LowAccessDensityTest_cuda 33554432 134217728
+Low Access Test(134217728): check: 0, time: 180.40ms
+Low Access Test(134217728): check_unified: 0, time: 23.00ms
+==7143== Profiling application: ./LowAccessDensityTest_cuda 33554432 134217728
+==7143== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.45%  1.90479s        22  86.582ms  1.7600us  309.79ms  [CUDA memcpy HtoD]
+                    0.55%  10.506ms        12  875.52us  819.80us  1.4829ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  26.912us        12  2.2420us  2.0160us  3.7120us  [CUDA memcpy DtoH]
+      API calls:   84.82%  1.92636s        34  56.658ms  69.135us  310.76ms  cudaMemcpy
+                   12.58%  285.65ms        23  12.420ms  139.89us  264.73ms  cudaMalloc
+                    1.56%  35.407ms        23  1.5394ms  114.28us  24.388ms  cudaFree
+                    0.91%  20.598ms         1  20.598ms  20.598ms  20.598ms  cudaMallocManaged
+                    0.09%  1.9391ms         1  1.9391ms  1.9391ms  1.9391ms  cuDeviceTotalMem
+                    0.02%  549.69us        97  5.6660us     175ns  222.92us  cuDeviceGetAttribute
+                    0.02%  522.31us        12  43.526us  29.367us  71.727us  cudaLaunchKernel
+                    0.00%  61.336us         1  61.336us  61.336us  61.336us  cuDeviceGetName
+                    0.00%  5.0710us         1  5.0710us  5.0710us  5.0710us  cuDeviceGetPCIBusId
+                    0.00%  1.9630us         3     654ns     179ns  1.3540us  cuDeviceGetCount
+                    0.00%  1.1770us         2     588ns     198ns     979ns  cuDeviceGet
+                    0.00%     391ns         1     391ns     391ns     391ns  cuDeviceGetUuid
+
+==7143== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+       8  32.000KB  4.0000KB  60.000KB  256.0000KB  45.88800us  Host To Device
+       1         -         -         -           -  1.479008ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7156== NVPROF is profiling process 7156, command: ./LowAccessDensityTest_cuda 67108864 134217728
+Low Access Test(134217728): check: 0, time: 181.50ms
+Low Access Test(134217728): check_unified: 0, time: 22.00ms
+==7156== Profiling application: ./LowAccessDensityTest_cuda 67108864 134217728
+==7156== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.48%  1.91164s        22  86.893ms  1.7600us  242.17ms  [CUDA memcpy HtoD]
+                    0.52%  10.053ms        12  837.77us  819.93us  1.0294ms  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  26.688us        12  2.2240us  2.0160us  3.2000us  [CUDA memcpy DtoH]
+      API calls:   86.78%  1.93373s        34  56.875ms  71.319us  243.14ms  cudaMemcpy
+                   10.61%  236.35ms        23  10.276ms  133.70us  215.56ms  cudaMalloc
+                    1.55%  34.573ms        23  1.5032ms  118.43us  23.294ms  cudaFree
+                    0.92%  20.609ms         1  20.609ms  20.609ms  20.609ms  cudaMallocManaged
+                    0.08%  1.8018ms         1  1.8018ms  1.8018ms  1.8018ms  cuDeviceTotalMem
+                    0.03%  559.03us        97  5.7630us     178ns  234.30us  cuDeviceGetAttribute
+                    0.02%  544.66us        12  45.388us  32.781us  73.025us  cudaLaunchKernel
+                    0.00%  47.539us         1  47.539us  47.539us  47.539us  cuDeviceGetName
+                    0.00%  4.1620us         1  4.1620us  4.1620us  4.1620us  cuDeviceGetPCIBusId
+                    0.00%  2.0840us         3     694ns     231ns  1.4830us  cuDeviceGetCount
+                    0.00%  1.4670us         2     733ns     227ns  1.2400us  cuDeviceGet
+                    0.00%     359ns         1     359ns     359ns     359ns  cuDeviceGetUuid
+
+==7156== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+       4  32.000KB  4.0000KB  60.000KB  128.0000KB  22.97600us  Host To Device
+       1         -         -         -           -  1.024992ms  Gpu page fault groups
+Total CPU Page faults: 1536
+Usage: Low Access Test <n>
+==7169== NVPROF is profiling process 7169, command: ./LowAccessDensityTest_cuda 134217728 134217728
+Low Access Test(134217728): check: 0, time: 183.00ms
+Low Access Test(134217728): check_unified: 0, time: 23.00ms
+==7169== Profiling application: ./LowAccessDensityTest_cuda 134217728 134217728
+==7169== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   99.44%  1.92810s        22  87.641ms  1.7920us  313.62ms  [CUDA memcpy HtoD]
+                    0.56%  10.903ms        12  908.55us  854.93us  922.77us  LowAccessDensityTest_cudakernel(float*, float*, int, float, int)
+                    0.00%  27.680us        12  2.3060us  2.0800us  3.0720us  [CUDA memcpy DtoH]
+      API calls:   86.46%  1.95000s        34  57.353ms  70.321us  314.59ms  cudaMemcpy
+                   10.94%  246.76ms        23  10.729ms  128.12us  225.83ms  cudaMalloc
+                    1.55%  34.973ms        23  1.5206ms  115.36us  23.900ms  cudaFree
+                    0.91%  20.593ms         1  20.593ms  20.593ms  20.593ms  cudaMallocManaged
+                    0.08%  1.7857ms         1  1.7857ms  1.7857ms  1.7857ms  cuDeviceTotalMem
+                    0.03%  566.35us        97  5.8380us     176ns  237.57us  cuDeviceGetAttribute
+                    0.02%  520.39us        12  43.365us  31.175us  71.242us  cudaLaunchKernel
+                    0.00%  46.346us         1  46.346us  46.346us  46.346us  cuDeviceGetName
+                    0.00%  5.1030us         1  5.1030us  5.1030us  5.1030us  cuDeviceGetPCIBusId
+                    0.00%  1.7440us         3     581ns     262ns  1.1730us  cuDeviceGetCount
+                    0.00%  1.1350us         2     567ns     201ns     934ns  cuDeviceGet
+                    0.00%     316ns         1     316ns     316ns     316ns  cuDeviceGetUuid
+
+==7169== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+       2  32.000KB  4.0000KB  60.000KB  64.00000KB  11.90400us  Host To Device
+       1         -         -         -           -  886.5280us  Gpu page fault groups
+Total CPU Page faults: 1536
