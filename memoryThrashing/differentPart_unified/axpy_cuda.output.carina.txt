@@ -1,0 +1,156 @@
+Test on Carina
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+xyi2@cci-carina:~/CUDAMemBench/memoryThrashing/differentPart_unified$ sh test.sh
+Usage: axpy <n>
+==35405== NVPROF is profiling process 35405, command: ./axpy_cuda 1024000
+axpy(1024000): check_x: 0, check_y: 0, time: 19.70ms
+axpy_unified(1024000): check_x: 0, check_y: 0, time: 544.00ms
+axpy_optimized(1024000): check_x: 0, check_y: 0, time: 8.10ms
+==35405== Profiling application: ./axpy_cuda 1024000
+==35405== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   48.72%  94.166ms        88  1.0701ms  325.98us  1.9046ms  [CUDA memcpy HtoD]
+                   43.33%  83.751ms        88  951.71us  160.26us  2.1567ms  [CUDA memcpy DtoH]
+                    5.43%  10.500ms        22  477.27us  18.080us  2.9963ms  axpy_cudakernel_part3
+                    2.40%  4.6429ms        22  211.04us  13.376us  2.8852ms  axpy_cudakernel_part1
+                    0.11%  216.93us        22  9.8600us  9.6320us  10.336us  axpy_cudakernel(double*, double*, int, double)
+      API calls:   49.87%  281.71ms         2  140.85ms  94.264us  281.61ms  cudaMallocManaged
+                   43.19%  243.97ms       176  1.3862ms  509.07us  2.7515ms  cudaMemcpy
+                    2.63%  14.847ms        23  645.52us  5.3590us  3.0027ms  cudaDeviceSynchronize
+                    2.00%  11.305ms        66  171.28us  112.60us  421.50us  cudaMalloc
+                    1.67%  9.4250ms        68  138.60us  105.31us  581.34us  cudaFree
+                    0.32%  1.8308ms         1  1.8308ms  1.8308ms  1.8308ms  cuDeviceTotalMem
+                    0.20%  1.1046ms        66  16.736us  12.922us  40.798us  cudaLaunchKernel
+                    0.11%  628.70us        97  6.4810us     179ns  251.43us  cuDeviceGetAttribute
+                    0.01%  49.863us         1  49.863us  49.863us  49.863us  cuDeviceGetName
+                    0.00%  4.1980us         1  4.1980us  4.1980us  4.1980us  cuDeviceGetPCIBusId
+                    0.00%  1.9710us         3     657ns     207ns  1.3310us  cuDeviceGetCount
+                    0.00%  1.2250us         2     612ns     239ns     986ns  cuDeviceGet
+                    0.00%     314ns         1     314ns     314ns     314ns  cuDeviceGetUuid
+
+==35405== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+     550  29.789KB  4.0000KB  952.00KB  16.00000MB  2.907360ms  Host To Device
+     264  62.061KB  4.0000KB  972.00KB  16.00000MB  1.637024ms  Device To Host
+      66         -         -         -           -  14.47738ms  Gpu page fault groups
+      80  4.0000KB  4.0000KB  4.0000KB  320.0000KB           -  Memory thrashes
+Total CPU Page faults: 158
+Total CPU thrashes: 80
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Usage: axpy <n>
+==35421== NVPROF is profiling process 35421, command: ./axpy_cuda 4096000
+axpy(4096000): check_x: 0, check_y: 0, time: 83.00ms
+axpy_unified(4096000): check_x: 0, check_y: 0, time: 496.50ms
+axpy_optimized(4096000): check_x: 0, check_y: 0, time: 29.60ms
+==35421== Profiling application: ./axpy_cuda 4096000
+==35421== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   50.34%  494.55ms        88  5.6199ms  1.8088ms  29.420ms  [CUDA memcpy HtoD]
+                   45.97%  451.55ms        88  5.1313ms  1.5184ms  11.688ms  [CUDA memcpy DtoH]
+                    1.97%  19.371ms        22  880.50us  64.608us  8.3471ms  axpy_cudakernel_part3
+                    1.57%  15.441ms        22  701.84us  64.959us  10.353ms  axpy_cudakernel_part1
+                    0.15%  1.4323ms        22  65.103us  64.671us  65.471us  axpy_cudakernel(double*, double*, int, double)
+      API calls:   75.82%  1.01468s       176  5.7652ms  1.9756ms  30.478ms  cudaMemcpy
+                   17.75%  237.61ms         2  118.80ms  109.94us  237.50ms  cudaMallocManaged
+                    2.61%  34.931ms        66  529.25us  114.58us  4.9531ms  cudaMalloc
+                    2.50%  33.487ms        23  1.4560ms  5.8210us  10.361ms  cudaDeviceSynchronize
+                    1.03%  13.768ms        68  202.46us  110.91us  1.8070ms  cudaFree
+                    0.15%  2.0336ms         1  2.0336ms  2.0336ms  2.0336ms  cuDeviceTotalMem
+                    0.09%  1.1955ms        66  18.113us  11.978us  76.222us  cudaLaunchKernel
+                    0.04%  548.18us        97  5.6510us     176ns  224.29us  cuDeviceGetAttribute
+                    0.00%  48.628us         1  48.628us  48.628us  48.628us  cuDeviceGetName
+                    0.00%  4.4010us         1  4.4010us  4.4010us  4.4010us  cuDeviceGetPCIBusId
+                    0.00%  3.0400us         3  1.0130us     277ns  2.2880us  cuDeviceGetCount
+                    0.00%  1.2630us         2     631ns     190ns  1.0730us  cuDeviceGet
+                    0.00%     389ns         1     389ns     389ns     389ns  cuDeviceGetUuid
+
+==35421== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    1631  29.782KB  4.0000KB  876.00KB  47.43750MB  9.032576ms  Host To Device
+     388  125.20KB  4.0000KB  0.9961MB  47.43750MB  4.361696ms  Device To Host
+     112         -         -         -           -  32.33466ms  Gpu page fault groups
+      32  4.0000KB  4.0000KB  4.0000KB  128.0000KB           -  Memory thrashes
+Total CPU Page faults: 375
+Total CPU thrashes: 32
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Usage: axpy <n>
+==35435== NVPROF is profiling process 35435, command: ./axpy_cuda 10240000
+axpy(10240000): check_x: 0, check_y: 0, time: 216.10ms
+axpy_unified(10240000): check_x: 0, check_y: 0, time: 514.40ms
+axpy_optimized(10240000): check_x: 0, check_y: 0, time: 72.10ms
+==35435== Profiling application: ./axpy_cuda 10240000
+==35435== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   50.43%  1.35614s        88  15.411ms  5.8946ms  63.367ms  [CUDA memcpy DtoH]
+                   46.37%  1.24698s        88  14.170ms  4.7834ms  62.269ms  [CUDA memcpy HtoD]
+                    1.83%  49.339ms        22  2.2427ms  157.18us  18.515ms  axpy_cudakernel_part3
+                    1.24%  33.295ms        22  1.5134ms  157.02us  25.839ms  axpy_cudakernel_part1
+                    0.13%  3.4679ms        22  157.63us  157.12us  158.05us  axpy_cudakernel(double*, double*, int, double)
+      API calls:   87.39%  2.68419s       176  15.251ms  5.0078ms  63.788ms  cudaMemcpy
+                    7.79%  239.14ms         2  119.57ms  109.08us  239.04ms  cudaMallocManaged
+                    2.58%  79.300ms        23  3.4478ms  8.2890us  25.849ms  cudaDeviceSynchronize
+                    1.44%  44.271ms        66  670.78us  138.16us  1.0623ms  cudaMalloc
+                    0.68%  20.860ms        68  306.76us  124.29us  4.2539ms  cudaFree
+                    0.06%  1.8148ms         1  1.8148ms  1.8148ms  1.8148ms  cuDeviceTotalMem
+                    0.05%  1.4019ms        66  21.241us  14.740us  76.501us  cudaLaunchKernel
+                    0.02%  557.79us        97  5.7500us     181ns  233.78us  cuDeviceGetAttribute
+                    0.00%  46.446us         1  46.446us  46.446us  46.446us  cuDeviceGetName
+                    0.00%  4.2720us         1  4.2720us  4.2720us  4.2720us  cuDeviceGetPCIBusId
+                    0.00%  2.1230us         3     707ns     203ns  1.4660us  cuDeviceGetCount
+                    0.00%  1.0580us         2     529ns     216ns     842ns  cuDeviceGet
+                    0.00%     327ns         1     327ns     327ns     327ns  cuDeviceGetUuid
+
+==35435== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    4966  26.773KB  4.0000KB  992.00KB  129.8438MB  25.74557ms  Host To Device
+     750  177.28KB  4.0000KB  0.9961MB  129.8438MB  11.67725ms  Device To Host
+     209         -         -         -           -  76.60262ms  Gpu page fault groups
+      16  4.0000KB  4.0000KB  4.0000KB  64.00000KB           -  Memory thrashes
+Total CPU Page faults: 825
+Total CPU thrashes: 16
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Usage: axpy <n>
+==35448== NVPROF is profiling process 35448, command: ./axpy_cuda 20480000
+axpy(20480000): check_x: 0, check_y: 0, time: 433.60ms
+axpy_unified(20480000): check_x: 0, check_y: 0, time: 548.00ms
+axpy_optimized(20480000): check_x: 0, check_y: 0, time: 136.90ms
+==35448== Profiling application: ./axpy_cuda 20480000
+==35448== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   52.29%  2.88688s        88  32.805ms  12.316ms  170.54ms  [CUDA memcpy DtoH]
+                   45.83%  2.53026s        88  28.753ms  9.6641ms  163.76ms  [CUDA memcpy HtoD]
+                    0.96%  53.110ms        22  2.4141ms  311.13us  40.649ms  axpy_cudakernel_part1
+                    0.80%  44.153ms        22  2.0070ms  310.75us  29.677ms  axpy_cudakernel_part3
+                    0.12%  6.6389ms        22  301.77us  301.31us  302.27us  axpy_cudakernel(double*, double*, int, double)
+      API calls:   92.69%  5.50011s       176  31.251ms  10.059ms  171.38ms  cudaMemcpy
+                    4.21%  249.88ms         2  124.94ms  110.61us  249.77ms  cudaMallocManaged
+                    1.53%  90.539ms        23  3.9365ms  8.8250us  40.658ms  cudaDeviceSynchronize
+                    0.98%  58.354ms        66  884.15us  150.32us  1.0650ms  cudaMalloc
+                    0.52%  30.895ms        68  454.34us  137.80us  7.6609ms  cudaFree
+                    0.03%  1.8301ms         1  1.8301ms  1.8301ms  1.8301ms  cuDeviceTotalMem
+                    0.03%  1.5284ms        66  23.157us  17.370us  86.215us  cudaLaunchKernel
+                    0.01%  574.16us        97  5.9190us     178ns  229.49us  cuDeviceGetAttribute
+                    0.00%  49.643us         1  49.643us  49.643us  49.643us  cuDeviceGetName
+                    0.00%  3.9530us         1  3.9530us  3.9530us  3.9530us  cuDeviceGetPCIBusId
+                    0.00%  1.7530us         3     584ns     177ns  1.2560us  cuDeviceGetCount
+                    0.00%  1.1110us         2     555ns     201ns     910ns  cuDeviceGet
+                    0.00%     319ns         1     319ns     319ns     319ns  cuDeviceGetUuid
+
+==35448== Unified Memory profiling result:
+Device "Tesla V100-PCIE-32GB (0)"
+   Count  Avg Size  Min Size  Max Size  Total Size  Total Time  Name
+    6667  30.718KB  4.0000KB  984.00KB  200.0000MB  36.79222ms  Host To Device
+    1536  133.33KB  4.0000KB  0.9961MB  200.0000MB  18.38115ms  Device To Host
+     215         -         -         -           -  85.37533ms  Gpu page fault groups
+Total CPU Page faults: 1688
