@@ -38,7 +38,7 @@ void init(REAL *A, int n)
 /*serial version */
 void axpy(REAL* x, REAL* y, long n, REAL a) {
   int i;
-  for (i = 0; i < n; ++i)
+  for (i = 1; i < n; ++i)
   {
     y[i] += a * x[i];
   }
@@ -76,14 +76,12 @@ int main(int argc, char *argv[])
   init(y_cuda, n);
   memcpy(y, y_cuda, n*sizeof(REAL));
 
-  axpy(x, y, n, a);
-
   int i;
   int num_runs = 10;
+  for (i=0; i<num_runs; i++) axpy(x, y, n, a);
   /* cuda version */
   double elapsed = read_timer_ms();
-  //for (i=0; i<num_runs; i++) 
-  axpy_cuda(x, y_cuda, n, a);
+  for (i=0; i<num_runs; i++) axpy_cuda(x, y_cuda, n, a);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
 
   REAL checkresult = check(y_cuda, y, n);

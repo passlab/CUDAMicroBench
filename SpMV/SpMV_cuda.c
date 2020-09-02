@@ -15,8 +15,8 @@ double read_timer_ms() {
     return (double) tm.time * 1000.0 + (double) tm.millitm;
 }
 
-int num_rows = 100;
-int nnz = 400;
+int num_rows = 1000;
+int nnz = 200;
 
 void zero(REAL *A, int n)
 {

@@ -5,14 +5,14 @@ void
 axpy_cudakernel_1perThread(REAL* x, REAL* y, int n, REAL a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i > 1 &&i < n) y[i] += a*x[i];
+    if (i > 0 &&i < n) y[i] += a*x[i];
 }
 
 __global__ 
 void
 axpy_cudakernel_1perThread_misaligned(REAL* x, REAL* y, int n, REAL a)
 {
-    int i = blockDim.x * blockIdx.x + threadIdx.x + 2;
+    int i = blockDim.x * blockIdx.x + threadIdx.x + 1;
     if (i < n) y[i] += a*x[i];
 }
 
@@ -21,7 +21,7 @@ void
 axpy_cudakernel_1perThread_warmup(REAL* x, REAL* y, int n, REAL a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
-    if (i < n) y[i] += a*x[i];
+    if (i > 1 && i < n) y[i] += a*x[i];
 }
 
 
