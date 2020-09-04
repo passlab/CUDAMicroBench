@@ -4,29 +4,29 @@
 __global__ void warmingup(float *x, float *y, float *z) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid % 2 == 0) {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 2 * x[tid] + 3 * y[tid];
 
     } else {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 3 * x[tid] + 2 * y[tid];
     }
 }
 
 __global__ void warpDivergence(float *x, float *y, float *z) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid % 2 == 0) {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 2 * x[tid] + 3 * y[tid];
 
     } else {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 3 * x[tid] + 2 * y[tid];
     }
 }
 
 __global__ void noWarpDivergence(float *x, float *y, float *z) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if ((tid / warpSize) % 2 == 0) {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 2 * x[tid] + 3 * y[tid];
     } else {
-        z[tid] = x[tid] + y[tid];
+        z[tid] = 3 * x[tid] + 2 * y[tid];
     }
 }
 void warpDivergenceTest_cuda(REAL* x, REAL* y, REAL *warp_divergence, REAL *no_warp_divergence, int n) {

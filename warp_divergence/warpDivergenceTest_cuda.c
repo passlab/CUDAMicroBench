@@ -16,7 +16,7 @@ double read_timer_ms() {
 
 /* change this to do saxpy or daxpy : single precision or double precision*/
 #define REAL float
-#define VEC_LEN 1024000 //use a fixed number for now
+#define VEC_LEN 32000 //use a fixed number for now
 /* zero out the entire vector */
 void zero(REAL *A, int n)
 {
@@ -40,8 +40,8 @@ void warpDivergenceSerial(REAL* x, REAL* y, REAL* z, int n) {
   int i;
   for (i = 0; i < n; ++i)
   {
-    if(i%2 == 0) z[i] = x[i] + y[i];
-    else z[i] = x[i] + y[i];
+    if(i%2 == 0) z[i] = 2 * x[i] + 3 * y[i];
+    else z[i] = 3 * x[i] + 2 * y[i];
   }
 }
 
@@ -49,8 +49,8 @@ void NoWarpDivergenceSerial(REAL* x, REAL* y, REAL* z, int n) {
   int i;
   for (i = 0; i < n; ++i)
   {
-    if((i/32)%2 ==0 ) z[i] = x[i] + y[i];
-    else z[i] = x[i] + y[i];
+    if((i/32)%2 ==0 ) z[i] = 2 * x[i] + 3 * y[i];
+    else z[i] = 3 * x[i] + 2 * y[i];
   }
 }
 
@@ -87,7 +87,9 @@ int main(int argc, char *argv[])
 
   srand48(1<<12);
   init(x, n);
-  init(y, n);
+  //init(y, n);
+  memcpy(y, x, n*sizeof(REAL));
+
 
   int i;
   int num_runs = 10;
