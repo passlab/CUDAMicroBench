@@ -46,7 +46,13 @@ LowAccessDensityTest_cudakernel(REAL* x, REAL* y, int n, REAL a, int stride)
     if (i < (n/stride)) y[i] = a*x[i*stride];
 }
 
-void LowAccessDensityTest_cuda(REAL* x, REAL* y, long int n, REAL a, int stride) {
+//We need to test discrete memory and unified memory, and also for fixed array size (vary stride) 
+//and for fix amount of memory access (vary stride)
+//So there are total 4 tests. They can use the same CUDA kernel, but the driver functions might need to 
+//be separate so it is easier to read.
+
+
+void LowAccessDensityTest_cuda_discrete_memory(REAL* x, REAL* y, long int n, REAL a, int stride) {
   REAL *d_x, *d_y;
   cudaMalloc(&d_x, n*sizeof(REAL));
   cudaMalloc(&d_y, (n/stride)*sizeof(REAL));
@@ -60,6 +66,32 @@ void LowAccessDensityTest_cuda(REAL* x, REAL* y, long int n, REAL a, int stride)
   cudaFree(d_x);
   cudaFree(d_y);
 }
+
+/* return the measured time */
+double LowAccessDensityTest_cuda_unified_memory(REAL* x, REAL* y, long int n, REAL a, int stride) {
+      
+  double elapsed1 = read_timer_ms();
+  REAL *x2;
+  cudaMallocManaged(&x2, n*sizeof(REAL));
+  elapsed1 = (read_timer_ms() - elapsed1);
+
+  //initial unified memory, should not count time here
+  memcpy(x2, x, n*sizeof(REAL));
+
+  double elapsed2 = read_timer_ms();
+  REAL *d_y;
+  cudaMalloc(&d_y, (n/stride)*sizeof(REAL));
+
+  LowAccessDensityTest_cudakernel<<<(n+255)/256, 256>>>(x2, d_y, n, a, stride);
+  cudaMemcpy(y_cuda_unified, d_y, (n/stride)*sizeof(REAL), cudaMemcpyDeviceToHost);
+    
+    /* clean up and deallocation */
+
+  elapsed2 = (read_timer_ms() - elapsed2);
+    
+  return elapsed1 + elapsed2;
+}
+
 
 /*serial version */
 void serial(REAL* x, REAL* y, long n, REAL a, int stride) {
@@ -114,32 +146,18 @@ int main(int argc, char *argv[])
   LowAccessDensityTest_cuda(x, y_cuda, n, a, stride);
   
   double elapsed = read_timer_ms();
-  for (i=0; i<num_runs; i++) LowAccessDensityTest_cuda(x, y_cuda, n, a, stride);
+  for (i=0; i<num_runs;; i++) LowAccessDensityTest_cuda(x, y_cuda, n, a, stride);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
   
   
-  double elapsed1 = read_timer_ms();
-  REAL *x2;
-  cudaMallocManaged(&x2, n*sizeof(REAL));
-  elapsed1 = (read_timer_ms() - elapsed1);
-
-  //initial unified memory, should not count time here
-  memcpy(x2, x, n*sizeof(REAL));
-
-  double elapsed2 = read_timer_ms();
-  REAL *d_y;
-  cudaMalloc(&d_y, (n/stride)*sizeof(REAL));
-
-  LowAccessDensityTest_cudakernel<<<(n+255)/256, 256>>>(x2, d_y, n, a, stride);
-  cudaMemcpy(y_cuda_unified, d_y, (n/stride)*sizeof(REAL), cudaMemcpyDeviceToHost);
-
-  elapsed2 = (read_timer_ms() - elapsed2);
-  
+  double elapsed_unified = 0;
+  for (i=0; i<num_runs; i++) elapsed_unified += LowAccessDensityTest_cuda_unified_memory( ... );
+  elapsed_unified /= num_runs;
 
   REAL checkresult = check(y_cuda, y, (n/stride));
   REAL checkresult1 = check(y_cuda_unified, y, (n/stride));
-  printf("Low Access Test(%ld): check: %g, time: %0.2fms\n", n, checkresult, elapsed);
-  printf("Low Access Test(%ld): check_unified: %g, time: %0.2fms\n", n, checkresult1, elapsed1+elapsed2);
+  printf("Low Access Test (Discrete Memory) (%ld): check: %g, time: %0.2fms\n", n, checkresult, elapsed);
+  printf("Low Access Test (Unified Memory) (%ld): check_unified: %g, time: %0.2fms\n", n, checkresult1, elapsed_unified);
 
   free(y_cuda);
   free(y_cuda_unified);
