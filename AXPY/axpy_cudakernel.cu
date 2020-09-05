@@ -2,6 +2,14 @@
 
 __global__ 
 void
+axpy_cudakernel_warmingup(REAL* x, REAL* y, int n, REAL a)
+{
+    int i = blockDim.x * blockIdx.x + threadIdx.x;
+    if (i < n) y[i] += a*x[i];
+}
+
+__global__ 
+void
 axpy_cudakernel_1perThread(REAL* x, REAL* y, int n, REAL a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -45,6 +53,8 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
   cudaMemcpy(d_y, y, n*sizeof(REAL), cudaMemcpyHostToDevice);
 
   // Perform axpy elements
+  axpy_cudakernel_warmingup<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
   cudaDeviceSynchronize();
   axpy_cudakernel_block<<<1024, 256>>>(d_x, d_y, n, a);
