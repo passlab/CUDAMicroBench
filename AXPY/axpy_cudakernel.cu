@@ -46,8 +46,11 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
 
   // Perform axpy elements
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_block<<<1024, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_cyclic<<<1024, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
 
   cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaFree(d_x);
