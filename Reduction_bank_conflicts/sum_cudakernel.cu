@@ -58,8 +58,11 @@ void sum_cuda(int n, REAL *x, REAL *result) {
   cudaMemcpy(d_x, x, n*sizeof(REAL), cudaMemcpyHostToDevice);
 
   sum_warmingup<<<(n+255)/256, 256>>>(d_x, d_result);
+  cudaDeviceSynchronize();
   sum_cudakernel<<<(n+255)/256, 256>>>(d_x, d_result);
+  cudaDeviceSynchronize();
   sum_cudakernel_bc<<<(n+255)/256, 256>>>(d_x, d_result);
+  cudaDeviceSynchronize();
 
   cudaMemcpy(result, d_result, ((n+255)/256) * sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaFree(d_x);
