@@ -35,9 +35,12 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
   
   //warm up
   axpy_cudakernel_1perThread_warmup<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   // Perform axpy elements
   axpy_cudakernel_1perThread_misaligned<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   
 
   cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
