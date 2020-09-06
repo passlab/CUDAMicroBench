@@ -107,6 +107,8 @@ int main(int argc, char *argv[])
   
   //using unified memory
   //warming up
+cudaMemAdvise(x2, n, ..SetReadMostly, myGpuId);
+cudaMemPrefetchAsync(x2, n, myGpuId, s);
   axpy_cudakernel_part1<<<(n+255)/256, 256>>>(x2, y2, n, a);
   cudaDeviceSynchronize();
 
