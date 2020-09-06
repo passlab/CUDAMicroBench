@@ -8,6 +8,15 @@ texture<float, 1, cudaReadModeElementType> rT1;
 
 __global__ 
 void
+axpy_cudakernel_warmingup(REAL* x, REAL* y, int n, REAL a)
+{
+    int i = blockDim.x * blockIdx.x + threadIdx.x;
+    if (i < n) y[i] += a*x[i];
+}
+
+
+__global__ 
+void
 axpy_cudakernel_1perThread_texture(REAL* y, int n, REAL a)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x;
@@ -33,8 +42,12 @@ void axpy_cuda(REAL* x, REAL* y, int n, REAL a) {
   cudaBindTexture(0, rT1, d_x);  
 
   // Perform axpy elements
+  axpy_cudakernel_warmingup<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_1perThread_texture<<<(n+255)/256, 256>>>(d_y, n, a);
+  cudaDeviceSynchronize();
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
+  cudaDeviceSynchronize();
 
   cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaUnbindTexture(rT1);
