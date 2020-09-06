@@ -66,8 +66,11 @@ void spmv_cuda(const int num_rows, const int *ptr, const int * indices, const RE
 
 
   spmv_csr_kernel<<<256,256>>>(num_rows,d_ptr, d_indices, d_data, d_x, d_y);
+  cudaDeviceSynchronize();
   spmv_cudakernel_1perThread<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
+  cudaDeviceSynchronize();
   spmv_cudakernel_1perThread_check_and_compute<<<256, 256>>>(d_matrix, d_x, d_y_normal, num_rows);
+  cudaDeviceSynchronize();
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaMemcpy(y_normal, d_y_normal, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
 
