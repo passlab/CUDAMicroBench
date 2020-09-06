@@ -12,6 +12,15 @@ texture<float,2>texMatrixB;
 __constant__ int cons_M;
 __constant__ int cons_N;
 
+__global__ void add_warmingup(float * d_matrixA, float * d_matrixB, float *d_Result, int d_M, int d_N)  
+{  
+    const int tidx = blockDim.x * blockIdx.x + threadIdx.x;
+    const int tidy = blockDim.y * blockIdx.y + threadIdx.y;
+    if(tidx<d_M && tidy<d_N) {
+        d_Result[tidx * d_N + tidy] = d_matrixA[tidx * d_N + tidy] + d_matrixB[tidx * d_N + tidy];
+    }
+}  
+
 __global__ void add(float * d_matrixA, float * d_matrixB, float *d_Result, int d_M, int d_N)  
 {  
     const int tidx = blockDim.x * blockIdx.x + threadIdx.x;
@@ -74,10 +83,16 @@ void matadd(float * h_matrixA, float * h_matrixB, int M, int N, float * h_result
     blocks.x=((M/BLOCK_SIZE) + (((M)%BLOCK_SIZE)==0?0:1));
     blocks.y=((N/BLOCK_SIZE) + (((N)%BLOCK_SIZE)==0?0:1));
 
+    add_warmingup<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result,M,N);
+    cudaDeviceSynchronize();
     add<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result,M,N);
-    //add_const<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result);
-    //add_texture<<<blocks,threadsperblock>>>(d_result,M,N);
-    //add_texture_constant<<<blocks,threadsperblock>>>(d_result);
+    cudaDeviceSynchronize();
+    add_const<<<blocks,threadsperblock>>>(d_matrixA,d_matrixB,d_result);
+    cudaDeviceSynchronize();
+    add_texture<<<blocks,threadsperblock>>>(d_result,M,N);
+    cudaDeviceSynchronize();
+    add_texture_constant<<<blocks,threadsperblock>>>(d_result);
+    cudaDeviceSynchronize();
 
     cudaDeviceSynchronize();
     cudaMemcpy(h_result,d_result,M * N * sizeof(float), cudaMemcpyDeviceToHost);
