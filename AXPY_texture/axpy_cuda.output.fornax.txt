@@ -4,106 +4,132 @@ Test on Fornax
 
 xyi2@fornax:~/CUDAMemBench/AXPY_texture$ sh test.sh
 Usage: axpy <n>
-==36001== NVPROF is profiling process 36001, command: ./axpy_cuda 1024000
-==36001== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
-axpy(1024000): checksum: 1.83252e+09, time: 76.10ms
-==36001== Profiling application: ./axpy_cuda 1024000
-==36001== Profiling result:
+==36586== NVPROF is profiling process 36586, command: ./axpy_cuda 1024000
+==36586== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
+axpy(1024000): checksum: 1.83252e+09, time: 75.70ms
+==36586== Profiling application: ./axpy_cuda 1024000
+==36586== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   58.63%  24.213ms        20  1.2107ms  762.26us  1.6143ms  [CUDA memcpy HtoD]
-                   34.72%  14.338ms        10  1.4338ms  1.4062ms  1.5381ms  [CUDA memcpy DtoH]
-                    2.25%  930.61us        10  93.060us  92.319us  93.983us  axpy_cudakernel_1perThread_texture(float*, int, float)
-                    2.21%  913.10us        10  91.310us  90.686us  92.095us  axpy_cudakernel_warmingup(float*, float*, int, float)
-                    2.18%  902.26us        10  90.225us  89.311us  90.911us  axpy_cudakernel_1perThread(float*, float*, int, float)
-      API calls:   84.66%  435.05ms        20  21.752ms  366.65us  426.00ms  cudaMalloc
-                   10.68%  54.889ms        30  1.8296ms  900.08us  2.6126ms  cudaMemcpy
-                    1.99%  10.236ms        20  511.78us  336.40us  683.45us  cudaFree
-                    0.89%  4.5539ms         4  1.1385ms  1.1328ms  1.1446ms  cuDeviceTotalMem
-                    0.74%  3.8143ms       388  9.8300us     397ns  360.03us  cuDeviceGetAttribute
-                    0.70%  3.5964ms        30  119.88us  92.143us  190.21us  cudaDeviceSynchronize
-                    0.25%  1.2614ms        30  42.047us  18.210us  384.32us  cudaLaunchKernel
-                    0.06%  287.15us         4  71.788us  68.974us  78.327us  cuDeviceGetName
-                    0.02%  102.80us        10  10.279us  9.4040us  14.453us  cudaBindTexture
-                    0.01%  42.316us        10  4.2310us  3.9200us  4.5630us  cudaUnbindTexture
-                    0.00%  14.850us         4  3.7120us  2.7560us  5.3370us  cuDeviceGetPCIBusId
-                    0.00%  5.6060us         8     700ns     434ns  1.4700us  cuDeviceGet
-                    0.00%  3.3130us         3  1.1040us     653ns  1.9430us  cuDeviceGetCount
-                    0.00%  2.5110us         4     627ns     524ns     747ns  cuDeviceGetUuid
+ GPU activities:   58.70%  24.336ms        20  1.2168ms  765.27us  1.6034ms  [CUDA memcpy HtoD]
+                   34.67%  14.375ms        10  1.4375ms  1.4124ms  1.5412ms  [CUDA memcpy DtoH]
+                    2.25%  932.18us        10  93.217us  92.638us  93.631us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    2.20%  913.46us        10  91.345us  90.847us  91.935us  axpy_cudakernel_warmingup(float*, float*, int, float)
+                    2.18%  902.61us        10  90.261us  89.727us  90.911us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   84.76%  438.66ms        20  21.933ms  369.77us  429.56ms  cudaMalloc
+                   10.66%  55.179ms        30  1.8393ms  898.86us  2.6142ms  cudaMemcpy
+                    1.97%  10.194ms        20  509.69us  335.24us  679.81us  cudaFree
+                    0.89%  4.5958ms         4  1.1490ms  1.1381ms  1.1652ms  cuDeviceTotalMem
+                    0.70%  3.6278ms        30  120.93us  94.503us  178.03us  cudaDeviceSynchronize
+                    0.68%  3.5422ms       388  9.1290us     387ns  336.01us  cuDeviceGetAttribute
+                    0.24%  1.2514ms        30  41.714us  18.704us  366.71us  cudaLaunchKernel
+                    0.06%  291.24us         4  72.810us  68.577us  83.216us  cuDeviceGetName
+                    0.02%  119.27us        10  11.926us  9.5900us  28.394us  cudaBindTexture
+                    0.01%  43.811us        10  4.3810us  3.6500us  4.9630us  cudaUnbindTexture
+                    0.00%  14.989us         4  3.7470us  2.8090us  5.5030us  cuDeviceGetPCIBusId
+                    0.00%  5.8060us         8     725ns     526ns  1.5970us  cuDeviceGet
+                    0.00%  3.8970us         3  1.2990us     667ns  2.0700us  cuDeviceGetCount
+                    0.00%  2.6460us         4     661ns     537ns     913ns  cuDeviceGetUuid
 Usage: axpy <n>
-==36022== NVPROF is profiling process 36022, command: ./axpy_cuda 4096000
-==36022== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
-axpy(4096000): checksum: 7.33166e+09, time: 93.70ms
-==36022== Profiling application: ./axpy_cuda 4096000
-==36022== Profiling result:
+==36607== NVPROF is profiling process 36607, command: ./axpy_cuda 4096000
+==36607== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
+axpy(4096000): checksum: 7.33166e+09, time: 93.80ms
+==36607== Profiling application: ./axpy_cuda 4096000
+==36607== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   55.70%  116.48ms        20  5.8242ms  3.7674ms  7.5011ms  [CUDA memcpy HtoD]
-                   39.18%  81.946ms        10  8.1946ms  8.0945ms  8.5374ms  [CUDA memcpy DtoH]
-                    1.73%  3.6134ms        10  361.34us  360.19us  362.20us  axpy_cudakernel_1perThread_texture(float*, int, float)
-                    1.70%  3.5590ms        10  355.90us  354.65us  358.23us  axpy_cudakernel_warmingup(float*, float*, int, float)
-                    1.69%  3.5286ms        10  352.86us  351.64us  353.72us  axpy_cudakernel_1perThread(float*, float*, int, float)
-      API calls:   62.55%  437.45ms        20  21.872ms  408.94us  414.05ms  cudaMalloc
-                   30.68%  214.58ms        30  7.1526ms  4.0032ms  9.4469ms  cudaMemcpy
-                    3.77%  26.333ms        20  1.3166ms  363.81us  2.2764ms  cudaFree
-                    1.60%  11.199ms        30  373.31us  359.57us  396.61us  cudaDeviceSynchronize
-                    0.66%  4.6101ms         4  1.1525ms  1.1339ms  1.2032ms  cuDeviceTotalMem
-                    0.50%  3.4987ms       388  9.0170us     396ns  327.40us  cuDeviceGetAttribute
-                    0.17%  1.2038ms        30  40.128us  18.760us  310.22us  cudaLaunchKernel
-                    0.04%  285.22us         4  71.305us  67.514us  80.140us  cuDeviceGetName
-                    0.02%  118.76us        10  11.875us  9.5570us  28.330us  cudaBindTexture
-                    0.01%  45.304us        10  4.5300us  4.2460us  4.9840us  cudaUnbindTexture
-                    0.00%  14.525us         4  3.6310us  2.7990us  5.0830us  cuDeviceGetPCIBusId
-                    0.00%  6.5230us         8     815ns     473ns  1.5300us  cuDeviceGet
-                    0.00%  3.4240us         3  1.1410us     640ns  1.8740us  cuDeviceGetCount
-                    0.00%  2.7570us         4     689ns     557ns     910ns  cuDeviceGetUuid
+ GPU activities:   55.73%  116.65ms        20  5.8325ms  3.7844ms  7.4913ms  [CUDA memcpy HtoD]
+                   39.15%  81.952ms        10  8.1952ms  8.0942ms  8.5275ms  [CUDA memcpy DtoH]
+                    1.73%  3.6158ms        10  361.58us  360.73us  362.36us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    1.70%  3.5602ms        10  356.02us  354.65us  356.76us  axpy_cudakernel_warmingup(float*, float*, int, float)
+                    1.69%  3.5311ms        10  353.11us  351.96us  354.04us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   62.52%  437.80ms        20  21.890ms  408.72us  414.35ms  cudaMalloc
+                   30.69%  214.89ms        30  7.1630ms  4.0214ms  9.4376ms  cudaMemcpy
+                    3.77%  26.404ms        20  1.3202ms  369.89us  2.2663ms  cudaFree
+                    1.60%  11.177ms        30  372.56us  356.09us  394.34us  cudaDeviceSynchronize
+                    0.65%  4.5621ms         4  1.1405ms  1.1322ms  1.1453ms  cuDeviceTotalMem
+                    0.53%  3.6832ms       388  9.4920us     393ns  501.94us  cuDeviceGetAttribute
+                    0.18%  1.2806ms        30  42.685us  19.723us  330.43us  cudaLaunchKernel
+                    0.04%  285.19us         4  71.298us  66.790us  82.040us  cuDeviceGetName
+                    0.02%  110.17us        10  11.017us  10.093us  15.450us  cudaBindTexture
+                    0.01%  51.668us        10  5.1660us  4.7100us  5.5130us  cudaUnbindTexture
+                    0.00%  14.384us         4  3.5960us  2.7910us  4.8260us  cuDeviceGetPCIBusId
+                    0.00%  6.1220us         8     765ns     473ns  1.3960us  cuDeviceGet
+                    0.00%  3.3180us         3  1.1060us     654ns  1.7970us  cuDeviceGetCount
+                    0.00%  2.4750us         4     618ns     500ns     754ns  cuDeviceGetUuid
 Usage: axpy <n>
-==36042== NVPROF is profiling process 36042, command: ./axpy_cuda 10240000
-==36042== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
-axpy(10240000): checksum: 1.81369e+10, time: 137.30ms
-==36042== Profiling application: ./axpy_cuda 10240000
-==36042== Profiling result:
+==36626== NVPROF is profiling process 36626, command: ./axpy_cuda 10240000
+==36626== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
+axpy(10240000): checksum: 1.81369e+10, time: 139.80ms
+==36626== Profiling application: ./axpy_cuda 10240000
+==36626== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   60.67%  354.21ms        20  17.710ms  15.889ms  18.855ms  [CUDA memcpy HtoD]
-                   34.76%  202.93ms        10  20.293ms  20.010ms  20.565ms  [CUDA memcpy DtoH]
-                    1.54%  9.0200ms        10  902.00us  899.63us  903.60us  axpy_cudakernel_1perThread_texture(float*, int, float)
-                    1.52%  8.8650ms        10  886.50us  885.07us  888.31us  axpy_cudakernel_warmingup(float*, float*, int, float)
-                    1.51%  8.7963ms        10  879.63us  877.62us  880.75us  axpy_cudakernel_1perThread(float*, float*, int, float)
-      API calls:   50.48%  571.80ms        30  19.060ms  16.270ms  21.154ms  cudaMemcpy
-                   40.97%  464.06ms        20  23.203ms  549.46us  411.32ms  cudaMalloc
-                    5.24%  59.327ms        20  2.9663ms  468.94us  5.4577ms  cudaFree
-                    2.43%  27.468ms        30  915.60us  883.28us  970.68us  cudaDeviceSynchronize
-                    0.41%  4.6354ms         4  1.1588ms  1.1374ms  1.2169ms  cuDeviceTotalMem
-                    0.31%  3.4911ms       388  8.9970us     394ns  326.17us  cuDeviceGetAttribute
-                    0.12%  1.3833ms        30  46.110us  20.213us  390.06us  cudaLaunchKernel
-                    0.02%  281.16us         4  70.289us  66.596us  79.783us  cuDeviceGetName
-                    0.01%  118.23us        10  11.822us  10.484us  16.470us  cudaBindTexture
-                    0.00%  41.886us        10  4.1880us  3.8070us  4.6300us  cudaUnbindTexture
-                    0.00%  14.213us         4  3.5530us  2.7300us  4.9500us  cuDeviceGetPCIBusId
-                    0.00%  6.2490us         8     781ns     480ns  1.4100us  cuDeviceGet
-                    0.00%  3.4830us         3  1.1610us     633ns  1.9000us  cuDeviceGetCount
-                    0.00%  2.4910us         4     622ns     507ns     804ns  cuDeviceGetUuid
+ GPU activities:   60.69%  365.73ms        20  18.287ms  16.595ms  19.407ms  [CUDA memcpy HtoD]
+                   34.88%  210.18ms        10  21.018ms  20.766ms  21.345ms  [CUDA memcpy DtoH]
+                    1.49%  9.0062ms        10  900.62us  897.52us  902.96us  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    1.47%  8.8669ms        10  886.69us  884.88us  888.11us  axpy_cudakernel_warmingup(float*, float*, int, float)
+                    1.46%  8.7992ms        10  879.92us  878.19us  881.75us  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   51.04%  590.99ms        30  19.700ms  16.978ms  21.959ms  cudaMemcpy
+                   40.58%  469.86ms        20  23.493ms  535.93us  417.07ms  cudaMalloc
+                    5.14%  59.555ms        20  2.9778ms  469.79us  5.4749ms  cudaFree
+                    2.37%  27.387ms        30  912.90us  885.69us  971.51us  cudaDeviceSynchronize
+                    0.41%  4.7194ms         4  1.1798ms  1.1336ms  1.2890ms  cuDeviceTotalMem
+                    0.30%  3.5152ms       388  9.0590us     397ns  330.79us  cuDeviceGetAttribute
+                    0.12%  1.4062ms        30  46.873us  19.197us  400.55us  cudaLaunchKernel
+                    0.02%  287.48us         4  71.870us  67.313us  80.657us  cuDeviceGetName
+                    0.01%  117.92us        10  11.792us  10.226us  17.986us  cudaBindTexture
+                    0.00%  48.045us        10  4.8040us  4.3270us  5.3900us  cudaUnbindTexture
+                    0.00%  14.651us         4  3.6620us  2.7150us  5.3430us  cuDeviceGetPCIBusId
+                    0.00%  6.8690us         8     858ns     540ns  1.4170us  cuDeviceGet
+                    0.00%  3.4510us         3  1.1500us     590ns  1.8140us  cuDeviceGetCount
+                    0.00%  2.5940us         4     648ns     574ns     816ns  cuDeviceGetUuid
 Usage: axpy <n>
-==36062== NVPROF is profiling process 36062, command: ./axpy_cuda 20480000
-==36062== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
-axpy(20480000): checksum: 3.60933e+10, time: 249.00ms
-==36062== Profiling application: ./axpy_cuda 20480000
-==36062== Profiling result:
+==36645== NVPROF is profiling process 36645, command: ./axpy_cuda 20480000
+==36645== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
+axpy(20480000): checksum: 3.60933e+10, time: 249.70ms
+==36645== Profiling application: ./axpy_cuda 20480000
+==36645== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   67.31%  1.06989s        20  53.495ms  36.019ms  177.07ms  [CUDA memcpy HtoD]
-                   29.34%  466.40ms        10  46.640ms  40.327ms  90.538ms  [CUDA memcpy DtoH]
-                    1.13%  17.928ms        10  1.7928ms  1.7872ms  1.7955ms  axpy_cudakernel_1perThread_texture(float*, int, float)
-                    1.11%  17.684ms        10  1.7684ms  1.7660ms  1.7717ms  axpy_cudakernel_warmingup(float*, float*, int, float)
-                    1.11%  17.576ms        10  1.7576ms  1.7560ms  1.7610ms  axpy_cudakernel_1perThread(float*, float*, int, float)
-      API calls:   69.08%  1.55505s        30  51.835ms  36.482ms  177.70ms  cudaMemcpy
-                   22.97%  517.20ms        20  25.860ms  670.85us  414.99ms  cudaMalloc
-                    5.09%  114.68ms        20  5.7339ms  624.64us  10.794ms  cudaFree
-                    2.37%  53.369ms        30  1.7790ms  1.7242ms  1.8100ms  cudaDeviceSynchronize
-                    0.21%  4.7295ms         4  1.1824ms  1.1363ms  1.3028ms  cuDeviceTotalMem
-                    0.16%  3.6077ms       388  9.2980us     400ns  457.75us  cuDeviceGetAttribute
-                    0.09%  1.9178ms        30  63.926us  20.413us  392.55us  cudaLaunchKernel
-                    0.01%  283.02us         4  70.754us  67.180us  79.523us  cuDeviceGetName
-                    0.01%  252.34us        10  25.233us  16.284us  63.654us  cudaBindTexture
-                    0.00%  67.138us        10  6.7130us  4.3600us  22.053us  cudaUnbindTexture
-                    0.00%  15.278us         4  3.8190us  2.7740us  5.5470us  cuDeviceGetPCIBusId
-                    0.00%  7.1400us         8     892ns     483ns  1.4940us  cuDeviceGet
-                    0.00%  3.4490us         3  1.1490us     603ns  1.8830us  cuDeviceGetCount
-                    0.00%  2.5900us         4     647ns     587ns     770ns  cuDeviceGetUuid
+ GPU activities:   68.31%  1.09133s        20  54.566ms  36.123ms  185.84ms  [CUDA memcpy HtoD]
+                   28.36%  453.16ms        10  45.316ms  40.370ms  80.814ms  [CUDA memcpy DtoH]
+                    1.12%  17.940ms        10  1.7940ms  1.7917ms  1.7961ms  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    1.11%  17.676ms        10  1.7676ms  1.7661ms  1.7698ms  axpy_cudakernel_warmingup(float*, float*, int, float)
+                    1.10%  17.577ms        10  1.7577ms  1.7558ms  1.7602ms  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   69.19%  1.56337s        30  52.112ms  36.558ms  186.46ms  cudaMemcpy
+                   22.88%  516.86ms        20  25.843ms  661.80us  414.65ms  cudaMalloc
+                    5.08%  114.72ms        20  5.7360ms  648.49us  10.864ms  cudaFree
+                    2.36%  53.366ms        30  1.7789ms  1.7337ms  1.8108ms  cudaDeviceSynchronize
+                    0.21%  4.7300ms         4  1.1825ms  1.1422ms  1.2970ms  cuDeviceTotalMem
+                    0.16%  3.6080ms       388  9.2990us     390ns  326.80us  cuDeviceGetAttribute
+                    0.10%  2.1528ms        30  71.758us  24.913us  410.83us  cudaLaunchKernel
+                    0.01%  317.71us        10  31.771us  18.470us  75.436us  cudaBindTexture
+                    0.01%  283.47us         4  70.866us  67.123us  80.147us  cuDeviceGetName
+                    0.00%  52.531us        10  5.2530us  4.9070us  5.6300us  cudaUnbindTexture
+                    0.00%  13.759us         4  3.4390us  2.6460us  4.6130us  cuDeviceGetPCIBusId
+                    0.00%  6.2770us         8     784ns     544ns  1.4430us  cuDeviceGet
+                    0.00%  3.4960us         3  1.1650us     636ns  1.9630us  cuDeviceGetCount
+                    0.00%  2.4670us         4     616ns     517ns     800ns  cuDeviceGetUuid
+Usage: axpy <n>
+==36665== NVPROF is profiling process 36665, command: ./axpy_cuda 102400000
+==36665== Warning: Auto boost enabled on device 0. Profiling results may be inconsistent.
+axpy(102400000): checksum: 6.87195e+10, time: 529.40ms
+==36665== Profiling application: ./axpy_cuda 102400000
+==36665== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   76.44%  2.96412s        20  148.21ms  96.152ms  306.39ms  [CUDA memcpy HtoD]
+                   17.65%  684.28ms        10  68.428ms  48.429ms  194.06ms  [CUDA memcpy DtoH]
+                    1.99%  77.258ms        10  7.7258ms  7.3864ms  8.9446ms  axpy_cudakernel_1perThread_texture(float*, int, float)
+                    1.96%  76.189ms        10  7.6189ms  7.2915ms  8.8080ms  axpy_cudakernel_warmingup(float*, float*, int, float)
+                    1.95%  75.798ms        10  7.5798ms  7.2573ms  8.7569ms  axpy_cudakernel_1perThread(float*, float*, int, float)
+      API calls:   72.33%  3.65825s        30  121.94ms  48.614ms  307.26ms  cudaMemcpy
+                   15.23%  770.42ms        20  38.521ms  904.51us  415.98ms  cudaMalloc
+                    7.70%  389.37ms        20  19.469ms  647.51us  53.140ms  cudaFree
+                    4.54%  229.45ms        30  7.6483ms  7.2649ms  8.9508ms  cudaDeviceSynchronize
+                    0.09%  4.5587ms         4  1.1397ms  1.1378ms  1.1425ms  cuDeviceTotalMem
+                    0.07%  3.5075ms       388  9.0390us     390ns  353.77us  cuDeviceGetAttribute
+                    0.03%  1.3857ms        30  46.190us  11.827us  388.73us  cudaLaunchKernel
+                    0.01%  279.47us         4  69.867us  66.620us  77.583us  cuDeviceGetName
+                    0.00%  188.16us        10  18.816us  15.349us  28.237us  cudaBindTexture
+                    0.00%  24.533us        10  2.4530us  1.7610us  4.9430us  cudaUnbindTexture
+                    0.00%  14.985us         4  3.7460us  2.7520us  5.2130us  cuDeviceGetPCIBusId
+                    0.00%  5.9300us         8     741ns     480ns  1.5530us  cuDeviceGet
+                    0.00%  3.5530us         3  1.1840us     547ns  2.0730us  cuDeviceGetCount
+                    0.00%  2.5000us         4     625ns     544ns     793ns  cuDeviceGetUuid
