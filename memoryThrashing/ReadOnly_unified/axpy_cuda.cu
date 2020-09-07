@@ -84,6 +84,8 @@ int main(int argc, char *argv[])
   cudaMallocManaged(&x2, n*sizeof(REAL));
   cudaMallocManaged(&y2, n*sizeof(REAL));
   elapsed2 = (read_timer_ms() - elapsed2);
+//cudaMemAdvise(x2, n, cudaMemAdviseSetReadMostly, 0);
+//cudaMemPrefetchAsync(x2, n, 0);
 
   memcpy(y2, y, n*sizeof(REAL));
   memcpy(x2, x, n*sizeof(REAL));
@@ -107,8 +109,7 @@ int main(int argc, char *argv[])
   
   //using unified memory
   //warming up
-cudaMemAdvise(x2, n, ..SetReadMostly, myGpuId);
-cudaMemPrefetchAsync(x2, n, myGpuId, s);
+//cudaMemAdvise(dataPtr, dataSize, cudaMemAdviseSetReadMostly, 0);
   axpy_cudakernel_part1<<<(n+255)/256, 256>>>(x2, y2, n, a);
   cudaDeviceSynchronize();
 
