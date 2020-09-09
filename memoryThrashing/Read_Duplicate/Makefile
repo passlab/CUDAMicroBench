@@ -1,2 +1,2 @@
 default:
-	nvcc -o axpy_cuda axpy_cuda.cu axpy_cudakernel.cu
+	nvcc -g -G -arch=sm_30 -o axpy_cuda axpy_cuda.cu

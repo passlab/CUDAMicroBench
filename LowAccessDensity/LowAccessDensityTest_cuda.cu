@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
   serial(x, y, n, a, stride);
 
   int i;
-  int num_runs = 10;
+  int num_runs = 100;
   /* cuda version */
   //warming up
   LowAccessDensityTest_cuda_discrete_memory(x, y_cuda, n, a, stride);
@@ -148,10 +148,8 @@ int main(int argc, char *argv[])
   for (i=0; i<num_runs; i++) elapsed_unified += LowAccessDensityTest_cuda_unified_memory(x, y_cuda_unified, n, a, stride);
   elapsed_unified /= num_runs;
 
-  //REAL checkresult = check(y_cuda, y, (n/stride));
-  //REAL checkresult1 = check(y_cuda_unified, y, (n/stride));
-  printf("Low Access Test (Discrete Memory) (%ld): time: %0.2fms\n", n, elapsed);
-  printf("Low Access Test (Unified Memory) (%ld): time: %0.2fms\n", n, elapsed_unified);
+  printf("Low Access Test (Discrete Memory) (%ld), stride:%d: time: %0.2fms\n", n, stride,elapsed);
+  printf("Low Access Test (Unified Memory) (%ld), stride:%d: time: %0.2fms\n", n, stride,elapsed_unified);
 
   free(y_cuda);
   free(y_cuda_unified);

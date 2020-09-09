@@ -55,29 +55,44 @@ REAL check(REAL*A, REAL*B, int n)
     }
     return diffsum;
 }
+
+__global__ 
+void
+axpy_cudakernel(REAL* x, REAL* y, REAL a, int i) {
+  int idx = blockDim.x * blockIdx.x + threadIdx.x;
+  if (idx>=i && idx < i+512){
+    y[i] += a*x[i];
+  }
+}
+
+void axpy_cpu(REAL* x, REAL* y, REAL a, int i) {
+  for(int j = i; j< (i+512); j++) {
+    y[j] += a*x[j];
+  } 
+}
+
   
-double axpy_cuda_unified_memory(REAL* x, REAL* y, long int n, REAL a, REAL* y_cuda) {
-  double elapsed1 = read_timer_ms();
+double axpy_cuda_unified_memory(REAL* x, REAL * y, long int n, REAL a, REAL* y_cuda) {
   REAL *x2, *y2;
-  cudaMallocManaged(&x2, n*sizeof(REAL));
   cudaMallocManaged(&y2, n*sizeof(REAL));
+  memcpy(y2, y, n*sizeof(REAL));
+
+  double elapsed1 = read_timer_ms();
+  cudaMallocManaged(&x2, n*sizeof(REAL));
   elapsed1 = (read_timer_ms() - elapsed1);
 
-  memcpy(y2, y, n*sizeof(REAL));
   memcpy(x2, x, n*sizeof(REAL));
 
   double elapsed2 = read_timer_ms();
-
-  axpy_cudakernel_part1<<<(n+255)/256, 256>>>(x2, y2, n, a);
+  
+  for(int i = 0; i< n; i++){
+      if((i/512)%2 == 0){
+          axpy_cudakernel<<<(n+255)/256, 256>>>(x2, y2, a, i);
+                 } else {
+       axpy_cpu(x2, y2, a,i);
+       }
+    }
   cudaDeviceSynchronize();
-
-  axpy_cpu_part2(x2, y2, n, a);
-
-  axpy_cudakernel_part3<<<(n+255)/256, 256>>>(x2, y2, n, a);
-  cudaDeviceSynchronize();
-
-  axpy_cpu_part4(x2, y2, n, a);
-
   elapsed2 = read_timer_ms() - elapsed2;
 
   memcpy(y_cuda, y2, n*sizeof(REAL));
@@ -87,33 +102,29 @@ double axpy_cuda_unified_memory(REAL* x, REAL* y, long int n, REAL a, REAL* y_cu
   return elapsed1 + elapsed2;
 }
 
-double axpy_cuda_unified_memory_optimized(REAL* x, REAL* y, long int n, REAL a, REAL* y_cuda) {
-  double elapsed1 = read_timer_ms();
+double axpy_cuda_unified_memory_optimized(REAL* x, REAL * y, long int n, REAL a, REAL* y_cuda) {
   REAL *x2, *y2;
-  cudaMallocManaged(&x2, n*sizeof(REAL));
   cudaMallocManaged(&y2, n*sizeof(REAL));
+  memcpy(y2, y, n*sizeof(REAL));
+
+  double elapsed1 = read_timer_ms();
+  cudaMallocManaged(&x2, n*sizeof(REAL));
   cudaMemAdvise(x2, n, cudaMemAdviseSetReadMostly, 0);
   cudaMemPrefetchAsync(x2, n, 0);
-  cudaMemAdvise(y2, n, cudaMemAdviseSetReadMostly, 0);
-  cudaMemPrefetchAsync(y2, n, 0);
-
   elapsed1 = (read_timer_ms() - elapsed1);
 
-  
-  memcpy(y2, y, n*sizeof(REAL));
   memcpy(x2, x, n*sizeof(REAL));
 
   double elapsed2 = read_timer_ms();
-
-  axpy_cudakernel_part1<<<(n+255)/256, 256>>>(x2, y2, n, a);
+  
+  for(int i = 0; i< n; i++){
+      if((i/512)%2 == 0){
+          axpy_cudakernel<<<(n+255)/256, 256>>>(x2, y2, a, i);
+      } else {
+         axpy_cpu(x2, y2, a,i);
+       }
+    }
   cudaDeviceSynchronize();
-
-  axpy_cpu_part2(x2, y2, n, a);
-
-  axpy_cudakernel_part3<<<(n+255)/256, 256>>>(x2, y2, n, a);
-  cudaDeviceSynchronize();
-
-  axpy_cpu_part4(x2, y2, n, a);
 
   elapsed2 = read_timer_ms() - elapsed2;
 
@@ -123,9 +134,6 @@ double axpy_cuda_unified_memory_optimized(REAL* x, REAL* y, long int n, REAL a, 
   cudaFree(y2);
   return elapsed1 + elapsed2;
 }
-
-
-
 
 int main(int argc, char *argv[])
 {
@@ -148,13 +156,13 @@ int main(int argc, char *argv[])
 
   srand48(1<<12);
   init(x, n);
-  init(y, n);
+  zero(y, n);
   memcpy(y_serial, y, n*sizeof(REAL));
   memcpy(y_cuda, y, n*sizeof(REAL));
   memcpy(y_cuda1, y, n*sizeof(REAL));
 
   int i;
-  int num_runs = 10;
+  int num_runs = 50;
   
   //serial version
   axpy(x, y_serial, n, a);
@@ -162,12 +170,14 @@ int main(int argc, char *argv[])
   //warm up
   double warm = axpy_cuda_unified_memory(x, y, n, a, y_cuda);
 
+
+
   double elapsed_unified = 0;
   for (i=0; i<num_runs; i++) elapsed_unified += axpy_cuda_unified_memory(x, y, n, a, y_cuda);
   elapsed_unified /= num_runs;
 
   double elapsed_unified_optimized = 0;
-  for (i=0; i<num_runs; i++) elapsed_unified_optimized += axpy_cuda_unified_memory(x, y, n, a, y_cuda1);
+  for (i=0; i<num_runs; i++) elapsed_unified_optimized += axpy_cuda_unified_memory_optimized(x, y, n, a, y_cuda1);
   elapsed_unified_optimized /= num_runs;
 
 

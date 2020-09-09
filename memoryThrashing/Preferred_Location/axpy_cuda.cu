@@ -95,8 +95,8 @@ double axpy_cuda_unified_memory_optimized(REAL* x, REAL* y, long int n, REAL a, 
   REAL *x2, *y2;
   cudaMallocManaged(&x2, n*sizeof(REAL));
   cudaMallocManaged(&y2, n*sizeof(REAL));
-  cudaMemAdvise(x2, n, cudaMemAdviseSetPreferredLocation, 0);
-  cudaMemAdvise(y2, n, cudaMemAdviseSetPreferredLocation, 0);
+  cudaMemAdvise(x2, n, cudaMemAdviseSetPreferredLocation, 1);
+  cudaMemAdvise(y2, n, cudaMemAdviseSetPreferredLocation, 1);
 
   elapsed1 = (read_timer_ms() - elapsed1);
   
@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
   elapsed_unified /= num_runs;
 
   double elapsed_unified_optimized = 0;
-  for (i=0; i<num_runs; i++) elapsed_unified_optimized += axpy_cuda_unified_memory(x, y, n, a, y_cuda1);
+  for (i=0; i<num_runs; i++) elapsed_unified_optimized += axpy_cuda_unified_memory_optimized(x, y, n, a, y_cuda1);
   elapsed_unified_optimized /= num_runs;
 
 

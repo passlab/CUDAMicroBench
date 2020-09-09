@@ -1,5 +1,92 @@
 Test on Carina
 
+xyi2@cci-carina:~/CUDAMemBench/LowAccessDensity$ sh test.sh
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:1: time: 121.54ms
+Low Access Test (Unified Memory) (134217728), stride:1: time: 172.70ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:2: time: 153.58ms
+Low Access Test (Unified Memory) (134217728), stride:2: time: 157.30ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:4: time: 151.22ms
+Low Access Test (Unified Memory) (134217728), stride:4: time: 137.52ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:8: time: 152.64ms
+Low Access Test (Unified Memory) (134217728), stride:8: time: 114.38ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:16: time: 151.16ms
+Low Access Test (Unified Memory) (134217728), stride:16: time: 106.20ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:32: time: 150.94ms
+Low Access Test (Unified Memory) (134217728), stride:32: time: 102.40ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:64: time: 149.64ms
+Low Access Test (Unified Memory) (134217728), stride:64: time: 96.46ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:128: time: 147.46ms
+Low Access Test (Unified Memory) (134217728), stride:128: time: 99.16ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:256: time: 148.82ms
+Low Access Test (Unified Memory) (134217728), stride:256: time: 89.66ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:512: time: 149.50ms
+Low Access Test (Unified Memory) (134217728), stride:512: time: 98.78ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:1024: time: 147.40ms
+Low Access Test (Unified Memory) (134217728), stride:1024: time: 90.82ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:2048: time: 148.24ms
+Low Access Test (Unified Memory) (134217728), stride:2048: time: 82.26ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:4096: time: 148.96ms
+Low Access Test (Unified Memory) (134217728), stride:4096: time: 70.36ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:8192: time: 149.70ms
+Low Access Test (Unified Memory) (134217728), stride:8192: time: 70.34ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:16384: time: 150.12ms
+Low Access Test (Unified Memory) (134217728), stride:16384: time: 61.90ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:32768: time: 147.56ms
+Low Access Test (Unified Memory) (134217728), stride:32768: time: 57.78ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:65536: time: 150.26ms
+Low Access Test (Unified Memory) (134217728), stride:65536: time: 42.12ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:131072: time: 147.50ms
+Low Access Test (Unified Memory) (134217728), stride:131072: time: 31.68ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:262144: time: 148.18ms
+Low Access Test (Unified Memory) (134217728), stride:262144: time: 27.10ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:524288: time: 149.76ms
+Low Access Test (Unified Memory) (134217728), stride:524288: time: 26.14ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:1048567: time: 150.20ms
+Low Access Test (Unified Memory) (134217728), stride:1048567: time: 15.98ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:2097152: time: 151.38ms
+Low Access Test (Unified Memory) (134217728), stride:2097152: time: 11.04ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:4194304: time: 148.08ms
+Low Access Test (Unified Memory) (134217728), stride:4194304: time: 7.02ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:8388608: time: 149.86ms
+Low Access Test (Unified Memory) (134217728), stride:8388608: time: 3.74ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:16777216: time: 149.90ms
+Low Access Test (Unified Memory) (134217728), stride:16777216: time: 2.34ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:33554432: time: 148.78ms
+Low Access Test (Unified Memory) (134217728), stride:33554432: time: 1.46ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:67108864: time: 146.40ms
+Low Access Test (Unified Memory) (134217728), stride:67108864: time: 1.14ms
+Usage: Low Access Test <n>
+Low Access Test (Discrete Memory) (134217728), stride:134217728: time: 147.24ms
+Low Access Test (Unified Memory) (134217728), stride:134217728: time: 1.08ms
+
+----------------------------------------------------------------------------------------------------------------
 Array Size: 134217728
 Stride range from 1, 2, 4, 8, 16, ......134217728
 
