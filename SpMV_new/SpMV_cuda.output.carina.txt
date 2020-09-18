@@ -1,0 +1,111 @@
+counting the time of initial csr vectors
+--------------------------------------------------------------------------------------------
+Spmv (dense) (524288): time: 1.62ms
+Spmv (csr) (524288): time: 12.68ms
+Usage: SpMV <n>
+Spmv (dense) (262144): time: 1.64ms
+Spmv (csr) (262144): time: 8.36ms
+Usage: SpMV <n>
+Spmv (dense) (131072): time: 1.64ms
+Spmv (csr) (131072): time: 5.24ms
+Usage: SpMV <n>
+Spmv (dense) (65535): time: 1.64ms
+Spmv (csr) (65535): time: 3.96ms
+Usage: SpMV <n>
+Spmv (dense) (32768): time: 1.64ms
+Spmv (csr) (32768): time: 3.28ms
+Usage: SpMV <n>
+Spmv (dense) (16384): time: 1.62ms
+Spmv (csr) (16384): time: 3.04ms
+Usage: SpMV <n>
+Spmv (dense) (8192): time: 1.64ms
+Spmv (csr) (8192): time: 2.82ms
+Usage: SpMV <n>
+Spmv (dense) (4096): time: 1.62ms
+Spmv (csr) (4096): time: 2.72ms
+Usage: SpMV <n>
+Spmv (dense) (2048): time: 1.62ms
+Spmv (csr) (2048): time: 2.68ms
+Usage: SpMV <n>
+Spmv (dense) (1024): time: 1.62ms
+Spmv (csr) (1024): time: 2.68ms
+Usage: SpMV <n>
+Spmv (dense) (512): time: 1.62ms
+Spmv (csr) (512): time: 2.66ms
+Usage: SpMV <n>
+Spmv (dense) (256): time: 1.64ms
+Spmv (csr) (256): time: 2.64ms
+Usage: SpMV <n>
+Spmv (dense) (128): time: 1.64ms
+Spmv (csr) (128): time: 2.66ms
+Usage: SpMV <n>
+Spmv (dense) (64): time: 1.64ms
+Spmv (csr) (64): time: 2.64ms
+Usage: SpMV <n>
+Spmv (dense) (32): time: 1.62ms
+Spmv (csr) (32): time: 2.78ms
+Usage: SpMV <n>
+Spmv (dense) (16): time: 1.64ms
+Spmv (csr) (16): time: 2.64ms
+Usage: SpMV <n>
+Spmv (dense) (8): time: 1.62ms
+Spmv (csr) (8): time: 2.76ms
+
+-------------------------------------------------------------------------------------
+
+Not counting the time for initial csr vectors
+
+-------------------------------------------------------------------------------------
+Usage: SpMV <n>
+Spmv (dense) (524288): time: 1.62ms
+Spmv (csr) (524288): time: 2.14ms
+Usage: SpMV <n>
+Spmv (dense) (262144): time: 1.64ms
+Spmv (csr) (262144): time: 1.38ms
+Usage: SpMV <n>
+Spmv (dense) (131072): time: 1.62ms
+Spmv (csr) (131072): time: 0.68ms
+Usage: SpMV <n>
+Spmv (dense) (65535): time: 1.62ms
+Spmv (csr) (65535): time: 0.60ms
+Usage: SpMV <n>
+Spmv (dense) (32768): time: 1.64ms
+Spmv (csr) (32768): time: 0.42ms
+Usage: SpMV <n>
+Spmv (dense) (16384): time: 1.66ms
+Spmv (csr) (16384): time: 0.38ms
+Usage: SpMV <n>
+Spmv (dense) (8192): time: 1.64ms
+Spmv (csr) (8192): time: 0.38ms
+Usage: SpMV <n>
+Spmv (dense) (4096): time: 1.62ms
+Spmv (csr) (4096): time: 0.36ms
+Usage: SpMV <n>
+Spmv (dense) (2048): time: 2.12ms
+Spmv (csr) (2048): time: 0.32ms
+Usage: SpMV <n>
+Spmv (dense) (1024): time: 1.62ms
+Spmv (csr) (1024): time: 0.28ms
+Usage: SpMV <n>
+Spmv (dense) (512): time: 1.64ms
+Spmv (csr) (512): time: 0.34ms
+Usage: SpMV <n>
+Spmv (dense) (256): time: 1.62ms
+Spmv (csr) (256): time: 0.30ms
+Usage: SpMV <n>
+Spmv (dense) (128): time: 1.64ms
+Spmv (csr) (128): time: 0.30ms
+Usage: SpMV <n>
+Spmv (dense) (64): time: 1.66ms
+Spmv (csr) (64): time: 0.26ms
+Usage: SpMV <n>
+Spmv (dense) (32): time: 1.64ms
+Spmv (csr) (32): time: 0.36ms
+Usage: SpMV <n>
+Spmv (dense) (16): time: 1.62ms
+Spmv (csr) (16): time: 0.30ms
+Usage: SpMV <n>
+Spmv (dense) (8): time: 1.66ms
+Spmv (csr) (8): time: 0.32ms
+
+
