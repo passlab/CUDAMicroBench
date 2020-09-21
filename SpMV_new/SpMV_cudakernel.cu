@@ -11,7 +11,7 @@ __global__ void spmv_csr(const int num_rows, const int *ptr, const int * indices
         for(int n = row_start; n < row_end; n++){
            dot += data[n] * x[indices[n]];
         }
-        y[row] += dot;
+        y[row] = dot;
     }
 }
 
@@ -39,6 +39,111 @@ __global__ void spmv_dense_check_and_compute(REAL* matrix, REAL* vector, REAL *y
         }
         y[i] = temp;
     }
+}
+
+__global__ void spmv_unified(REAL* matrix_unified, const int num_rows, const int *rowNum, const int * columnNum, const REAL * x, REAL *y, int nnz)
+{
+    int row = threadIdx.x + blockIdx.x * blockDim.x;
+    REAL dot = 0;
+    for (int n = 0; n < nnz; n++){
+        if(rowNum[n] == row){
+           dot += matrix_unified[row * num_rows + columnNum[n]]* x[columnNum[n]];
+        }
+    }
+    y[row] = dot;
+}
+
+__global__ void spmv_unified_count(int * count, REAL* matrix_unified, const int num_rows, const int *rowNum, const int * columnNum, const REAL * x, REAL *y, int nnz)
+{
+    int row = threadIdx.x + blockIdx.x * blockDim.x;
+    int row_start = count[row];
+    int row_end = count[row+1];
+
+    REAL dot = 0;
+    for (int n = row_start; n < row_end; n++){
+      dot += matrix_unified[row * num_rows + columnNum[n]]* x[columnNum[n]];
+    }
+    y[row] = dot;
+}
+
+
+double spmv_cuda_unified(const int num_rows, const REAL * x, int nnz, REAL* matrix, REAL *y) {
+  int *row, * column;
+  row = (int *) malloc(nnz * sizeof(int));
+  column= (int *) malloc(nnz * sizeof(int));
+
+  double elapsed1 = read_timer_ms();
+  REAL *matrix_unified;
+  cudaMallocManaged(&matrix_unified, num_rows*num_rows*sizeof(REAL));
+  memcpy(matrix_unified, matrix, num_rows*num_rows*sizeof(REAL));
+  REAL * d_x, *d_y;
+    
+  init_index(row , column, matrix, num_rows);
+  //double elapsed1 = read_timer_ms();
+
+  int *d_row, * d_column;
+
+  cudaMalloc(&d_row, nnz*sizeof(int));
+  cudaMalloc(&d_column, nnz*sizeof(int));
+  cudaMalloc(&d_x, num_rows*sizeof(REAL));
+  cudaMalloc(&d_y, num_rows*sizeof(REAL));
+
+  cudaMemcpy(d_row, row, nnz*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_column, column, nnz*sizeof(int), cudaMemcpyHostToDevice);
+
+  cudaMemcpy(d_x, x, num_rows*sizeof(REAL), cudaMemcpyHostToDevice);
+  spmv_unified<<<256,256>>>(matrix_unified, num_rows,d_row, d_column, d_x, d_y, nnz);
+  cudaDeviceSynchronize();
+  cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+  cudaFree(d_row);
+  cudaFree(d_column);
+  cudaFree(d_x);
+  cudaFree(d_y);
+  elapsed1 = (read_timer_ms() - elapsed1);
+  return elapsed1;
+
+}
+
+double spmv_cuda_unified_count(const int num_rows, const REAL * x, int nnz, REAL* matrix, REAL *y) {
+  int *row, * column, *count;
+  row = (int *) malloc(nnz * sizeof(int));
+  column = (int *) malloc(nnz * sizeof(int));
+  count = (int *) malloc(num_rows * sizeof(int));
+
+  double elapsed1 = read_timer_ms();
+  REAL *matrix_unified;
+  cudaMallocManaged(&matrix_unified, num_rows*num_rows*sizeof(REAL));
+  memcpy(matrix_unified, matrix, num_rows*num_rows*sizeof(REAL));
+  REAL * d_x, *d_y;
+    
+  init_index_count(count, row , column, matrix, num_rows);
+  //double elapsed1 = read_timer_ms();
+
+  int *d_row, * d_column, *d_count;
+
+  cudaMalloc(&d_row, nnz*sizeof(int));
+  cudaMalloc(&d_column, nnz*sizeof(int));
+  cudaMalloc(&d_count, num_rows*sizeof(int));
+
+  cudaMalloc(&d_x, num_rows*sizeof(REAL));
+  cudaMalloc(&d_y, num_rows*sizeof(REAL));
+
+  cudaMemcpy(d_row, row, nnz*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_column, column, nnz*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_count, count, num_rows*sizeof(int), cudaMemcpyHostToDevice);
+
+
+  cudaMemcpy(d_x, x, num_rows*sizeof(REAL), cudaMemcpyHostToDevice);
+  spmv_unified_count<<<256,256>>>(d_count, matrix_unified, num_rows,d_row, d_column, d_x, d_y, nnz);
+  cudaDeviceSynchronize();
+  cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+  cudaFree(d_row);
+  cudaFree(d_column);
+  cudaFree(d_x);
+  cudaFree(d_y);
+  elapsed1 = (read_timer_ms() - elapsed1);
+  return elapsed1;
+
 }
 
 double warmingup_dense(const int num_rows, const REAL * x, int nnz, REAL* matrix, REAL *y) {

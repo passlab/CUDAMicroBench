@@ -11,7 +11,7 @@ __global__ void spmv_csr_kernel(const int num_rows, const int *ptr, const int * 
         for(int n = row_start; n < row_end; n++){
            dot += data[n] * x[indices[n]];
         }
-        y[row] += dot;
+        y[row] = dot;
     }
 }
 

@@ -79,26 +79,61 @@ void init_csr(int *ptr, REAL *data, int *indices, REAL *matrix, int num_rows, in
   }
 }
 
-/*void init_ptr(int *ptr, REAL * matrix, int num_rows, int nnz)
+/*typedef struct {
+    int i,j;
+    int data;
+}triple;
+typedef struct {
+    triple data[number];
+    int n,m,num;
+}TSMatrix;
+
+void init_triple(TSMatrix M, REAL *matrix, int num_rows, int nnz)
 {
   int tmp = 0;
-  ptr[num_rows] = nnz;
-  ptr[0] = 0;
-  float * non_zero_elements;
-  non_zero_elements = (float *) malloc(num_rows * sizeof(float));
 	for (int i = 0; i < num_rows; i++) {
-    int tmp = 0;
 	  for (int j = 0; j < num_rows; j++) {
       if(matrix[i*num_rows+j] != 0) {
+        M.data[tmp].i = i;
+        M.data[tmp].j = j;
+        M.data[tmp].data=matrix[i*num_rows+j];
         tmp++;
       }
-    non_zero_elements[i] = tmp;
     }
   }
-  for (int i = 1; i<num_rows; i++){
-    ptr[i] = ptr[i-1]+ non_zero_elements[i-1];
-  }
 }*/
+void init_index_count(int * row_nnz_start, int * row, int * column, REAL *matrix, int num_rows)
+{
+  int tmp = 0;
+  int count = 0;
+  row_nnz_start[0] = 0;
+	for (int i = 0; i < num_rows; i++) {
+    count = 0;
+	  for (int j = 0; j < num_rows; j++) {
+      if(matrix[i*num_rows+j] != 0) {
+        count++;
+        row[tmp] = i;
+        column[tmp] = j;
+        tmp++;
+      }
+    }
+    if( i < num_rows-1 ) row_nnz_start[i+1] = row_nnz_start[i-1] + count;
+  }
+}
+
+void init_index(int * row, int * column, REAL *matrix, int num_rows)
+{
+  int tmp = 0;
+	for (int i = 0; i < num_rows; i++) {
+	  for (int j = 0; j < num_rows; j++) {
+      if(matrix[i*num_rows+j] != 0) {
+        row[tmp] = i;
+        column[tmp] = j;
+        tmp++;
+      }
+    }
+  }
+}
 
 void spmv_csr_serial( const int num_rows, const int *ptr, const int * indices, const float *data, const float * x, float *y){
     for(int row = 0; row < num_rows; row++){
@@ -127,7 +162,7 @@ REAL check(REAL*A, REAL*B, int n)
 int main(int argc, char *argv[])
 {
   int *ptr, * indices;
-  float * data, * x, *y, *y_csr, *y_dense, *y_warmingup;
+  float * data, * x, *y, *y_csr, *y_dense, *y_warmingup, *y_unified, *y_unified_count;
   float *matrix;
   int num_rows = 0;
   int nnz = 0;
@@ -146,6 +181,8 @@ int main(int argc, char *argv[])
   y = (float *) malloc(num_rows * sizeof(float));
   y_csr = (float *) malloc(num_rows * sizeof(float));
   y_dense = (float *) malloc(num_rows * sizeof(float));
+  y_unified = (float *) malloc(num_rows * sizeof(float));
+  y_unified_count = (float *) malloc(num_rows * sizeof(float));
   y_warmingup = (float *) malloc(num_rows * sizeof(float));
   matrix = (float *) malloc(num_rows * num_rows * sizeof(float));
   
@@ -162,19 +199,28 @@ int main(int argc, char *argv[])
   double elapsed = 0;
   double elapsed1 = 0;
   double elapsed2 = 0;
+  double elapsed3 = 0;
+  double elapsed4 = 0;
 
   spmv_csr_serial( num_rows, ptr, indices, data, x, y);
   elapsed = warmingup_dense( num_rows, x, nnz, matrix, y_warmingup);
   for (i=0; i<num_runs; i++) elapsed1 += spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_dense);
   elapsed = warmingup_csr( num_rows, x, nnz, matrix, y_warmingup);
   for (i=0; i<num_runs; i++) elapsed2 += spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_csr);
+  
+  for (i=0; i<num_runs; i++) elapsed3 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified);
+  
+  for (i=0; i<num_runs; i++) elapsed4 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified_count);
   //elapsed = (read_timer_ms() - elapsed)/num_runs;
 
   printf("Spmv (dense) (%d): time: %0.2fms\n", nnz, elapsed1/num_runs);
   printf("Spmv (csr) (%d): time: %0.2fms\n", nnz, elapsed2/num_runs);
-  //printf("check:%f\n",check(y,y_csr,num_rows));
-  //printf("check1:%f\n",check(y,y_dense,num_rows));
-
+  printf("Spmv (unified) (%d): time: %0.2fms\n", nnz, elapsed3/num_runs);
+  printf("Spmv (unified_count) (%d): time: %0.2fms\n", nnz, elapsed4/num_runs);
+  //printf("check_dense:%f\n",check(y,y_csr,num_rows));
+  //printf("check_csr:%f\n",check(y,y_dense,num_rows));
+  //printf("check_unified:%f\n",check(y,y_unified,num_rows));
+  //printf("check_unified_count:%f\n",check(y,y_unified_count,num_rows));
   free(ptr);
   free(indices);
   free(data);
