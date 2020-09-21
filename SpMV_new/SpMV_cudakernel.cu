@@ -225,12 +225,19 @@ double spmv_cuda_dense_discrete(const int num_rows, const REAL * x, int nnz, REA
 
   cudaMalloc(&d_y, num_rows*sizeof(REAL));
 
+  //timer start for H2D
   cudaMemcpy(d_x, x, num_rows*sizeof(REAL), cudaMemcpyHostToDevice);
   cudaMemcpy(d_matrix, matrix, num_rows*num_rows*sizeof(REAL), cudaMemcpyHostToDevice);
+  //timer end for H2D
+    
+  //timer start for kernel
   spmv_dense_check_and_compute<<<256, 256>>>(d_matrix, d_x, d_y, num_rows);
   cudaDeviceSynchronize();
+  //timer stop for kernel
 
+ //timer start for D2H
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+    //timer stop for D2H
 
   cudaFree(d_x);
   cudaFree(d_y);
