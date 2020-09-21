@@ -1,5 +1,6 @@
 #include "SpMV.h"
 
+//2 csr-format of the matrix, copy csr formatted-matrix via discrete memory
 __global__ void spmv_csr(const int num_rows, const int *ptr, const int * indices, const REAL *data, const REAL * x, REAL *y)
 {
     int row = threadIdx.x + blockIdx.x * blockDim.x;
@@ -15,6 +16,7 @@ __global__ void spmv_csr(const int num_rows, const int *ptr, const int * indices
     }
 }
 
+// 1) full matrix, discrete memory to copy the full matrix
 __global__ void spmv_dense(REAL* matrix, REAL* vector, REAL *y, int num_rows)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -41,6 +43,7 @@ __global__ void spmv_dense_check_and_compute(REAL* matrix, REAL* vector, REAL *y
     }
 }
 
+// 3) kernels for full matrix stored in unified memory, data copied to GPU explicitly via cudaMemcpy are indexes of non-zero elements
 __global__ void spmv_unified(REAL* matrix_unified, const int num_rows, const int *rowNum, const int * columnNum, const REAL * x, REAL *y, int nnz)
 {
     int row = threadIdx.x + blockIdx.x * blockDim.x;
@@ -53,6 +56,8 @@ __global__ void spmv_unified(REAL* matrix_unified, const int num_rows, const int
     y[row] = dot;
 }
 
+// 4) kernels for full matrix stored in unified memory, data copied to GPU explicitly via cudaMemcpy are indexes of non-zero elements, 
+// and the column of the first non-zero element of each row
 __global__ void spmv_unified_count(int * count, REAL* matrix_unified, const int num_rows, const int *rowNum, const int * columnNum, const REAL * x, REAL *y, int nnz)
 {
     int row = threadIdx.x + blockIdx.x * blockDim.x;
