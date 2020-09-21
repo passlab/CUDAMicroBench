@@ -204,13 +204,21 @@ int main(int argc, char *argv[])
 
   spmv_csr_serial( num_rows, ptr, indices, data, x, y);
   elapsed = warmingup_dense( num_rows, x, nnz, matrix, y_warmingup);
+	
+  //1) pass the full matrix via discrete memory, and regular MV
   for (i=0; i<num_runs; i++) elapsed1 += spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_dense);
+	
+	
   elapsed = warmingup_csr( num_rows, x, nnz, matrix, y_warmingup);
+	
+  //2) pass the csr format of the matrix via discrete memery, and sparseMV	
   for (i=0; i<num_runs; i++) elapsed2 += spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_csr);
   
+  //3) full matrix, pass indexes of non-zero elements, unified memory
   for (i=0; i<num_runs; i++) elapsed3 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified);
   
-  for (i=0; i<num_runs; i++) elapsed4 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified_count);
+  //4) full matrix on unified memory, pass the index of non-zero elements, but not the element themselves.  	
+  for (i=0; i<num_runs; i++) elapsed4 += spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_unified_count);
   //elapsed = (read_timer_ms() - elapsed)/num_runs;
 
   printf("Spmv (dense) (%d): time: %0.2fms\n", nnz, elapsed1/num_runs);
