@@ -100,19 +100,22 @@ double spmv_cuda_unified(const int num_rows, const REAL * x, int nnz, REAL* matr
   spmv_unified<<<256,256>>>(matrix_unified, num_rows,d_row, d_column, d_x, d_y, nnz);
   cudaDeviceSynchronize();
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+
+  free(row);
+  free(column);
   cudaFree(d_row);
   cudaFree(d_column);
   cudaFree(d_x);
   cudaFree(d_y);
+  cudaFree(matrix_unified);
   elapsed1 = (read_timer_ms() - elapsed1);
   return elapsed1;
 
 }
-
 double spmv_cuda_unified_count(const int num_rows, const REAL * x, int nnz, REAL* matrix, REAL *y) {
-  int *row, * column, *count;
+  int *row, * column,*count;
   row = (int *) malloc(nnz * sizeof(int));
-  column = (int *) malloc(nnz * sizeof(int));
+  column= (int *) malloc(nnz * sizeof(int));
   count = (int *) malloc(num_rows * sizeof(int));
 
   double elapsed1 = read_timer_ms();
@@ -120,9 +123,8 @@ double spmv_cuda_unified_count(const int num_rows, const REAL * x, int nnz, REAL
   cudaMallocManaged(&matrix_unified, num_rows*num_rows*sizeof(REAL));
   memcpy(matrix_unified, matrix, num_rows*num_rows*sizeof(REAL));
   REAL * d_x, *d_y;
-    
+
   init_index_count(count, row , column, matrix, num_rows);
-  //double elapsed1 = read_timer_ms();
 
   int *d_row, * d_column, *d_count;
 
@@ -139,13 +141,19 @@ double spmv_cuda_unified_count(const int num_rows, const REAL * x, int nnz, REAL
 
 
   cudaMemcpy(d_x, x, num_rows*sizeof(REAL), cudaMemcpyHostToDevice);
-  spmv_unified_count<<<256,256>>>(d_count, matrix_unified, num_rows,d_row, d_column, d_x, d_y, nnz);
+  spmv_unified<<<256,256>>>(matrix_unified, num_rows,d_row, d_column, d_x, d_y, nnz);
   cudaDeviceSynchronize();
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+
+  free(row);
+  free(column);
+  free(count);
   cudaFree(d_row);
   cudaFree(d_column);
+  cudaFree(count);
   cudaFree(d_x);
   cudaFree(d_y);
+  cudaFree(matrix_unified);
   elapsed1 = (read_timer_ms() - elapsed1);
   return elapsed1;
 
@@ -204,6 +212,10 @@ double warmingup_csr(const int num_rows, const REAL * x, int nnz, REAL* matrix, 
 
   spmv_csr<<<256,256>>>(num_rows,d_ptr, d_indices, d_data, d_x, d_y);
   cudaDeviceSynchronize();
+  free(data);
+  free(ptr);
+  free(indices);
+
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
   cudaFree(d_ptr);
   cudaFree(d_indices);
@@ -279,6 +291,10 @@ double spmv_cuda_csr_discrete(const int num_rows, const REAL * x, int nnz, REAL*
   spmv_csr<<<256,256>>>(num_rows,d_ptr, d_indices, d_data, d_x, d_y);
   cudaDeviceSynchronize();
   cudaMemcpy(y, d_y, num_rows*sizeof(REAL), cudaMemcpyDeviceToHost);
+  free(data);
+  free(ptr);
+  free(indices);
+
   cudaFree(d_ptr);
   cudaFree(d_indices);
   cudaFree(d_data);

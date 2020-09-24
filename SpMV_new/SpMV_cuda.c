@@ -36,9 +36,11 @@ void init_vector(REAL *vector, int m)
 
 
 void init_matrix(REAL * matrix, int num_rows,int nnz) {
-    REAL d[num_rows*num_rows];
+
+    REAL *d, *A;
+    d = (REAL *) malloc((num_rows * num_rows) * sizeof(REAL));
+    A = (REAL *) malloc((num_rows * num_rows) * sizeof(REAL));
     int i,j,n,a,b,t;
-    REAL A[num_rows][num_rows];
     srand(time(NULL));
     n=num_rows*num_rows;
     for (i=0;i<n;i++) d[i]=i;
@@ -49,8 +51,8 @@ void init_matrix(REAL * matrix, int num_rows,int nnz) {
  
     for (i=0;i<num_rows;i++) {
         for (j=0;j<num_rows;j++) {
-            A[i][j]=(d[i*num_rows+j]>=nnz)?0:(REAL)(drand48()+1);
-            matrix[i*num_rows+j] = A[i][j];
+            A[i*num_rows+j]=(d[i*num_rows+j]>=nnz)?0:(REAL)(drand48()+1);
+            matrix[i*num_rows+j] = A[i*num_rows+j];
         }
     }
 }
@@ -79,29 +81,6 @@ void init_csr(int *ptr, REAL *data, int *indices, REAL *matrix, int num_rows, in
   }
 }
 
-/*typedef struct {
-    int i,j;
-    int data;
-}triple;
-typedef struct {
-    triple data[number];
-    int n,m,num;
-}TSMatrix;
-
-void init_triple(TSMatrix M, REAL *matrix, int num_rows, int nnz)
-{
-  int tmp = 0;
-	for (int i = 0; i < num_rows; i++) {
-	  for (int j = 0; j < num_rows; j++) {
-      if(matrix[i*num_rows+j] != 0) {
-        M.data[tmp].i = i;
-        M.data[tmp].j = j;
-        M.data[tmp].data=matrix[i*num_rows+j];
-        tmp++;
-      }
-    }
-  }
-}*/
 void init_index_count(int * row_nnz_start, int * row, int * column, REAL *matrix, int num_rows)
 {
   int tmp = 0;
@@ -117,7 +96,7 @@ void init_index_count(int * row_nnz_start, int * row, int * column, REAL *matrix
         tmp++;
       }
     }
-    if( i < num_rows-1 ) row_nnz_start[i+1] = row_nnz_start[i-1] + count;
+    if( i < num_rows-1 ) row_nnz_start[i+1] = row_nnz_start[i] + count;
   }
 }
 
@@ -185,15 +164,16 @@ int main(int argc, char *argv[])
   y_unified_count = (float *) malloc(num_rows * sizeof(float));
   y_warmingup = (float *) malloc(num_rows * sizeof(float));
   matrix = (float *) malloc(num_rows * num_rows * sizeof(float));
-  
+
   srand48(1<<12);
   init_matrix(matrix,num_rows,nnz);
+
   init_vector(x, num_rows);
   init_csr(ptr, data,indices, matrix, num_rows,nnz);
   //init_ptr(ptr, matrix,num_rows,nnz);
 
   int i;
-  int num_runs = 50;
+  int num_runs = 10;
   /* cuda version */
   //double elapsed = read_timer_ms();
   double elapsed = 0;
@@ -206,29 +186,30 @@ int main(int argc, char *argv[])
   elapsed = warmingup_dense( num_rows, x, nnz, matrix, y_warmingup);
 	
   //1) pass the full matrix via discrete memory, and regular MV
+
   for (i=0; i<num_runs; i++) elapsed1 += spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_dense);
 	
-	
+	printf("test1\n");
   elapsed = warmingup_csr( num_rows, x, nnz, matrix, y_warmingup);
 	
   //2) pass the csr format of the matrix via discrete memery, and sparseMV	
   for (i=0; i<num_runs; i++) elapsed2 += spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_csr);
-  
+  	printf("test2\n");
   //3) full matrix, pass indexes of non-zero elements, unified memory
   for (i=0; i<num_runs; i++) elapsed3 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified);
-  
+  	printf("test3\n");
   //4) full matrix on unified memory, pass the index of non-zero elements, but not the element themselves.  	
   for (i=0; i<num_runs; i++) elapsed4 += spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_unified_count);
   //elapsed = (read_timer_ms() - elapsed)/num_runs;
-
+	printf("test4\n");
   printf("Spmv (dense) (%d): time: %0.2fms\n", nnz, elapsed1/num_runs);
   printf("Spmv (csr) (%d): time: %0.2fms\n", nnz, elapsed2/num_runs);
   printf("Spmv (unified) (%d): time: %0.2fms\n", nnz, elapsed3/num_runs);
   printf("Spmv (unified_count) (%d): time: %0.2fms\n", nnz, elapsed4/num_runs);
-  //printf("check_dense:%f\n",check(y,y_csr,num_rows));
-  //printf("check_csr:%f\n",check(y,y_dense,num_rows));
-  //printf("check_unified:%f\n",check(y,y_unified,num_rows));
-  //printf("check_unified_count:%f\n",check(y,y_unified_count,num_rows));
+  printf("check_dense:%f\n",check(y,y_csr,num_rows));
+  printf("check_csr:%f\n",check(y,y_dense,num_rows));
+  printf("check_unified:%f\n",check(y,y_unified,num_rows));
+  printf("check_unified_count:%f\n",check(y,y_unified_count,num_rows));
   free(ptr);
   free(indices);
   free(data);
