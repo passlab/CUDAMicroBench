@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
   float *matrix;
   int num_rows = 0;
   int nnz = 0;
-  fprintf(stderr, "Usage: SpMV <n>\n");
+  //fprintf(stderr, "Usage: SpMV <n>\n");
   if (argc >= 2) {
     nnz = atoi(argv[1]);
   }
@@ -176,46 +176,36 @@ int main(int argc, char *argv[])
   int num_runs = 5;
   /* cuda version */
   //double elapsed = read_timer_ms();
+  double elapsed = 0;
+  double elapsed1 = 0;
+  double elapsed2 = 0;
+  double elapsed3 = 0;
+  double elapsed4 = 0;
 
-  
-  double *elapsed, *elapsed1, *elapsed2,*elapsed3,*elapsed4;
-  elapsed = (double *) malloc(5 * sizeof(double));  
-  elapsed1 = (double *) malloc(5 * sizeof(double));
-  elapsed2 = (double *) malloc(5 * sizeof(double));
-  elapsed3 = (double *) malloc(5 * sizeof(double));
-  elapsed4 = (double *) malloc(5 * sizeof(double));
-  
-  for(int i = 0; i < 5; i++) {
-    elapsed[i] = elapsed1[i] = elapsed2[i] = elapsed3[i] = elapsed4[i] = 0;
-  }
   spmv_csr_serial( num_rows, ptr, indices, data, x, y);
   
   //warmingup for dense_discrete
-  spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_warmingup, elapsed);
+  elapsed = spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_warmingup);
   //1) pass the full matrix via discrete memory, and regular MV
-  for (i=0; i<num_runs; i++) spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_dense, elapsed1);
+  for (i=0; i<num_runs; i++) elapsed1 += spmv_cuda_dense_discrete( num_rows, x, nnz, matrix, y_dense);
 	
   //warmingup for csr_discrete
-  spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_warmingup, elapsed);
+  elapsed = spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_warmingup);
   //2) pass the csr format of the matrix via discrete memery, and sparseMV	
-  for (i=0; i<num_runs; i++) spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_csr, elapsed2);
+  for (i=0; i<num_runs; i++) elapsed2 += spmv_cuda_csr_discrete( num_rows, x, nnz, matrix, y_csr);
   
   //warmingup for unified memory
-  spmv_cuda_unified( num_rows, x, nnz, matrix, y_warmingup, elapsed);
+  elapsed = spmv_cuda_unified( num_rows, x, nnz, matrix, y_warmingup);
   //3) full matrix, pass indexes of non-zero elements, unified memory
-  for (i=0; i<num_runs; i++) spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified, elapsed3);
+  for (i=0; i<num_runs; i++) elapsed3 += spmv_cuda_unified( num_rows, x, nnz, matrix, y_unified);
   
   //warmingup for unified_count
-  spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_warmingup, elapsed);
+  elapsed = spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_warmingup);
   //4) full matrix on unified memory, pass the index of non-zero elements, but not the element themselves.  	
-  for (i=0; i<num_runs; i++) spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_unified_count, elapsed4);
+  for (i=0; i<num_runs; i++) elapsed4 += spmv_cuda_unified_count( num_rows, x, nnz, matrix, y_unified_count);
   //elapsed = (read_timer_ms() - elapsed)/num_runs;
   
-  //printf("Spmv (dense) (%d): time: %0.2fms\n", nnz, elapsed1/num_runs);
-  printf("%lf,%lf,%lf,%lf,%lf\n",elapsed1[0]/num_runs,elapsed1[1]/num_runs,elapsed1[2]/num_runs,elapsed1[3]/num_runs,elapsed1[4]/num_runs);
-  printf("%lf,%lf,%lf,%lf,%lf\n",elapsed2[0]/num_runs,elapsed2[1]/num_runs,elapsed2[2]/num_runs,elapsed2[3]/num_runs,elapsed2[4]/num_runs);
-  printf("%lf,%lf,%lf,%lf,%lf\n",elapsed3[0]/num_runs,elapsed3[1]/num_runs,elapsed3[2]/num_runs,elapsed3[3]/num_runs,elapsed3[4]/num_runs);
-  printf("%lf,%lf,%lf,%lf,%lf\n",elapsed4[0]/num_runs,elapsed4[1]/num_runs,elapsed4[2]/num_runs,elapsed4[3]/num_runs,elapsed4[4]/num_runs);
+  printf("%d,%f,%f,%f,%f\n", nnz, elapsed1/num_runs, elapsed2/num_runs, elapsed3/num_runs, elapsed4/num_runs);
   //printf("Spmv (csr) (%d): time: %0.2fms\n", nnz, elapsed2/num_runs);
   //printf("Spmv (unified) (%d): time: %0.2fms\n", nnz, elapsed3/num_runs);
   //printf("Spmv (unified_count) (%d): time: %0.2fms\n", nnz, elapsed4/num_runs);

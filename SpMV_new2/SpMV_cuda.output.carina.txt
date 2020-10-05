@@ -1,0 +1,91 @@
+xyi2@cci-carina:~/CUDAMemBench/SpMV_new$ sh test.sh
+Usage: SpMV <n>
+Spmv (dense) (524288): time: 2.30ms
+Spmv (csr) (524288): time: 14.88ms
+Spmv (unified) (524288): time: 68.68ms
+Spmv (unified_count) (524288): time: 68.44ms
+Usage: SpMV <n>
+Spmv (dense) (524288): time: 1.60ms
+Spmv (csr) (524288): time: 12.98ms
+Spmv (unified) (524288): time: 68.92ms
+Spmv (unified_count) (524288): time: 69.24ms
+Usage: SpMV <n>
+Spmv (dense) (262144): time: 1.62ms
+Spmv (csr) (262144): time: 8.38ms
+Spmv (unified) (262144): time: 37.80ms
+Spmv (unified_count) (262144): time: 37.92ms
+Usage: SpMV <n>
+Spmv (dense) (131072): time: 1.62ms
+Spmv (csr) (131072): time: 5.28ms
+Spmv (unified) (131072): time: 20.70ms
+Spmv (unified_count) (131072): time: 20.80ms
+Usage: SpMV <n>
+Spmv (dense) (65535): time: 1.60ms
+Spmv (csr) (65535): time: 4.04ms
+Spmv (unified) (65535): time: 12.58ms
+Spmv (unified_count) (65535): time: 12.58ms
+Usage: SpMV <n>
+Spmv (dense) (32768): time: 1.58ms
+Spmv (csr) (32768): time: 3.24ms
+Spmv (unified) (32768): time: 8.32ms
+Spmv (unified_count) (32768): time: 8.30ms
+Usage: SpMV <n>
+Spmv (dense) (16384): time: 1.58ms
+Spmv (csr) (16384): time: 3.08ms
+Spmv (unified) (16384): time: 6.40ms
+Spmv (unified_count) (16384): time: 6.32ms
+Usage: SpMV <n>
+Spmv (dense) (8192): time: 1.58ms
+Spmv (csr) (8192): time: 2.80ms
+Spmv (unified) (8192): time: 5.82ms
+Spmv (unified_count) (8192): time: 5.68ms
+Usage: SpMV <n>
+Spmv (dense) (4096): time: 1.58ms
+Spmv (csr) (4096): time: 2.74ms
+Spmv (unified) (4096): time: 5.44ms
+Spmv (unified_count) (4096): time: 5.40ms
+Usage: SpMV <n>
+Spmv (dense) (2048): time: 1.60ms
+Spmv (csr) (2048): time: 2.70ms
+Spmv (unified) (2048): time: 5.64ms
+Spmv (unified_count) (2048): time: 5.42ms
+Usage: SpMV <n>
+Spmv (dense) (1024): time: 1.62ms
+Spmv (csr) (1024): time: 2.68ms
+Spmv (unified) (1024): time: 5.22ms
+Spmv (unified_count) (1024): time: 5.22ms
+Usage: SpMV <n>
+Spmv (dense) (512): time: 1.62ms
+Spmv (csr) (512): time: 2.66ms
+Spmv (unified) (512): time: 5.20ms
+Spmv (unified_count) (512): time: 5.14ms
+Usage: SpMV <n>
+Spmv (dense) (256): time: 1.60ms
+Spmv (csr) (256): time: 2.64ms
+Spmv (unified) (256): time: 5.14ms
+Spmv (unified_count) (256): time: 5.04ms
+Usage: SpMV <n>
+Spmv (dense) (128): time: 1.60ms
+Spmv (csr) (128): time: 2.64ms
+Spmv (unified) (128): time: 5.18ms
+Spmv (unified_count) (128): time: 5.22ms
+Usage: SpMV <n>
+Spmv (dense) (64): time: 1.64ms
+Spmv (csr) (64): time: 2.64ms
+Spmv (unified) (64): time: 4.98ms
+Spmv (unified_count) (64): time: 4.94ms
+Usage: SpMV <n>
+Spmv (dense) (32): time: 1.62ms
+Spmv (csr) (32): time: 2.66ms
+Spmv (unified) (32): time: 4.84ms
+Spmv (unified_count) (32): time: 4.86ms
+Usage: SpMV <n>
+Spmv (dense) (16): time: 1.64ms
+Spmv (csr) (16): time: 2.66ms
+Spmv (unified) (16): time: 4.54ms
+Spmv (unified_count) (16): time: 4.58ms
+Usage: SpMV <n>
+Spmv (dense) (8): time: 1.64ms
+Spmv (csr) (8): time: 2.66ms
+Spmv (unified) (8): time: 4.40ms
+Spmv (unified_count) (8): time: 4.38ms
