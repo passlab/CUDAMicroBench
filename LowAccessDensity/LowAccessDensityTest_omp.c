@@ -41,7 +41,7 @@ void serial_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
   int i;
   for (i = 0; i < (n/stride); i++)
   {
-    y[i] = a * x[i*stride];
+    y[i] += a * x[i*stride];
   }
 }
 
@@ -51,7 +51,7 @@ void omp_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
   #pragma omp parallel for shared(x,y,a,n,stride) private(i)  
   for (i = 0; i < (n/stride); i++)
   {
-    y[i] = a * x[i*stride];
+    y[i] += a * x[i*stride];
   }
 }
 
