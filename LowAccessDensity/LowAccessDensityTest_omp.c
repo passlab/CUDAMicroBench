@@ -1,3 +1,4 @@
+// clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda LowAccessDensityTest_omp.c
 // Experimental test input for Accelerator directives
 //  simplest scalar*vector operations
 // Liao 1/15/2013
@@ -56,6 +57,19 @@ void omp_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
   }
 }
 
+/*omp gpu version */
+void omp_gpu_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
+  int i;
+  //#pragma omp target teams distribute parallel for map(tofrom:y) map(to:x,a,n,stride)
+  #pragma omp target map(to:a,n,x[0:n]) map(tofrom:y[0:n])
+  #pragma parallel for
+  for (i = 0; i < n; i+=stride)
+  {
+    y[i] += a * x[i];
+  }
+}
+
+
 
 /* compare two arrays and return percentage of difference */
 REAL check(REAL*A, REAL*B, long int n)
@@ -109,12 +123,19 @@ int main(int argc, char *argv[])
   }
 
   y_omp  = (REAL *) malloc(n * sizeof(REAL));
-
   if (y_omp==NULL)
   {
     fprintf(stderr, "y_omp malloc returns NULL: out of memory\n");
     abort();
   }
+
+  REAL*  y_omp_gpu  = (REAL *) malloc(n * sizeof(REAL));
+  if (y_omp_gpu==NULL)
+  {
+    fprintf(stderr, "y_omp malloc returns NULL: out of memory\n");
+    abort();
+  }
+
 
   // serial version as a reference
   serial_kernel(x, y, n, a, stride);
@@ -130,8 +151,14 @@ int main(int argc, char *argv[])
 
   printf("diff ratio=%f\n", check(y,y_omp, n));
 
+  for (i=0; i<num_runs; i++) 
+    omp_gpu_kernel(x, y_omp_gpu, n, a, stride);
+
+  printf("diff ratio=%f\n", check(y,y_omp_gpu, n));
+
   free(x);
   free(y);
   free(y_omp);
+  free(y_omp_gpu);
   return 0;
 }
