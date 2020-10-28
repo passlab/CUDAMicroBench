@@ -6,6 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include <sys/timeb.h>
+#include <time.h>
 
 double read_timer_ms() {
     struct timeb tm;
@@ -14,7 +15,7 @@ double read_timer_ms() {
 }
 
 /* change this to do saxpy or daxpy : single precision or double precision*/
-#define REAL float
+#define REAL double
 #define VEC_LEN 102400000//use a fixed number for now
 #define STRIDE 1024
 
@@ -39,9 +40,9 @@ void init(REAL *A, long int n)
 /*serial version */
 void serial_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
   int i;
-  for (i = 0; i < (n/stride); i++)
+  for (i = 0; i < n; i+=stride)
   {
-    y[i] += a * x[i*stride];
+    y[i] += a * x[i];
   }
 }
 
@@ -49,9 +50,9 @@ void serial_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
 void omp_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
   int i;
   #pragma omp parallel for shared(x,y,a,n,stride) private(i)  
-  for (i = 0; i < (n/stride); i++)
+  for (i = 0; i < n; i+=stride)
   {
-    y[i] += a * x[i*stride];
+    y[i] += a * x[i];
   }
 }
 
@@ -60,12 +61,15 @@ void omp_kernel(REAL* x, REAL* y, long n, REAL a, int stride) {
 REAL check(REAL*A, REAL*B, long int n)
 {
     int i;
-    REAL diffsum =0.0, sum = 0.0;
+    REAL diffRatioSum= 0.0;
     for (i = 0; i < n; i++) {
-        diffsum += fabs(A[i] - B[i]);
-        sum += fabs(B[i]);
+      REAL diff = fabs(A[i] - B[i]);
+      if (fabs(B[i])==0.0)
+	diffRatioSum+=0.0;
+      else
+	diffRatioSum += diff/fabs(B[i]);
     }
-    return diffsum/sum;
+    return diffRatioSum/n;
 }
 
 int main(int argc, char *argv[])
@@ -80,19 +84,37 @@ int main(int argc, char *argv[])
   if (argc >= 2) {
     stride = atoi(argv[1]);
   }
+
   if (argc >= 3) {
     n = atoi(argv[2]);
   }
+  printf("vec len(n_=%ld, stride=%d\n", n, stride);
 
   // same input x
   x = (REAL *) malloc(n * sizeof(REAL));
-  srand48(1<<12);
+  if (x==NULL)
+  {
+    fprintf(stderr, "malloc returns NULL: out of memory\n");
+    abort();
+  }
+  srand48(time(NULL));
   init(x, n);
 
   // output for serial and omp version
-  y  = (REAL *) malloc((n/stride) * sizeof(REAL));
-  y_omp  = (REAL *) malloc((n/stride) * sizeof(REAL));
+  y  = (REAL *) malloc(n * sizeof(REAL));
+  if (y==NULL)
+  {
+    fprintf(stderr, "y malloc returns NULL: out of memory\n");
+    abort();
+  }
 
+  y_omp  = (REAL *) malloc(n * sizeof(REAL));
+
+  if (y_omp==NULL)
+  {
+    fprintf(stderr, "y_omp malloc returns NULL: out of memory\n");
+    abort();
+  }
 
   // serial version as a reference
   serial_kernel(x, y, n, a, stride);
@@ -106,6 +128,7 @@ int main(int argc, char *argv[])
     omp_kernel(x, y_omp, n, a, stride);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
 
+  printf("diff ratio=%f\n", check(y,y_omp, n));
 
   free(x);
   free(y);
