@@ -1,138 +1,91 @@
-int num_rows = 100;
-int nnz = 400;
-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-xyi2@cci-carina:~/CUDAMemBench/SpMV$ nvprof ./SpMV_cuda
-==12385== NVPROF is profiling process 12385, command: ./SpMV_cuda
-check:4.000000
-check1:4.000000
-==12385== Profiling application: ./SpMV_cuda
-==12385== Profiling result:
-            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   38.78%  65.279us        25  2.6110us  1.5360us  6.1440us  [CUDA memcpy HtoD]
-                   20.74%  34.912us         5  6.9820us  6.8800us  7.3280us  spmv_cudakernel_1perThread(float*, float*, float*, int)
-                   19.98%  33.631us         5  6.7260us  6.4640us  7.3600us  spmv_cudakernel_1perThread_check_and_compute(float*, float*, float*, int)
-                   10.38%  17.471us        10  1.7470us  1.6320us  1.8240us  [CUDA memcpy DtoH]
-                   10.11%  17.024us         5  3.4040us  3.1040us  4.0640us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
-      API calls:   98.47%  363.27ms        35  10.379ms  6.0220us  362.43ms  cudaMalloc
-                    0.53%  1.9663ms        97  20.271us     176ns  1.6127ms  cuDeviceGetAttribute
-                    0.50%  1.8312ms         1  1.8312ms  1.8312ms  1.8312ms  cuDeviceTotalMem
-                    0.27%  991.06us        35  28.315us  5.7150us  181.70us  cudaFree
-                    0.16%  594.61us        35  16.988us  10.214us  44.430us  cudaMemcpy
-                    0.05%  186.53us        15  12.435us  8.5790us  34.617us  cudaLaunchKernel
-                    0.01%  54.168us         1  54.168us  54.168us  54.168us  cuDeviceGetName
-                    0.00%  4.6550us         1  4.6550us  4.6550us  4.6550us  cuDeviceGetPCIBusId
-                    0.00%  3.8040us         3  1.2680us     385ns  2.9280us  cuDeviceGetCount
-                    0.00%  1.4230us         2     711ns     231ns  1.1920us  cuDeviceGet
-                    0.00%     386ns         1     386ns     386ns     386ns  cuDeviceGetUuid
-                    
-                    
-
-int num_rows = 1000;
-int nnz = 400;
-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-xyi2@cci-carina:~/CUDAMemBench/SpMV$ nvprof ./SpMV_cuda
-==12613== NVPROF is profiling process 12613, command: ./SpMV_cuda
-check:4.000000
-check1:4.000000
-==12613== Profiling application: ./SpMV_cuda
-==12613== Profiling result:
-            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   79.53%  5.4857ms        25  219.43us  1.6640us  1.1609ms  [CUDA memcpy HtoD]
-                   10.02%  691.16us         5  138.23us  137.60us  138.78us  spmv_cudakernel_1perThread(float*, float*, float*, int)
-                    9.97%  687.39us         5  137.48us  137.21us  137.95us  spmv_cudakernel_1perThread_check_and_compute(float*, float*, float*, int)
-                    0.27%  18.528us        10  1.8520us  1.7920us  1.9520us  [CUDA memcpy DtoH]
-                    0.21%  14.688us         5  2.9370us  2.7520us  3.5200us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
-      API calls:   95.79%  307.80ms        35  8.7943ms  6.3510us  306.10ms  cudaMalloc
-                    2.76%  8.8795ms        35  253.70us  11.695us  1.4772ms  cudaMemcpy
-                    0.60%  1.9137ms        35  54.676us  6.0170us  205.56us  cudaFree
-                    0.56%  1.8011ms         1  1.8011ms  1.8011ms  1.8011ms  cuDeviceTotalMem
-                    0.18%  578.23us        97  5.9610us     176ns  232.65us  cuDeviceGetAttribute
-                    0.09%  280.38us        15  18.692us  10.430us  47.846us  cudaLaunchKernel
-                    0.02%  52.324us         1  52.324us  52.324us  52.324us  cuDeviceGetName
-                    0.00%  3.5390us         1  3.5390us  3.5390us  3.5390us  cuDeviceGetPCIBusId
-                    0.00%  2.4050us         3     801ns     195ns  1.6080us  cuDeviceGetCount
-                    0.00%  1.2590us         2     629ns     263ns     996ns  cuDeviceGet
-                    0.00%     348ns         1     348ns     348ns     348ns  cuDeviceGetUuid
-                    
-int num_rows = 1000;
-int nnz = 40;
-------------------------------------------------------------------------------------------------------------------------------------------------------------------                    
- xyi2@cci-carina:~/CUDAMemBench/SpMV$ nvprof ./SpMV_cuda
-==10615== NVPROF is profiling process 10615, command: ./SpMV_cuda
-check:4.000000
-check1:4.000000
-==10615== Profiling application: ./SpMV_cuda
-==10615== Profiling result:
-            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   74.13%  4.0288ms        25  161.15us  1.3760us  827.00us  [CUDA memcpy HtoD]
-                   12.66%  688.09us         5  137.62us  137.31us  137.89us  spmv_cudakernel_1perThread(float*, float*, float*, int)
-                   12.64%  686.87us         5  137.37us  136.93us  138.30us  spmv_cudakernel_1perThread_check_and_compute(float*, float*, float*, int)
-                    0.33%  18.016us        10  1.8010us  1.7280us  1.9520us  [CUDA memcpy DtoH]
-                    0.24%  13.120us         5  2.6240us  2.5600us  2.8800us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
-      API calls:   95.89%  260.21ms        35  7.4345ms  4.3420us  258.87ms  cudaMalloc
-                    2.57%  6.9852ms        35  199.58us  9.4230us  1.0304ms  cudaMemcpy
-                    0.67%  1.8173ms         1  1.8173ms  1.8173ms  1.8173ms  cuDeviceTotalMem
-                    0.53%  1.4495ms        35  41.415us  3.9920us  163.99us  cudaFree
-                    0.23%  632.52us        97  6.5200us     177ns  257.83us  cuDeviceGetAttribute
-                    0.07%  190.00us        15  12.666us  6.4340us  38.455us  cudaLaunchKernel
-                    0.02%  54.693us         1  54.693us  54.693us  54.693us  cuDeviceGetName
-                    0.00%  4.8920us         1  4.8920us  4.8920us  4.8920us  cuDeviceGetPCIBusId
-                    0.00%  4.2330us         3  1.4110us     192ns  3.5300us  cuDeviceGetCount
-                    0.00%  1.1420us         2     571ns     233ns     909ns  cuDeviceGet
-                    0.00%     339ns         1     339ns     339ns     339ns  cuDeviceGetUuid
-                    
-int num_rows = 1000;
-int nnz = 100;
-------------------------------------------------------------------------------------------------------------------------------------------------------------------                      
- xyi2@cci-carina:~/CUDAMemBench/SpMV$ nvprof ./SpMV_cuda
-==10759== NVPROF is profiling process 10759, command: ./SpMV_cuda
-check:4.000000
-check1:4.000000
-==10759== Profiling application: ./SpMV_cuda
-==10759== Profiling result:
-            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   74.29%  4.0695ms        25  162.78us  1.4080us  834.55us  [CUDA memcpy HtoD]
-                   12.57%  688.76us         5  137.75us  137.54us  137.89us  spmv_cudakernel_1perThread(float*, float*, float*, int)
-                   12.57%  688.60us         5  137.72us  137.41us  138.34us  spmv_cudakernel_1perThread_check_and_compute(float*, float*, float*, int)
-                    0.32%  17.664us        10  1.7660us  1.6960us  1.8880us  [CUDA memcpy DtoH]
-                    0.25%  13.536us         5  2.7070us  2.5600us  3.1680us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
-      API calls:   95.94%  264.74ms        35  7.5641ms  4.1160us  263.44ms  cudaMalloc
-                    2.55%  7.0432ms        35  201.23us  9.1910us  1.0431ms  cudaMemcpy
-                    0.70%  1.9195ms         1  1.9195ms  1.9195ms  1.9195ms  cuDeviceTotalMem
-                    0.52%  1.4342ms        35  40.977us  3.9590us  156.23us  cudaFree
-                    0.21%  581.00us        97  5.9890us     175ns  233.57us  cuDeviceGetAttribute
-                    0.06%  172.87us        15  11.524us  5.6760us  33.644us  cudaLaunchKernel
-                    0.02%  51.212us         1  51.212us  51.212us  51.212us  cuDeviceGetName
-                    0.00%  4.2710us         1  4.2710us  4.2710us  4.2710us  cuDeviceGetPCIBusId
-                    0.00%  2.1610us         3     720ns     183ns  1.4620us  cuDeviceGetCount
-                    0.00%  1.1450us         2     572ns     212ns     933ns  cuDeviceGet
-                    0.00%     337ns         1     337ns     337ns     337ns  cuDeviceGetUuid
-
-int num_rows = 1000;
-int nnz = 200;
------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-                    
-xyi2@cci-carina:~/CUDAMemBench/SpMV$ nvprof ./SpMV_cuda
-==10987== NVPROF is profiling process 10987, command: ./SpMV_cuda
-check:4.000000
-check1:4.000000
-==10987== Profiling application: ./SpMV_cuda
-==10987== Profiling result:
-            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   79.68%  5.5334ms        25  221.34us  1.5030us  1.2812ms  [CUDA memcpy HtoD]
-                    9.94%  690.23us         5  138.05us  137.92us  138.34us  spmv_cudakernel_1perThread(float*, float*, float*, int)
-                    9.91%  688.12us         5  137.62us  137.15us  137.85us  spmv_cudakernel_1perThread_check_and_compute(float*, float*, float*, int)
-                    0.26%  18.112us        10  1.8110us  1.6960us  1.9520us  [CUDA memcpy DtoH]
-                    0.21%  14.752us         5  2.9500us  2.7840us  3.3920us  spmv_csr_kernel(int, int const *, int const *, float const *, float const *, float*)
-      API calls:   95.89%  316.05ms        35  9.0299ms  6.4100us  314.42ms  cudaMalloc
-                    2.73%  8.9975ms        35  257.07us  10.808us  1.6452ms  cudaMemcpy
-                    0.56%  1.8466ms        35  52.760us  5.7320us  192.12us  cudaFree
-                    0.55%  1.8144ms         1  1.8144ms  1.8144ms  1.8144ms  cuDeviceTotalMem
-                    0.18%  583.98us        97  6.0200us     180ns  232.83us  cuDeviceGetAttribute
-                    0.07%  237.58us        15  15.838us  8.4200us  45.887us  cudaLaunchKernel
-                    0.02%  54.444us         1  54.444us  54.444us  54.444us  cuDeviceGetName
-                    0.00%  4.5720us         1  4.5720us  4.5720us  4.5720us  cuDeviceGetPCIBusId
-                    0.00%  3.2430us         3  1.0810us     190ns  2.5240us  cuDeviceGetCount
-                    0.00%  1.0540us         2     527ns     219ns     835ns  cuDeviceGet
-                    0.00%     371ns         1     371ns     371ns     371ns  cuDeviceGetUuid
-
+xyi2@cci-carina:~/CUDAMemBench/SpMV_new$ sh test.sh
+Usage: SpMV <n>
+Spmv (dense) (524288): time: 2.30ms
+Spmv (csr) (524288): time: 14.88ms
+Spmv (unified) (524288): time: 68.68ms
+Spmv (unified_count) (524288): time: 68.44ms
+Usage: SpMV <n>
+Spmv (dense) (524288): time: 1.60ms
+Spmv (csr) (524288): time: 12.98ms
+Spmv (unified) (524288): time: 68.92ms
+Spmv (unified_count) (524288): time: 69.24ms
+Usage: SpMV <n>
+Spmv (dense) (262144): time: 1.62ms
+Spmv (csr) (262144): time: 8.38ms
+Spmv (unified) (262144): time: 37.80ms
+Spmv (unified_count) (262144): time: 37.92ms
+Usage: SpMV <n>
+Spmv (dense) (131072): time: 1.62ms
+Spmv (csr) (131072): time: 5.28ms
+Spmv (unified) (131072): time: 20.70ms
+Spmv (unified_count) (131072): time: 20.80ms
+Usage: SpMV <n>
+Spmv (dense) (65535): time: 1.60ms
+Spmv (csr) (65535): time: 4.04ms
+Spmv (unified) (65535): time: 12.58ms
+Spmv (unified_count) (65535): time: 12.58ms
+Usage: SpMV <n>
+Spmv (dense) (32768): time: 1.58ms
+Spmv (csr) (32768): time: 3.24ms
+Spmv (unified) (32768): time: 8.32ms
+Spmv (unified_count) (32768): time: 8.30ms
+Usage: SpMV <n>
+Spmv (dense) (16384): time: 1.58ms
+Spmv (csr) (16384): time: 3.08ms
+Spmv (unified) (16384): time: 6.40ms
+Spmv (unified_count) (16384): time: 6.32ms
+Usage: SpMV <n>
+Spmv (dense) (8192): time: 1.58ms
+Spmv (csr) (8192): time: 2.80ms
+Spmv (unified) (8192): time: 5.82ms
+Spmv (unified_count) (8192): time: 5.68ms
+Usage: SpMV <n>
+Spmv (dense) (4096): time: 1.58ms
+Spmv (csr) (4096): time: 2.74ms
+Spmv (unified) (4096): time: 5.44ms
+Spmv (unified_count) (4096): time: 5.40ms
+Usage: SpMV <n>
+Spmv (dense) (2048): time: 1.60ms
+Spmv (csr) (2048): time: 2.70ms
+Spmv (unified) (2048): time: 5.64ms
+Spmv (unified_count) (2048): time: 5.42ms
+Usage: SpMV <n>
+Spmv (dense) (1024): time: 1.62ms
+Spmv (csr) (1024): time: 2.68ms
+Spmv (unified) (1024): time: 5.22ms
+Spmv (unified_count) (1024): time: 5.22ms
+Usage: SpMV <n>
+Spmv (dense) (512): time: 1.62ms
+Spmv (csr) (512): time: 2.66ms
+Spmv (unified) (512): time: 5.20ms
+Spmv (unified_count) (512): time: 5.14ms
+Usage: SpMV <n>
+Spmv (dense) (256): time: 1.60ms
+Spmv (csr) (256): time: 2.64ms
+Spmv (unified) (256): time: 5.14ms
+Spmv (unified_count) (256): time: 5.04ms
+Usage: SpMV <n>
+Spmv (dense) (128): time: 1.60ms
+Spmv (csr) (128): time: 2.64ms
+Spmv (unified) (128): time: 5.18ms
+Spmv (unified_count) (128): time: 5.22ms
+Usage: SpMV <n>
+Spmv (dense) (64): time: 1.64ms
+Spmv (csr) (64): time: 2.64ms
+Spmv (unified) (64): time: 4.98ms
+Spmv (unified_count) (64): time: 4.94ms
+Usage: SpMV <n>
+Spmv (dense) (32): time: 1.62ms
+Spmv (csr) (32): time: 2.66ms
+Spmv (unified) (32): time: 4.84ms
+Spmv (unified_count) (32): time: 4.86ms
+Usage: SpMV <n>
+Spmv (dense) (16): time: 1.64ms
+Spmv (csr) (16): time: 2.66ms
+Spmv (unified) (16): time: 4.54ms
+Spmv (unified_count) (16): time: 4.58ms
+Usage: SpMV <n>
+Spmv (dense) (8): time: 1.64ms
+Spmv (csr) (8): time: 2.66ms
+Spmv (unified) (8): time: 4.40ms
+Spmv (unified_count) (8): time: 4.38ms
