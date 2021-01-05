@@ -1,0 +1,39 @@
+﻿  Compiling CUDA source file main.cu...
+  
+  C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\bin\HostX86\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include"  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static --expt-relaxed-constexpr -g   -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Fdx64\Debug\vc142.pdb /FS /Zi /RTC1 /MDd " -o x64\Debug\main.cu.obj "C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\main.cu" 
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(92): warning : missing return statement at end of non-void function "border_check"
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(82): warning : variable "x_block" was declared but never referenced
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(83): warning : variable "y_block" was declared but never referenced
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(84): warning : variable "x" was declared but never referenced
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(85): warning : variable "y" was declared but never referenced
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(165): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(166): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(165): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(166): warning : conversion from a string literal to "char *" is deprecated
+  
+  main.cu
+C:/Users/dstok/source/repos/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(206): warning C4996: 'cudaThreadSynchronize': was declared deprecated
+     Creating library C:\Users\dstok\source\repos\Dynamic Parallelism Demo\x64\Debug\Dynamic Parallelism Demo.lib and object C:\Users\dstok\source\repos\Dynamic Parallelism Demo\x64\Debug\Dynamic Parallelism Demo.exp
+main.cu.obj : error LNK2019: unresolved external symbol png_create_write_struct referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_set_longjmp_fn referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_create_info_struct referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_write_info referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_write_row referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_write_end referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_destroy_write_struct referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_init_io referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_free_data referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_set_IHDR referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+main.cu.obj : error LNK2019: unresolved external symbol png_set_text referenced in function "void __cdecl save_image(char const *,int *,int,int)" (?save_image@@YAXPEBDPEAHHH@Z)
+C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\lib\libpng.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\lib\libpngd.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\lib\zlibstat.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\dstok\source\repos\Dynamic Parallelism Demo\x64\Debug\Dynamic Parallelism Demo.exe : fatal error LNK1120: 11 unresolved externals

@@ -1,0 +1,27 @@
+﻿  Compiling CUDA source file main.cu...
+  
+  C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\bin\HostX86\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static --expt-relaxed-constexpr    -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS   /MD " -o x64\Release\main.cu.obj "C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo\main.cu" 
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(93): warning : missing return statement at end of non-void function "border_check"
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(83): warning : variable "x_block" was declared but never referenced
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(84): warning : variable "y_block" was declared but never referenced
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(85): warning : variable "x" was declared but never referenced
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(86): warning : variable "y" was declared but never referenced
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(166): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(167): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(166): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(167): warning : conversion from a string literal to "char *" is deprecated
+  
+  main.cu
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/main.cu(207): warning C4996: 'cudaThreadSynchronize': was declared deprecated
+     Creating library C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\x64\Release\Dynamic Parallelism Demo.lib and object C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\x64\Release\Dynamic Parallelism Demo.exp
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+  Dynamic Parallelism Demo.vcxproj -> C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\x64\Release\Dynamic Parallelism Demo.exe
