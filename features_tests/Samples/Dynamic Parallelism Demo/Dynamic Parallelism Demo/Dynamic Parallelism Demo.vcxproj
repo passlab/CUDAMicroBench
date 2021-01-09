@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="main.cu" />
+    <CudaCompile Include="Non_Dynamic_Parallelism.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
