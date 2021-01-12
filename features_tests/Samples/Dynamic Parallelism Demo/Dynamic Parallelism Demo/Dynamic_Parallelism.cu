@@ -18,18 +18,20 @@
 using namespace std;
 
 #define threhhold -1
-#define maxDepth  1024
 #define DIFF_DWELL -1
-#define MAX_DWELL 1024
+#define MAX_DWELL 512
 #define BSX 64
 #define BSY 4
 #define MAX_DEPTH 4
+#define neutral (MAX_DWELL + 1)
 /** region below which do per-pixel */
 #define MIN_SIZE 32
 /** subdivision factor along each axis */
 #define SUBDIV 4
 /** subdivision when launched from host */
 #define INIT_SUBDIV 32
+
+#define NEUT_DWELL (MAX_DWELL + 1)
 
 
 /** gets the color, given the dwell (on host) */
@@ -46,19 +48,20 @@ void dwell_color(int* r, int* g, int* b, float dwell) {
             dwell = 0;
         if (dwell <= CUT_DWELL) {
             // from black to blue the first half
-            *r = *g = 0;
+            *r = 120;
+            *g = 0;
             *b = 128 + dwell * 127 / (CUT_DWELL);
         }
         else {
             // from blue to white for the second half
-            *b = 255;
+            *b = 20;
             *r = *g = (dwell - CUT_DWELL) * 255 / (MAX_DWELL - CUT_DWELL);
         }
     }
 }  // dwell_color
 
 /** from nv page*/
-void save_image(const char* filename, float* dwells, int w, int h) {
+void save_image(const char* filename, int* dwells, int w, int h) {
     //for (int i = 0; i < (w * h); i++) {
     //    printf("%.f", dwells);
     //}
@@ -177,136 +180,78 @@ __device__ __host__ int divup(int x, int y) {
     return x / y + (x % y ? 1 : 0);
 }
 
-
-__device__ int border_check(complex* grid, int w, int h, int* dwells) {
-    int x_block = blockDim.x * blockIdx.x;
-    int y_block = blockDim.y * blockIdx.y;
-    int x = threadIdx.x + blockDim.x * blockIdx.x;
-    int y = threadIdx.y + blockDim.y * blockIdx.y;
-}
-
-
-
-__device__ int get_dwell_eq(int d1, complex a) {
-    int d2 = a.re;
+__device__ int get_dwell_eq(int d1, int d2) {
     if (d1 == d2) {
-        return 1;
+        return d1;
     }
-    else if (d1 == maxDepth + 1 || d2 == maxDepth + 1) {
+    else if (d1 == NEUT_DWELL || d2 == NEUT_DWELL) {
         return min(d1, d2);
     }
     return -1;
 }
 
-__device__ complex z_function(int x, int y, int w, int h, complex cmin, complex cmax) {
-    complex dc = cmax - cmin;
-    float fx = (float)x / w;
-    float fy = (float)y / h;
-    complex c = cmin + complex(fx * dc.re, fy * dc.im);
-    complex z = c;
-    int dwell = 0;
-    while (dwell < maxDepth && abs2(z) <= 4) {
-        z = z * z + c;
-        dwell++;
-    }
-    return z;
-}
 __device__ int dwell_function(int x, int y, int w, int h, complex cmin, complex cmax) {
     complex dc = cmax - cmin;
-    float fx = (float)x / w;
-    float fy = (float)y / h;
+    float fx = (float)x / w, fy = (float)y / h;
     complex c = cmin + complex(fx * dc.re, fy * dc.im);
-    complex z = c;
     int dwell = 0;
-    while (dwell < maxDepth && abs2(z) <= 4) {
+    complex z = c;
+    while (dwell < MAX_DWELL && abs2(z) < 2 * 2) {
         z = z * z + c;
         dwell++;
     }
     return dwell;
 }
-// i dont think this is correct
-__device__ complex z_function_first_derivative(int x, int y, int w, int h, complex cmin, complex cmax) {
-    complex z = complex(0, 0);
-    for (double n = 3; n == 0; n = n - .0001) {
-        complex dc = cmax - cmin;
-        float fx = (float)x / w;
-        float fy = (float)y / h;
-        complex c = cmin + complex(fx * dc.re, fy * dc.im);
-        c = complex(c.re + n, c.im);
-        complex z = c;
-        int dwell = 0;
-        while (dwell < maxDepth && abs2(z) <= 4) {
-            z = z * z + c;
-            dwell++;
-        }
+
+__global__ void pixel_calc(int* dwells, int w, int h, int x0, int y0, complex cmin, complex cmax, int d) {
+    int x = threadIdx.x + blockDim.x * blockIdx.x; 
+    int y = threadIdx.y + blockDim.y * blockIdx.y;
+    if (x < d && y < d) {
+        x += x0, y += y0;
+        dwells[y * w + x] = dwell_function(x, y, w, h, cmin, cmax);
     }
-    return z;
 }
-__device__ complex get_distance(int w, int h, int x, int y, complex cmin, complex cmax) {
-    //int x = threadIdx.x + blockDim.x * blockIdx.x;
-    //int y = threadIdx.y + blockDim.y * blockIdx.y;
-    double distance = 0;
-    //iter of n 
-    if (x < w && y < h) {
-        //exterior distance calculation on iteration over n
-        complex z_val = z_function(x, y, w, h, cmin, cmax);
-        complex z_val_prime = z_function_first_derivative(x, y, w, h, cmin, cmax);
-        complex distance = ((absolute(z_val) * logC(absolute(z_val)) / absolute(z_val_prime))) * 2.0;
 
-
+__global__ void dwell_fill_k(int* dwells, int w, int x0, int y0, int d, int dwell) {
+    int x = threadIdx.x + blockIdx.x * blockDim.x;
+    int y = threadIdx.y + blockIdx.y * blockDim.y;
+    if (x < d && y < d) {
+        x += x0, y += y0;
+        dwells[y * w + x] = dwell;
     }
-    return distance;
 }
 //nv blog
 __device__ int border_dwell(int w, int h, complex cmin, complex cmax, int x0, int y0, int d) {
     // check whether all boundary pixels have the same dwell
     int tid = threadIdx.y * blockDim.x + threadIdx.x;
     int bs = blockDim.x * blockDim.y;
-    complex comm_dwell = complex(0, 0);
+    int comm_dwell = neutral;
     // for all boundary pixels, distributed across threads
     for (int r = tid; r < d; r += bs) {
         // for each boundary: b = 0 is east, then counter-clockwise
         for (int b = 0; b < 4; b++) {
             int x = b % 2 != 0 ? x0 + r : (b == 0 ? x0 + d - 1 : x0);
             int y = b % 2 == 0 ? y0 + r : (b == 1 ? y0 + d - 1 : y0);
-            complex dist = get_distance(x, y, w, h, cmin, cmax);
-            if (r = tid) {
-                comm_dwell = dist;
-            }
-            else {
-                int same = dist.compare(comm_dwell);
-                if (same != 1) {
-                    return -1;
-                }
-
-            }
+            int dwell = dwell_function(x, y, w, h, cmin, cmax);
+            comm_dwell = get_dwell_eq(comm_dwell, dwell);
         }
     }  // for all boundary pixels
     // reduce across threads in the block
     __shared__ int ldwells[BSX * BSY];
     int nt = min(d, BSX * BSY);
     if (tid < nt)
-        ldwells[tid] = comm_dwell.re;
+        ldwells[tid] = comm_dwell;
     __syncthreads();
     for (; nt > 1; nt /= 2) {
         if (tid < nt / 2)
             ldwells[tid] = get_dwell_eq(ldwells[tid], ldwells[tid + nt / 2]);
         __syncthreads();
     }
+    //printf("%i", ldwells[0]);
     return ldwells[0];
 }
 
-
-__global__ void dwell_fill_k(float* dwells, int w, int x0, int y0, int d, int dwell) {
-    int x = threadIdx.x + blockIdx.x * blockDim.x;
-    int y = threadIdx.y + blockIdx.y * blockDim.y;
-    if (x < d && y < d) {
-        x += x0, y += y0;
-        dwells[y * w + x] = (float)dwell;
-    }
-}
-
-__global__ void mandelbrot_block_k(float* dwells, int w, int h, complex cmin, complex cmax, int x0, int y0,
+__global__ void mandelbrot_block_k(int* dwells, int w, int h, complex cmin, complex cmax, int x0, int y0,
     int d, int depth) {
     x0 += d * blockIdx.x, y0 += d * blockIdx.y;
     int comm_dwell = border_dwell(w, h, cmin, cmax, x0, y0, d);
@@ -326,7 +271,7 @@ __global__ void mandelbrot_block_k(float* dwells, int w, int h, complex cmin, co
             // leaf, per-pixel kernel
             dim3 bs(BSX, BSY), grid(divup(d, BSX), divup(d, BSY));
             //maybe broke since not treating as kernel launch
-            dwells[y0 * w + x0] = dwell_function(w, h, x0, y0, cmin, cmax);
+            pixel_calc<<<grid, bs>>>(dwells, w, h, x0, y0, cmin, cmax, d);
             //__syncthreads();
         }
     }
@@ -334,21 +279,21 @@ __global__ void mandelbrot_block_k(float* dwells, int w, int h, complex cmin, co
 
 
 
-#define H (8 * 3000)
-#define W (8 * 3000)
-#define IMAGE_PATH "./mandelbrot_d.png"
+#define H (8 * 5500)
+#define W (8 * 5500)
+#define IMAGE_PATH "./mandelbrot_dda.png"
 int main(int argc, char** argv) {
     int w = W;
     int h = H;
-    size_t dwells_size = w * h * sizeof(float);
-    float* dwellsD;
-    float* dwellsH;
+    size_t dwells_size = w * h * sizeof(int);
+    int* dwellsD;
+    int* dwellsH;
     cudaMalloc((void**)&dwellsD, dwells_size);
-    dwellsH = (float*)malloc(dwells_size);
+    dwellsH = (int*)malloc(dwells_size);
     complex cmin = complex(-1.5, -1);
     complex cmax = complex(.5, 1);
     //kernel dims
-    dim3 blocks(BSX, BSY), grid(divup(w, blocks.x), divup(h, blocks.y));
+    dim3 blocks(BSX, BSY), grid(INIT_SUBDIV,  INIT_SUBDIV);
     double start;
     double end;
     start = omp_get_wtime();

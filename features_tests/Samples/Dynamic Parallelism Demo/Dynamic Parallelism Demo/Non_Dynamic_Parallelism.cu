@@ -17,8 +17,8 @@
 using namespace std;
 
 #define threhhold -1
-#define maxDepth  1024
-#define MAX_DWELL 1024
+#define maxDepth  512
+#define MAX_DWELL 512
 
 
 
@@ -141,8 +141,8 @@ void dwell_color(int* r, int* g, int* b, int dwell) {
         }
         else {
             // from blue to white for the second half
-            *b = 255;
-            *r = *g = (dwell - CUT_DWELL) * 255 / (MAX_DWELL - CUT_DWELL);
+            *r = 255;
+            *b = *g = (dwell - CUT_DWELL) * 255 / (MAX_DWELL - CUT_DWELL);
         }
     }
 }  // dwell_color
@@ -188,13 +188,13 @@ void save_image(const char* filename, int* dwells, int w, int h) {
     free(row);
 }  // save_image
 
-#define H (8 * 2400)
-#define W (8 * 2400)
+#define H (8 * 5500)
+#define W (8 * 5500)
 #define IMAGE_PATH "./mandelbrot.png"
 int main(int argc, char **argv) {
     int w = W;
     int h = H;
-    size_t dwells_size = w * h * sizeof(int);
+    size_t dwells_size = w * h * sizeof(int); 
     int* dwellsD;
     int* dwellsH;
     cudaMalloc((void**)&dwellsD, dwells_size);
