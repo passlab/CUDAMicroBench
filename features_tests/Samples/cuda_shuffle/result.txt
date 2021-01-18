@@ -1,0 +1,72 @@
+./reduction.out Starting...
+
+GPU Device 0: "Volta" with compute capability 7.0
+
+Using Device 0: Tesla V100-PCIE-32GB
+
+Reducing array of type int
+
+16777216 elements
+256 threads (max)
+32768 blocks
+
+Reduction, Throughput = 73.3799 GB/s, Time = 0.00091 s, Size = 16777216 Elements, NumDevsUsed = 1, Workgroup = 256
+
+GPU result = 2139353471
+CPU result = 2139353471
+
+Test passed
+./reduction.out Starting...
+
+GPU Device 0: "Volta" with compute capability 7.0
+
+Using Device 0: Tesla V100-PCIE-32GB
+
+Reducing array of type int
+
+33554432 elements
+256 threads (max)
+65536 blocks
+
+Reduction, Throughput = 161.9071 GB/s, Time = 0.00083 s, Size = 33554432 Elements, NumDevsUsed = 1, Workgroup = 256
+
+GPU result = -16317892
+CPU result = -16317892
+
+Test passed
+./reduction.out Starting...
+
+GPU Device 0: "Volta" with compute capability 7.0
+
+Using Device 0: Tesla V100-PCIE-32GB
+
+Reducing array of type int
+
+67108864 elements
+256 threads (max)
+131072 blocks
+
+Reduction, Throughput = 323.6463 GB/s, Time = 0.00083 s, Size = 67108864 Elements, NumDevsUsed = 1, Workgroup = 256
+
+GPU result = -32918757
+CPU result = -32918757
+
+Test passed
+./reduction.out Starting...
+
+GPU Device 0: "Volta" with compute capability 7.0
+
+Using Device 0: Tesla V100-PCIE-32GB
+
+Reducing array of type int
+
+134217728 elements
+256 threads (max)
+262144 blocks
+
+Reduction, Throughput = 590.8185 GB/s, Time = 0.00091 s, Size = 134217728 Elements, NumDevsUsed = 1, Workgroup = 256
+
+GPU result = -66248749
+CPU result = -66248749
+
+Test passed
