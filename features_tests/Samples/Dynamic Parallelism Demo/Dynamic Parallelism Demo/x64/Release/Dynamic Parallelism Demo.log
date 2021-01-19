@@ -1,21 +1,28 @@
-﻿  Compiling CUDA source file Dynamic_Parallelism.cu...
+﻿  Compiling CUDA source file Non_Dynamic_Parallelism.cu...
   
-  C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\bin\HostX86\x64" -x cu -rdc=true  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart shared --expt-relaxed-constexpr -lcudadevrt -rdc=true    -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS   /MD " -o x64\Release\Dynamic_Parallelism.cu.obj "C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo\Dynamic_Parallelism.cu" 
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(82): warning : conversion from a string literal to "char *" is deprecated
+  C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\bin\HostX86\x64" -x cu -rdc=true  -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\include"     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart shared --expt-relaxed-constexpr -lcudadevrt -rdc=true    -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS   /MD " -o x64\Release\Non_Dynamic_Parallelism.cu.obj "C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo\Non_Dynamic_Parallelism.cu" 
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(96): warning : missing return statement at end of non-void function "border_check"
   
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(83): warning : conversion from a string literal to "char *" is deprecated
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(86): warning : variable "x_block" was declared but never referenced
   
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(82): warning : conversion from a string literal to "char *" is deprecated
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(87): warning : variable "y_block" was declared but never referenced
   
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(83): warning : conversion from a string literal to "char *" is deprecated
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(88): warning : variable "x" was declared but never referenced
   
-  Dynamic_Parallelism.cu
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(52): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(57): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Dynamic_Parallelism.cu(315): warning C4996: 'cudaThreadSynchronize': was declared deprecated
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(89): warning : variable "y" was declared but never referenced
   
-  C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -dlink -o "x64\Release\Dynamic Parallelism Demo.device-link.obj" -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb   /MD " -L"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin/crt" -L"C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\lib" -L"C:\Program Files (x86)\GnuWin32\lib\\" -L"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\lib\x64" cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libpng.lib libpngd.lib zlibstat.lib cudadevrt.lib cudart.lib  -gencode=arch=compute_52,code=sm_52  --machine 64 x64\Release\Dynamic_Parallelism.cu.obj 
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(169): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(170): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(169): warning : conversion from a string literal to "char *" is deprecated
+  
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(170): warning : conversion from a string literal to "char *" is deprecated
+  
+  Non_Dynamic_Parallelism.cu
+C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic Parallelism Demo/Dynamic Parallelism Demo/Non_Dynamic_Parallelism.cu(213): warning C4996: 'cudaThreadSynchronize': was declared deprecated
+  
+  C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\Dynamic Parallelism Demo>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin\nvcc.exe" -dlink -o "x64\Release\Dynamic Parallelism Demo.device-link.obj" -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb   /MD " -L"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\bin/crt" -L"C:\Users\dstok\source\repos\Dynamic Parallelism Demo\Dynamic Parallelism Demo\lib" -L"C:\Program Files (x86)\GnuWin32\lib\\" -L"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\lib\x64" cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libpng.lib libpngd.lib zlibstat.lib cudadevrt.lib cudart.lib  -gencode=arch=compute_52,code=sm_52  --machine 64 x64\Release\Non_Dynamic_Parallelism.cu.obj 
   cudart_static.lib
   kernel32.lib
   user32.lib
@@ -34,7 +41,7 @@ C:/Users/dstok/source/repos/passlab/CUDAMemBench/features_tests/Samples/Dynamic 
   zlibstat.lib
   cudadevrt.lib
   cudart.lib
-  Dynamic_Parallelism.cu.obj
+  Non_Dynamic_Parallelism.cu.obj
      Creating library C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\x64\Release\Dynamic Parallelism Demo.lib and object C:\Users\dstok\source\repos\passlab\CUDAMemBench\features_tests\Samples\Dynamic Parallelism Demo\x64\Release\Dynamic Parallelism Demo.exp
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance

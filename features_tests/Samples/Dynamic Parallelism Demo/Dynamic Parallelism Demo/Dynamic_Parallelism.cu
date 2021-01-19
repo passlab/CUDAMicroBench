@@ -19,24 +19,24 @@ using namespace std;
 
 #define threhhold -1
 #define DIFF_DWELL -1
-#define MAX_DWELL 512
+#define MAX_DWELL 2048
 #define BSX 64
-#define BSY 4
-#define MAX_DEPTH 4
+#define BSY 16
+#define MAX_DEPTH 16
 #define neutral (MAX_DWELL + 1)
 /** region below which do per-pixel */
-#define MIN_SIZE 32
+#define MIN_SIZE 64
 /** subdivision factor along each axis */
-#define SUBDIV 4
+#define SUBDIV 16
 /** subdivision when launched from host */
-#define INIT_SUBDIV 32
+#define INIT_SUBDIV 64
 
 #define NEUT_DWELL (MAX_DWELL + 1)
 
 
 /** gets the color, given the dwell (on host) */
 
-#define CUT_DWELL (MAX_DWELL / 4)
+#define CUT_DWELL (MAX_DWELL / MAX_DEPTH)
 void dwell_color(int* r, int* g, int* b, float dwell) {
     // black for the Mandelbrot set
     if (dwell >= MAX_DWELL) {
@@ -62,9 +62,6 @@ void dwell_color(int* r, int* g, int* b, float dwell) {
 
 /** from nv page*/
 void save_image(const char* filename, int* dwells, int w, int h) {
-    //for (int i = 0; i < (w * h); i++) {
-    //    printf("%.f", dwells);
-    //}
     png_bytep row;
 
     FILE* fp = fopen(filename, "wb");
@@ -115,20 +112,6 @@ struct complex {
     }
     /** real and imaginary part */
     float re, im;
-
-    __device__ int compare(complex b) {
-        if (re == b.re && im == b.im) {
-            return 1;
-        }
-        else if (re > b.re && im > b.im){
-            return 2;
-        }
-        else if (re < b.re && im < b.im) {
-            return 3;
-        }
-        return -1;
-    }
-  
 };
 
 __host__ __device__ complex absolute(complex x) {
@@ -167,13 +150,9 @@ inline __host__ __device__ complex operator/
     float invabs2 = 1 / abs2(b);
     return complex((a.re * b.re + a.im * b.im) * invabs2,
         (a.im * b.re - b.im * a.re) * invabs2);
-}  // operator/
+} 
 
-
-struct pixel {
-    complex z;
-    int color;
-};
+// operator/
 /** a useful function to compute the number of threads
 copied from 24-25*/
 __device__ __host__ int divup(int x, int y) {
@@ -192,7 +171,8 @@ __device__ int get_dwell_eq(int d1, int d2) {
 
 __device__ int dwell_function(int x, int y, int w, int h, complex cmin, complex cmax) {
     complex dc = cmax - cmin;
-    float fx = (float)x / w, fy = (float)y / h;
+    float fx = (float)x / w;
+    float fy = (float)y / h;
     complex c = cmin + complex(fx * dc.re, fy * dc.im);
     int dwell = 0;
     complex z = c;
@@ -225,7 +205,7 @@ __device__ int border_dwell(int w, int h, complex cmin, complex cmax, int x0, in
     // check whether all boundary pixels have the same dwell
     int tid = threadIdx.y * blockDim.x + threadIdx.x;
     int bs = blockDim.x * blockDim.y;
-    int comm_dwell = neutral;
+    int comm_dwell = NEUT_DWELL;
     // for all boundary pixels, distributed across threads
     for (int r = tid; r < d; r += bs) {
         // for each boundary: b = 0 is east, then counter-clockwise
@@ -250,6 +230,7 @@ __device__ int border_dwell(int w, int h, complex cmin, complex cmax, int x0, in
     //printf("%i", ldwells[0]);
     return ldwells[0];
 }
+
 
 __global__ void mandelbrot_block_k(int* dwells, int w, int h, complex cmin, complex cmax, int x0, int y0,
     int d, int depth) {
@@ -279,9 +260,9 @@ __global__ void mandelbrot_block_k(int* dwells, int w, int h, complex cmin, comp
 
 
 
-#define H (8 * 5500)
-#define W (8 * 5500)
-#define IMAGE_PATH "./mandelbrot_dda.png"
+#define H (8 * 2000)
+#define W (8 * 2000)
+#define IMAGE_PATH "./mandelbrot_dp.png"
 int main(int argc, char** argv) {
     int w = W;
     int h = H;
@@ -302,10 +283,10 @@ int main(int argc, char** argv) {
     end = omp_get_wtime();
     printf("Work took %f seconds\n", end - start);
     cudaMemcpy(dwellsH, dwellsD, dwells_size, cudaMemcpyDeviceToHost);
-
+    printf("saving image....");
+    cudaFree(dwellsD);
     save_image(IMAGE_PATH, dwellsH, w, h);
 
-    cudaFree(dwellsD);
     free(dwellsH);
     return 0;
 }

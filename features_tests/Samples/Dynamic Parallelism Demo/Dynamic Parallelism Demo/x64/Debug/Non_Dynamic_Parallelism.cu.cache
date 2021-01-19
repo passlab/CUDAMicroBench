@@ -4,12 +4,12 @@ AdditionalCompilerOptions=
 AdditionalDependencies=
 AdditionalDeps=
 AdditionalLibraryDirectories=
-AdditionalOptions=--expt-relaxed-constexpr
-AdditionalOptions=--expt-relaxed-constexpr
+AdditionalOptions=--expt-relaxed-constexpr -lcudadevrt -rdc=true
+AdditionalOptions=--expt-relaxed-constexpr -lcudadevrt -rdc=true
 CodeGeneration=compute_52,sm_52
 CodeGeneration=compute_52,sm_52
 CompileOut=x64\Debug\Non_Dynamic_Parallelism.cu.obj
-CudaRuntime=Static
+CudaRuntime=Shared
 CudaToolkitCustomDir=
 DebugInformationFormat=ProgramDatabase
 DebugInformationFormat=ProgramDatabase
@@ -18,7 +18,7 @@ Emulation=false
 ExtensibleWholeProgramCompilation=false
 FastMath=false
 GenerateLineInfo=false
-GenerateRelocatableDeviceCode=false
+GenerateRelocatableDeviceCode=true
 GPUDebugInfo=true
 GPUDebugInfo=true
 HostDebugInfo=true

@@ -17,9 +17,12 @@
 using namespace std;
 
 #define threhhold -1
-#define maxDepth  512
-#define MAX_DWELL 512
-
+#define DIFF_DWELL -1
+#define MAX_DWELL 2048
+#define BSX 64
+#define BSY 16
+#define MAX_DEPTH 16
+#define neutral (MAX_DWELL + 1)
 
 
 //nv git
@@ -96,7 +99,7 @@ __device__ int get_dwell_eq(int d1, int d2) {
     if(d1 == d2){
     return 1;
     }
-    else if (d1 == maxDepth + 1 || d2 == maxDepth + 1) {
+    else if (d1 == neutral || d2 == neutral) {
         return min(d1, d2);
     }
     return -1;
@@ -108,7 +111,7 @@ __device__ int render(int x, int y, int w, int h, complex cmin, complex cmax) {
     complex c = cmin + complex (fx * dc.re, fy * dc.im);
     complex z = c;
     int dwell = 0;
-    while (dwell < maxDepth && abs2(z) <= 4) {
+    while (dwell < MAX_DWELL && abs2(z) <= 4) {
         z = z * z + c;
         dwell++;
     }
@@ -188,8 +191,8 @@ void save_image(const char* filename, int* dwells, int w, int h) {
     free(row);
 }  // save_image
 
-#define H (8 * 5500)
-#define W (8 * 5500)
+#define H (8 * 2000)
+#define W (8 * 2000)
 #define IMAGE_PATH "./mandelbrot.png"
 int main(int argc, char **argv) {
     int w = W;
@@ -202,7 +205,7 @@ int main(int argc, char **argv) {
     complex cmin = complex(-1.5, -1);
     complex cmax = complex(.5, 1);
     //kernel dims
-    dim3 blocks(64, 4), grid(divup(w, blocks.x), divup(h, blocks.y));
+    dim3 blocks(BSX, BSY), grid(divup(w, blocks.x), divup(h, blocks.y));
     double start;
     double end;
     start = omp_get_wtime();
