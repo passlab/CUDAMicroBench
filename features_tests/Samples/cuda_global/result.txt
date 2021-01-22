@@ -28,7 +28,7 @@ Reducing array of type int
 256 threads (max)
 65536 blocks
 
-Reduction, Throughput = 161.0948 GB/s, Time = 0.00083 s, Size = 33554432 Elements, NumDevsUsed = 1, Workgroup = 256
+Reduction, Throughput = 161.0948 GB/s, Time = 0.00097 s, Size = 33554432 Elements, NumDevsUsed = 1, Workgroup = 256
 
 GPU result = -16317892
 CPU result = -16317892
@@ -46,7 +46,7 @@ Reducing array of type int
 256 threads (max)
 131072 blocks
 
-Reduction, Throughput = 292.4071 GB/s, Time = 0.00092 s, Size = 67108864 Elements, NumDevsUsed = 1, Workgroup = 256
+Reduction, Throughput = 292.4071 GB/s, Time = 0.00103 s, Size = 67108864 Elements, NumDevsUsed = 1, Workgroup = 256
 
 GPU result = -32918757
 CPU result = -32918757
@@ -64,7 +64,7 @@ Reducing array of type int
 256 threads (max)
 262144 blocks
 
-Reduction, Throughput = 459.6851 GB/s, Time = 0.00117 s, Size = 134217728 Elements, NumDevsUsed = 1, Workgroup = 256
+Reduction, Throughput = 459.6851 GB/s, Time = 0.00121 s, Size = 134217728 Elements, NumDevsUsed = 1, Workgroup = 256
 
 GPU result = -66248749
 CPU result = -66248749

@@ -1,228 +1,170 @@
-/* Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *  * Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  * Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *  * Neither the name of NVIDIA CORPORATION nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <ctime>
 
-//
-// This sample demonstrates the use of streams for concurrent execution. It also
-// illustrates how to introduce dependencies between CUDA streams with the
-// cudaStreamWaitEvent function.
-//
-
-// Devices of compute capability 2.0 or higher can overlap the kernels
-//
-#include <cooperative_groups.h>
-#include <stdio.h>
-
-namespace cg = cooperative_groups;
-#include <helper_cuda.h>
-#include <helper_functions.h>
-
-// This is a kernel that does no real work but runs at least for a specified
-// number of clocks
-__global__ void clock_block(clock_t *d_o, clock_t clock_count) {
-  unsigned int start_clock = (unsigned int)clock();
-
-  clock_t clock_offset = 0;
-
-  while (clock_offset < clock_count) {
-    unsigned int end_clock = (unsigned int)clock();
-
-    // The code below should work like
-    // this (thanks to modular arithmetics):
-    //
-    // clock_offset = (clock_t) (end_clock > start_clock ?
-    //                           end_clock - start_clock :
-    //                           end_clock + (0xffffffffu - start_clock));
-    //
-    // Indeed, let m = 2^32 then
-    // end - start = end + m - start (mod m).
-
-    clock_offset = (clock_t)(end_clock - start_clock);
-  }
-
-  d_o[0] = clock_offset;
+//sleep for the requested number of clocks
+__global__ void timed_kernel( clock_t* clocksArray, int kernelIdx, int clockTicks ) {
+    const clock_t start = clock();
+    clock_t elapsed = 0;
+    while( elapsed < clockTicks ) elapsed = clock() - start; 
+    clocksArray[ kernelIdx ] = elapsed;
 }
 
-// Single warp reduction kernel
-__global__ void sum(clock_t *d_clocks, int N) {
-  // Handle to thread block group
-  cg::thread_block cta = cg::this_thread_block();
-  __shared__ clock_t s_clocks[32];
+//parallel reduction: assume only one thread block used for computation;
+//using more than a single block requires inter-block sychronization, see example 4.1/4.2 
+__global__ void sum_clocks( clock_t* result, const clock_t* clocks, int numElements ) {
+    const int CACHE_SIZE = 32; // equal to number of threads in thread block
+    __shared__ clock_t cache[ CACHE_SIZE ];
+    cache[ threadIdx.x ] = 0;
+    if( threadIdx.x < numElements ) {
+        for( int i = 0; i < numElements; i += CACHE_SIZE ) {
+            cache[ threadIdx.x ] += clocks[ threadIdx.x + i ];   
+        }
+    }
+    __syncthreads();
+    for( int i = CACHE_SIZE / 2; i > 0; i /= 2 ) {
+        if( threadIdx.x < i ) cache[ threadIdx.x ] += cache[ threadIdx.x + i ];
+        __syncthreads();
+    }        
+    result[ 0 ] = cache[ 0 ];
+}
 
-  clock_t my_sum = 0;
+//------------------------------------------------------------------------------
+int main( int , char**  ) {
+    
+    //first task: verify support for concurrent kernel execution
+    cudaDeviceProp prop = cudaDeviceProp();
+    int currentDevice = -1;
+    cudaGetDevice( &currentDevice );
+    cudaGetDeviceProperties( &prop, currentDevice );
+    if( prop.concurrentKernels == 0 ) {
+        std::cout << "Concurrent kernel execution not supported\n"
+                  << "kernels will be serialized" << std::endl;
+    }    
 
-  for (int i = threadIdx.x; i < N; i += blockDim.x) {
-    my_sum += d_clocks[i];
-  }
+    // change this value to find the maximum number of concurrent kernels supported
+    const int NUM_KERNELS = 8;
+    const int NUM_CLOCKS  = NUM_KERNELS;
+    const size_t CLOCKS_BYTE_SIZE = NUM_CLOCKS * sizeof( clock_t );
+    const int KERNEL_EXECUTION_TIME_ms = 50; 
+    float elapsed_time = 0.f;   
+    cudaEvent_t start, stop;
+    std::vector< cudaEvent_t >  kernel_events( NUM_KERNELS );
+    cudaStream_t time_compute_stream;
+    std::vector< cudaStream_t > kernel_streams( NUM_KERNELS );
 
-  s_clocks[threadIdx.x] = my_sum;
-  cg::sync(cta);
+    //create timing events
+    cudaEventCreate( &start );
+    cudaEventCreate( &stop  );
 
-  for (int i = 16; i > 0; i /= 2) {
-    if (threadIdx.x < i) {
-      s_clocks[threadIdx.x] += s_clocks[threadIdx.x + i];
+    //create kernel events
+    for( std::vector< cudaEvent_t >::iterator i =  kernel_events.begin();
+         i != kernel_events.end(); ++i ) {
+        cudaEventCreateWithFlags( &(*i), cudaEventDisableTiming );             
+        
     }
 
-    cg::sync(cta);
-  }
+    //create stream for time reporting kernel: stream must wait for all kernel events to be recorded 
+    cudaStreamCreate( &time_compute_stream );
+    
+    //create kernel streams
+    for( std::vector< cudaStream_t >::iterator i =  kernel_streams.begin();
+        i != kernel_streams.end(); ++i ) {
+        cudaStreamCreate( &(*i) );           
+    }
 
-  d_clocks[0] = s_clocks[0];
-}
+    //data array to hold timing information from kernel runs; TODO: use std::vector with page locked allocator
+    clock_t* clocks    = 0;
+    clock_t* clock_sum = 0; // sum of kernel execution times
+    //we need host-allocated page locked memory because later-on an async memcpy operation is
+    //is used; async operations *always* require page-locked memory
+    cudaHostAlloc( &clocks, CLOCKS_BYTE_SIZE, cudaHostAllocPortable );
+    cudaHostAlloc( &clock_sum, sizeof( clock_t ), cudaHostAllocPortable );
+    clock_t* dev_clocks = 0;
+    cudaMalloc( &dev_clocks, CLOCKS_BYTE_SIZE );
+    clock_t* dev_clock_sum = 0;
+    cudaMalloc( &dev_clock_sum, sizeof( clock_t ) );
 
-int main(int argc, char **argv) {
-  int nkernels = 8;             // number of concurrent kernels
-  int nstreams = nkernels + 1;  // use one more stream than concurrent kernel
-  int nbytes = nkernels * sizeof(clock_t);  // number of data bytes
-  float kernel_time = 10;                   // time the kernel should run in ms
-  float elapsed_time;                       // timing variables
-  int cuda_device = 0;
-
-  printf("[%s] - Starting...\n", argv[0]);
-
-  // get number of kernels if overridden on the command line
-  if (checkCmdLineFlag(argc, (const char **)argv, "nkernels")) {
-    nkernels = getCmdLineArgumentInt(argc, (const char **)argv, "nkernels");
-    nstreams = nkernels + 1;
-  }
-
-  // use command-line specified CUDA device, otherwise use device with highest
-  // Gflops/s
-  cuda_device = findCudaDevice(argc, (const char **)argv);
-
-  cudaDeviceProp deviceProp;
-  checkCudaErrors(cudaGetDevice(&cuda_device));
-
-  checkCudaErrors(cudaGetDeviceProperties(&deviceProp, cuda_device));
-
-  if ((deviceProp.concurrentKernels == 0)) {
-    printf("> GPU does not support concurrent kernel execution\n");
-    printf("  CUDA kernel runs will be serialized\n");
-  }
-
-  printf("> Detected Compute SM %d.%d hardware with %d multi-processors\n",
-         deviceProp.major, deviceProp.minor, deviceProp.multiProcessorCount);
-
-  // allocate host memory
-  clock_t *a = 0;  // pointer to the array data in host memory
-  checkCudaErrors(cudaMallocHost((void **)&a, nbytes));
-
-  // allocate device memory
-  clock_t *d_a = 0;  // pointers to data and init value in the device memory
-  checkCudaErrors(cudaMalloc((void **)&d_a, nbytes));
-
-  // allocate and initialize an array of stream handles
-  cudaStream_t *streams =
-      (cudaStream_t *)malloc(nstreams * sizeof(cudaStream_t));
-
-  for (int i = 0; i < nstreams; i++) {
-    checkCudaErrors(cudaStreamCreate(&(streams[i])));
-  }
-
-  // create CUDA event handles
-  cudaEvent_t start_event, stop_event;
-  checkCudaErrors(cudaEventCreate(&start_event));
-  checkCudaErrors(cudaEventCreate(&stop_event));
-
-  // the events are used for synchronization only and hence do not need to
-  // record timings this also makes events not introduce global sync points when
-  // recorded which is critical to get overlap
-  cudaEvent_t *kernelEvent;
-  kernelEvent = (cudaEvent_t *)malloc(nkernels * sizeof(cudaEvent_t));
-
-  for (int i = 0; i < nkernels; i++) {
-    checkCudaErrors(
-        cudaEventCreateWithFlags(&(kernelEvent[i]), cudaEventDisableTiming));
-  }
-
-  //////////////////////////////////////////////////////////////////////
-  // time execution with nkernels streams
-  clock_t total_clocks = 0;
-#if defined(__arm__) || defined(__aarch64__)
-  // the kernel takes more time than the channel reset time on arm archs, so to
-  // prevent hangs reduce time_clocks.
-  clock_t time_clocks = (clock_t)(kernel_time * (deviceProp.clockRate / 100));
+    const int CLOCK_FREQ_kHz = prop.clockRate; 
+    // BEGIN of async operations
+    cudaEventRecord( start, 0 );
+    clock_t cpu_start = clock();
+    for( int k = 0; k != NUM_KERNELS; ++k ) {
+#ifdef FORCE_SERIALIZED
+        // clock ticks = freq [s^-1] x time [s]  =
+        //   10 ^ 3 x freq  x 10 ^ -3 time       =
+        //   CLOCK_FREQ_kHz x KERNEL_EXECUTION_TIME_ms
+        timed_kernel<<< 1, 1, 0, kernel_streams[ 0 ] >>>( dev_clocks,
+                                                          k,
+                                                          CLOCK_FREQ_kHz * KERNEL_EXECUTION_TIME_ms );
+        if( k == NUM_KERNELS - 1 ) { // record event after all kernel have been executed
+             cudaEventRecord( kernel_events[ 0 ], kernel_streams[ 0 ] );
+             cudaStreamWaitEvent( time_compute_stream, kernel_events[ 0 ], 0 /*must be zero*/ );
+        }
 #else
-  clock_t time_clocks = (clock_t)(kernel_time * deviceProp.clockRate);
-#endif
+        timed_kernel<<< 1, 1, 0, kernel_streams[ k ] >>>( dev_clocks,
+                                                          k,
+                                                          KERNEL_EXECUTION_TIME_ms * CLOCK_FREQ_kHz );
+        cudaEventRecord( kernel_events[ k ], kernel_streams[ k ] );
+        cudaStreamWaitEvent( time_compute_stream, kernel_events[ k ], 0 /*must be zero*/ );
+#endif               
+    }
+    const int NUM_BLOCKS = 1;
+    const int NUM_THREADS_PER_BLOCK = 32; // must match shared memory size
+    const size_t SHARED_MEMORY_SIZE = 0;     
+    
+    sum_clocks<<< NUM_BLOCKS, NUM_THREADS_PER_BLOCK,
+                  SHARED_MEMORY_SIZE, time_compute_stream >>>( dev_clock_sum, dev_clocks, NUM_KERNELS );
+    cudaMemcpyAsync( clock_sum, dev_clock_sum, sizeof( clock_t ), cudaMemcpyDeviceToHost, time_compute_stream );
+    cudaMemcpyAsync( clocks, dev_clocks, CLOCKS_BYTE_SIZE, cudaMemcpyDeviceToHost, time_compute_stream );
+    
+    //record event, not associated with any stream and therefore recorded
+    //after *all* stream events are recorded
+    cudaEventRecord( stop, 0 );
+    // END of async operations
+    
+    //sync everything
+    //this synchronization call forces to wait until the stop event has been recorded;
+    //the stop event is associated with the global context (the '0' in the cudaEventRegister call)
+    //and therefore all events in the context must have been recorded before the stop event is recorded
+    cudaEventSynchronize( stop );
+    const double cpu_elapsed_time = clock() - cpu_start;
+    cudaEventElapsedTime( &elapsed_time, start, stop );    
+ 
+    //output information
+    std::cout << "Clock:                                 " << double( CLOCK_FREQ_kHz ) * 1E-6 << " GHz" << std::endl; 
+    std::cout << "Number of kernels:                     " << NUM_KERNELS << std::endl;
+    std::cout << "Requested kernel execution time:       " << KERNEL_EXECUTION_TIME_ms << " ms" << std::endl;
+    std::cout << "Computed kernel execution time:        " 
+              << double( *std::max_element( clocks, clocks + NUM_KERNELS ) ) / CLOCK_FREQ_kHz << " ms" << std::endl;  
+    std::cout << "Sum of kernel execution times:         " << double( *clock_sum ) / CLOCK_FREQ_kHz << " ms" << std::endl;  
+    std::cout << "Total measured execution time:         " << elapsed_time << " ms" << std::endl;
+    std::cout << "CPU elapsed time:                      " << 1000. * cpu_elapsed_time / CLOCKS_PER_SEC << " ms" << std::endl;
+    //free resources
+    for( std::vector< cudaEvent_t >::iterator i =  kernel_events.begin();
+         i != kernel_events.end(); ++i ) {
+        cudaEventDestroy( *i );            
+    }
 
-  cudaEventRecord(start_event, 0);
+    //create sync stream: sync stream wait for all kernel events to be recorded 
+    cudaStreamDestroy( time_compute_stream );
+    
+    //create kernel streams
+    for( std::vector< cudaStream_t >::iterator i =  kernel_streams.begin();
+         i != kernel_streams.end(); ++i ) {
+        cudaStreamDestroy( *i );           
+    }
 
-  // queue nkernels in separate streams and record when they are done
-  for (int i = 0; i < nkernels; ++i) {
-    clock_block<<<1, 1, 0, streams[i]>>>(&d_a[i], time_clocks);
-    total_clocks += time_clocks;
-    checkCudaErrors(cudaEventRecord(kernelEvent[i], streams[i]));
+    cudaFreeHost( clock_sum );
+    cudaFreeHost( clocks );
+    cudaFree( dev_clocks );
+    cudaFree( dev_clock_sum );
 
-    // make the last stream wait for the kernel event to be recorded
-    checkCudaErrors(
-        cudaStreamWaitEvent(streams[nstreams - 1], kernelEvent[i], 0));
-  }
+    //OPTIONAL, apparently it must be called in order for profiling and tracing tools
+    //to show complete traces
+    cudaDeviceReset(); 
 
-  // queue a sum kernel and a copy back to host in the last stream.
-  // the commands in this stream get dispatched as soon as all the kernel events
-  // have been recorded
-  sum<<<1, 32, 0, streams[nstreams - 1]>>>(d_a, nkernels);
-  checkCudaErrors(cudaMemcpyAsync(
-      a, d_a, sizeof(clock_t), cudaMemcpyDeviceToHost, streams[nstreams - 1]));
+    return 0;
 
-  // at this point the CPU has dispatched all work for the GPU and can continue
-  // processing other tasks in parallel
-
-  // in this sample we just wait until the GPU is done
-  checkCudaErrors(cudaEventRecord(stop_event, 0));
-  checkCudaErrors(cudaEventSynchronize(stop_event));
-  checkCudaErrors(cudaEventElapsedTime(&elapsed_time, start_event, stop_event));
-
-  printf("Expected time for serial execution of %d kernels = %.3fs\n", nkernels,
-         nkernels * kernel_time / 1000.0f);
-  printf("Expected time for concurrent execution of %d kernels = %.3fs\n",
-         nkernels, kernel_time / 1000.0f);
-  printf("Measured time for sample = %.3fs\n", elapsed_time / 1000.0f);
-
-  bool bTestResult = (a[0] > total_clocks);
-
-  // release resources
-  for (int i = 0; i < nkernels; i++) {
-    cudaStreamDestroy(streams[i]);
-    cudaEventDestroy(kernelEvent[i]);
-  }
-
-  free(streams);
-  free(kernelEvent);
-
-  cudaEventDestroy(start_event);
-  cudaEventDestroy(stop_event);
-  cudaFreeHost(a);
-  cudaFree(d_a);
-
-  if (!bTestResult) {
-    printf("Test failed!\n");
-    exit(EXIT_FAILURE);
-  }
-
-  printf("Test passed\n");
-  exit(EXIT_SUCCESS);
 }
