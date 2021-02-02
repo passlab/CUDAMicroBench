@@ -51,18 +51,18 @@
 		if (i < n) {
 			y[i] = a * x[i] + y[i];
 		}
-		int j = 0;
-		for (int q = 0; q < 1000000000; q++) {
+		//int j = 0;
+		/*for (int q = 0; q < 1000000000; q++) {
 			bool temp;
 			while (j < 5313434234) {
 				temp = isPrimeF((i - 4123453125) * (i - 4123453125));
 				j++;
 			}
 			if(temp){
-				double re = i;
+				double re = i;*/
 			
-			}
-		}
+			//}
+		//}
 	}
 
 	#define N 300000000 

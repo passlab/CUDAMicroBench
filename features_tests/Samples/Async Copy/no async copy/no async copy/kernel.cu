@@ -19,7 +19,7 @@ void sort(int* values, int n) {
 	return;
 
 }
-
+	
 
 __global__ void saxpy(float* y, float* x, int n, float a) {
 	int i = threadIdx.x + blockIdx.x * blockDim.x;
@@ -30,7 +30,7 @@ __global__ void saxpy(float* y, float* x, int n, float a) {
 
 
 
-#define N 100000000
+#define N 300000000
 #define K 10000
 int main() {
 	std::vector<double> memcpyt;
@@ -38,7 +38,7 @@ int main() {
 	std::vector<double> kernelt;
 	std::vector<double> hostt;
 	
-	for (int q = 0; q < 30; q++) {
+	for (int q = 0; q < 1; q++) {
 		int size = N * sizeof(float);
 		int blockS = (N + 255) / 256;
 		//generating random array
@@ -69,7 +69,7 @@ int main() {
 		memEnd = omp_get_wtime();
 		kernelStart = omp_get_wtime();
 		//kernel launch
-		saxpy << <blockS, 256 >> > (y, x, N, 2.0);
+		saxpy << <blockS, 256, 1 >> > (y, x, N, 2.0);
 		//cudaThreadSynchronize();
 		//timers
 		kernelEnd = omp_get_wtime();

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="Non_Dynamic_Parallelism.cu" />
+    <CudaCompile Include="Dynamic_Parallelism.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B923151C-348B-49C8-BFFB-FEE88815781E}</ProjectGuid>
