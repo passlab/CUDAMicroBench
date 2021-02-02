@@ -1,0 +1,19 @@
+xyi2@cci-carina:~/CUDAMemBench/features_tests/Samples/Async Copy$ sh test.sh
+Usage: axpy <n>
+axpy(1024000): checksum: 0.99919, time: 4.50ms
+axpy_async(1024000): checksum: 1.19903, time: 4.70ms
+Usage: axpy <n>
+axpy(4096000): checksum: 0.99919, time: 16.10ms
+axpy_async(4096000): checksum: 1.19903, time: 16.00ms
+Usage: axpy <n>
+axpy(10240000): checksum: 0.999191, time: 42.10ms
+axpy_async(10240000): checksum: 1.19903, time: 44.50ms
+Usage: axpy <n>
+axpy(20480000): checksum: 0.999191, time: 89.20ms
+axpy_async(20480000): checksum: 1.19903, time: 89.90ms
+Usage: axpy <n>
+axpy(40960000): checksum: 0.999191, time: 185.20ms
+axpy_async(40960000): checksum: 1.19903, time: 93.00ms
+Usage: axpy <n>
+axpy(102400000): checksum: 0.999191, time: 406.10ms
+axpy_async(102400000): checksum: 1.19903, time: 278.20ms
