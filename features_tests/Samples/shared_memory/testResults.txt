@@ -1,0 +1,84 @@
+xyi2@cci-carina:~/CUDAMemBench/features_tests/Samples/SharedMemory$ nvprof ./mm_omp_cuda.out 512
+==29502== NVPROF is profiling process 29502, command: ./mm_omp_cuda.out 512
+======================================================================================================
+        Matrix Multiplication: A[N][N] * B[N][N] = C[N][N], N=512
+------------------------------------------------------------------------------------------------------
+Performance:            Runtime (ms)     MFLOPS
+------------------------------------------------------------------------------------------------------
+matmul_shmem:           2.500010        107373.772802
+------------------------------------------------------------------------------------------------------
+matmul_cuda:            2.600002        103244.315266
+==29502== Profiling application: ./mm_omp_cuda.out 512
+==29502== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   65.49%  13.671ms        42  325.49us  316.78us  375.47us  [CUDA memcpy HtoD]
+                   17.23%  3.5971ms        21  171.29us  168.57us  177.21us  [CUDA memcpy DtoH]
+                    9.07%  1.8936ms        10  189.36us  183.57us  195.48us  global_block(double*, double*, double*, int)
+                    8.21%  1.7141ms        11  155.83us  151.29us  161.46us  shared_block(double*, double*, double*, int)
+      API calls:   81.98%  235.47ms        63  3.7376ms  72.913us  230.35ms  cudaMalloc
+                   15.47%  44.435ms        63  705.32us  468.79us  1.7768ms  cudaMemcpy
+                    1.68%  4.8259ms        63  76.601us  61.376us  134.00us  cudaFree
+                    0.66%  1.9078ms         1  1.9078ms  1.9078ms  1.9078ms  cuDeviceTotalMem
+                    0.12%  335.89us        21  15.994us  13.817us  29.344us  cudaLaunchKernel
+                    0.06%  180.65us       101  1.7880us     178ns  71.386us  cuDeviceGetAttribute
+                    0.02%  47.091us         1  47.091us  47.091us  47.091us  cuDeviceGetName
+                    0.00%  8.4980us         1  8.4980us  8.4980us  8.4980us  cuDeviceGetPCIBusId
+                    0.00%  1.9060us         3     635ns     211ns  1.3730us  cuDeviceGetCount
+                    0.00%  1.6720us         2     836ns     175ns  1.4970us  cuDeviceGet
+                    0.00%     588ns         1     588ns     588ns     588ns  cuDeviceGetUuid
+xyi2@cci-carina:~/CUDAMemBench/features_tests/Samples/SharedMemory$ nvprof ./mm_omp_cuda.out 1024
+==29544== NVPROF is profiling process 29544, command: ./mm_omp_cuda.out 1024
+======================================================================================================
+        Matrix Multiplication: A[N][N] * B[N][N] = C[N][N], N=1024
+------------------------------------------------------------------------------------------------------
+Performance:            Runtime (ms)     MFLOPS
+------------------------------------------------------------------------------------------------------
+matmul_shmem:           10.200000       210537.616486
+------------------------------------------------------------------------------------------------------
+matmul_cuda:            11.100006       193466.888934
+==29544== Profiling application: ./mm_omp_cuda.out 1024
+==29544== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   50.27%  88.216ms        42  2.1004ms  2.0547ms  2.2586ms  [CUDA memcpy HtoD]
+                   32.57%  57.163ms        21  2.7221ms  2.3909ms  5.5631ms  [CUDA memcpy DtoH]
+                    9.08%  15.942ms        10  1.5942ms  1.5907ms  1.5963ms  global_block(double*, double*, double*, int)
+                    8.08%  14.173ms        11  1.2885ms  1.2739ms  1.2987ms  shared_block(double*, double*, double*, int)
+      API calls:   60.18%  321.16ms        63  5.0978ms  94.886us  304.25ms  cudaMalloc
+                   38.16%  203.65ms        63  3.2325ms  2.2646ms  8.9286ms  cudaMemcpy
+                    1.22%  6.5130ms        63  103.38us  82.762us  168.26us  cudaFree
+                    0.31%  1.6785ms         1  1.6785ms  1.6785ms  1.6785ms  cuDeviceTotalMem
+                    0.08%  450.28us        21  21.441us  18.939us  33.800us  cudaLaunchKernel
+                    0.03%  171.02us       101  1.6930us     183ns  69.468us  cuDeviceGetAttribute
+                    0.01%  42.232us         1  42.232us  42.232us  42.232us  cuDeviceGetName
+                    0.00%  13.511us         1  13.511us  13.511us  13.511us  cuDeviceGetPCIBusId
+                    0.00%  2.0540us         3     684ns     294ns  1.4150us  cuDeviceGetCount
+                    0.00%  1.1490us         2     574ns     168ns     981ns  cuDeviceGet
+                    0.00%     382ns         1     382ns     382ns     382ns  cuDeviceGetUuid
+xyi2@cci-carina:~/CUDAMemBench/features_tests/Samples/SharedMemory$ nvprof ./mm_omp_cuda.out 2048
+==29566== NVPROF is profiling process 29566, command: ./mm_omp_cuda.out 2048
+======================================================================================================
+        Matrix Multiplication: A[N][N] * B[N][N] = C[N][N], N=2048
+------------------------------------------------------------------------------------------------------
+Performance:            Runtime (ms)     MFLOPS
+------------------------------------------------------------------------------------------------------
+matmul_shmem:           39.800000       431655.002554
+------------------------------------------------------------------------------------------------------
+matmul_cuda:            47.399998       362444.515054
+==29566== Profiling application: ./mm_omp_cuda.out 2048
+==29566== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   43.66%  370.95ms        42  8.8320ms  8.0530ms  11.362ms  [CUDA memcpy HtoD]
+                   31.02%  263.60ms        21  12.552ms  9.9203ms  31.294ms  [CUDA memcpy DtoH]
+                   13.60%  115.55ms        10  11.555ms  11.099ms  12.225ms  global_block(double*, double*, double*, int)
+                   11.72%  99.604ms        11  9.0549ms  8.9400ms  10.064ms  shared_block(double*, double*, double*, int)
+      API calls:   69.54%  877.44ms        63  13.928ms  8.2268ms  45.555ms  cudaMemcpy
+                   29.65%  374.11ms        63  5.9382ms  142.91us  320.33ms  cudaMalloc
+                    0.60%  7.6229ms        63  121.00us  81.895us  255.37us  cudaFree
+                    0.15%  1.9078ms         1  1.9078ms  1.9078ms  1.9078ms  cuDeviceTotalMem
+                    0.03%  437.12us        21  20.815us  13.768us  64.128us  cudaLaunchKernel
+                    0.01%  172.22us       101  1.7050us     179ns  68.449us  cuDeviceGetAttribute
+                    0.00%  43.052us         1  43.052us  43.052us  43.052us  cuDeviceGetName
+                    0.00%  16.002us         1  16.002us  16.002us  16.002us  cuDeviceGetPCIBusId
+                    0.00%  2.0940us         3     698ns     250ns  1.5610us  cuDeviceGetCount
+                    0.00%  1.4320us         2     716ns     217ns  1.2150us  cuDeviceGet
+                    0.00%     381ns         1     381ns     381ns     381ns  cuDeviceGetUuid
