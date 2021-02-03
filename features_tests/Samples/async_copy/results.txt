@@ -1,19 +1,21 @@
-xyi2@cci-carina:~/CUDAMemBench/features_tests/Samples/Async Copy$ sh test.sh
+//test results on fornax
+
+xyi2@fornax:~/CUDAMemBench/features_tests/Samples/async_copy$ sh test.sh
 Usage: axpy <n>
-axpy(1024000): checksum: 0.99919, time: 4.50ms
-axpy_async(1024000): checksum: 1.19903, time: 4.70ms
+axpy(1024000): checksum: 0.99919, time: 13.30ms
+axpy_async(1024000): checksum: 1.19903, time: 13.30ms
 Usage: axpy <n>
-axpy(4096000): checksum: 0.99919, time: 16.10ms
-axpy_async(4096000): checksum: 1.19903, time: 16.00ms
+axpy(4096000): checksum: 0.99919, time: 94.20ms
+axpy_async(4096000): checksum: 1.19903, time: 98.20ms
 Usage: axpy <n>
-axpy(10240000): checksum: 0.999191, time: 42.10ms
-axpy_async(10240000): checksum: 1.19903, time: 44.50ms
+axpy(10240000): checksum: 0.999191, time: 246.70ms
+axpy_async(10240000): checksum: 1.19903, time: 243.60ms
 Usage: axpy <n>
-axpy(20480000): checksum: 0.999191, time: 89.20ms
-axpy_async(20480000): checksum: 1.19903, time: 89.90ms
+axpy(20480000): checksum: 0.999191, time: 518.00ms
+axpy_async(20480000): checksum: 1.19903, time: 500.00ms
 Usage: axpy <n>
-axpy(40960000): checksum: 0.999191, time: 185.20ms
-axpy_async(40960000): checksum: 1.19903, time: 93.00ms
+axpy(40960000): checksum: 0.999191, time: 1021.20ms
+axpy_async(40960000): checksum: 1.19903, time: 989.60ms
 Usage: axpy <n>
-axpy(102400000): checksum: 0.999191, time: 406.10ms
-axpy_async(102400000): checksum: 1.19903, time: 278.20ms
+axpy(102400000): checksum: 0.999191, time: 2395.00ms
+axpy_async(102400000): checksum: 1.19903, time: 2370.10ms
