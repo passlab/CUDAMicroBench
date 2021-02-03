@@ -1,2 +1,2 @@
 default:
-	nvcc -o axpy_cuda axpy_cudakernel1.cu
+	nvcc -o axpy_cuda axpy_cudakernel.cu

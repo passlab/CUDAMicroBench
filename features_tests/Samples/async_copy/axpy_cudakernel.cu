@@ -11,6 +11,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
+
 double read_timer_ms() {
     struct timeb tm;
     ftime(&tm);
@@ -29,6 +30,16 @@ void zero(REAL *A, int n)
     }
 }
 
+/*serial version */
+void axpy(REAL* x, REAL* y, long n, REAL a) {
+  int i;
+  for (i = 1; i < n; ++i)
+  {
+    y[i] += a * x[i];
+  }
+}
+
+
 __global__ 
 void
 axpy_cudakernel_1perThread(REAL* x, REAL* y, int n, REAL a)
@@ -37,8 +48,10 @@ axpy_cudakernel_1perThread(REAL* x, REAL* y, int n, REAL a)
     if (i > 0 &&i < n) y[i] += a*x[i];
 }
 
-void axpy_cuda_normal(REAL* x, REAL* y, int n, REAL a) {
+void axpy_cuda_normal(REAL* x, REAL* y, int n, REAL a, REAL* testx, REAL* testy, int m, REAL b) {
   REAL *d_x, *d_y;
+
+  axpy(testx, testy, n, b);
   cudaMalloc(&d_x, n*sizeof(REAL));
   cudaMalloc(&d_y, n*sizeof(REAL));
 
@@ -47,18 +60,19 @@ void axpy_cuda_normal(REAL* x, REAL* y, int n, REAL a) {
 
   // Perform axpy elements
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
-  cudaDeviceSynchronize();
-  
+  //cudaDeviceSynchronize();
   cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
+  axpy(testx, testy, n, b);
+
   cudaFree(d_x);
   cudaFree(d_y);
 }
 
-void axpy_cuda_async(REAL* x, REAL* y, int n, REAL a) {
+void axpy_cuda_async(REAL* x, REAL* y, int n, REAL a, REAL* testx, REAL* testy, int m, REAL b) {
 		cudaStream_t stream1;
 		cudaError_t result;
 		result = cudaStreamCreate(&stream1);
-
+  axpy(testx, testy, n, b);
   REAL *d_x, *d_y;
   cudaMalloc(&d_x, n*sizeof(REAL));
   cudaMalloc(&d_y, n*sizeof(REAL));
@@ -68,10 +82,11 @@ void axpy_cuda_async(REAL* x, REAL* y, int n, REAL a) {
 
   // Perform axpy elements
   axpy_cudakernel_1perThread<<<(n+255)/256, 256>>>(d_x, d_y, n, a);
-  cudaDeviceSynchronize();
-  
+  //cudaDeviceSynchronize();
 
-  cudaMemcpy(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
+  cudaMemcpyAsync(y, d_y, n*sizeof(REAL), cudaMemcpyDeviceToHost);
+  axpy(testx, testy, n, b);
+
   cudaFree(d_x);
   cudaFree(d_y);
 }
@@ -87,14 +102,6 @@ void init(REAL *A, int n)
     }
 }
 
-/*serial version */
-void axpy(REAL* x, REAL* y, long n, REAL a) {
-  int i;
-  for (i = 1; i < n; ++i)
-  {
-    y[i] += a * x[i];
-  }
-}
 
 /* compare two arrays and return percentage of difference */
 REAL check(REAL*A, REAL*B, int n)
@@ -113,16 +120,22 @@ int main(int argc, char *argv[])
   int n;
   REAL *y_cuda, *y, *x, *y_cuda_async;
   REAL a = 123.456;
-
+  REAL *testx, *testy;
+  REAL b = 123.456;
   n = VEC_LEN;
   fprintf(stderr, "Usage: axpy <n>\n");
   if (argc >= 2) {
     n = atoi(argv[1]);
   }
+  int m = n;
   y_cuda = (REAL *) malloc(n * sizeof(REAL));
   y_cuda_async = (REAL *) malloc(n * sizeof(REAL));
   y  = (REAL *) malloc(n * sizeof(REAL));
   x = (REAL *) malloc(n * sizeof(REAL));
+
+  testx  = (REAL *) malloc(n * sizeof(REAL));
+  testy = (REAL *) malloc(n * sizeof(REAL));
+
 
   srand48(1<<12);
   init(x, n);
@@ -130,21 +143,26 @@ int main(int argc, char *argv[])
   memcpy(y, y_cuda, n*sizeof(REAL));
   memcpy(y_cuda_async, y_cuda, n*sizeof(REAL));
 
+  memcpy(testx, x, n*sizeof(REAL));
+  memcpy(testy, y, n*sizeof(REAL));
+
+
+
   int i;
   int num_runs = 10;
   for (i=0; i<num_runs; i++) axpy(x, y, n, a);
 
   //warming up
-  axpy_cuda_normal(x, y_cuda_async, n, a);
-  axpy_cuda_async(x, y_cuda_async, n, a);
+axpy_cuda_normal(x, y_cuda_async, n, a, testx, testy,m, b);  axpy_cuda_async(x, y_cuda_async, n, a, testx, testy, m, b);
+
 
   /* cuda version */
   double elapsed = read_timer_ms();
-  for (i=0; i<num_runs; i++) axpy_cuda_normal(x, y_cuda_async, n, a);
+  for (i=0; i<num_runs; i++) axpy_cuda_normal(x, y_cuda_async, n, a, testx, testy,m, b);
   elapsed =  (read_timer_ms() - elapsed)/num_runs;
 
   double elapsed1 = read_timer_ms();
-  for (i=0; i<num_runs; i++) axpy_cuda_async(x, y_cuda_async, n, a);
+  for (i=0; i<num_runs; i++) axpy_cuda_async(x, y_cuda_async, n, a, testx, testy, m, b);
   elapsed1 =  (read_timer_ms() - elapsed1)/num_runs;
 
   REAL checkresult = check(y_cuda, y, n);
@@ -158,6 +176,10 @@ int main(int argc, char *argv[])
   free(y_cuda);
   free(y);
   free(x);
+  free(testy);
+  free(testx);
+
+
   return 0;
 }
 
