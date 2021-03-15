@@ -1,6 +1,4 @@
-// Experimental test input for Accelerator directives
-//  simplest scalar*vector operations
-// Liao 1/15/2013
+// Experimental tests for aligned memory access and unaligned memory access
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

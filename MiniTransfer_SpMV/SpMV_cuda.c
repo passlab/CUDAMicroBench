@@ -1,6 +1,4 @@
-// Experimental test input for Accelerator directives
-//  simplest scalar*vector operations
-// Liao 1/15/2013
+// Experimental test for minimizing data transfer using sparseMV
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

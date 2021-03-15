@@ -1,4 +1,4 @@
-
+// Experimental test for random memory access and coalesced memory access using sparseMM
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

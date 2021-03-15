@@ -1,10 +1,10 @@
-
+// Experimental test for texture memory using 1-D array
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <sys/timeb.h>
-#include "sum.h"
+#include "axpy.h"
 
 double read_timer_ms() {
     struct timeb tm;
@@ -13,10 +13,7 @@ double read_timer_ms() {
 }
 
 /* change this to do saxpy or daxpy : single precision or double precision*/
-#define REAL float
-
-//#define ThreadsPerBlock 256
-
+#define VEC_LEN 1024000//use a fixed number for now
 /* zero out the entire vector */
 void zero(REAL *A, int n)
 {
@@ -36,13 +33,12 @@ void init(REAL *A, int n)
 }
 
 /*serial version */
-float sum(int N, float *numbers) {
-	float sum = 0;
-	
-	for (int i = 0; i<N; i++)
-		sum += numbers[i];
-	
-	return sum;
+void axpy(REAL* x, REAL* y, long n, REAL a) {
+  int i;
+  for (i = 0; i < n; ++i)
+  {
+    y[i] += a * x[i];
+  }
 }
 
 /* compare two arrays and return percentage of difference */
@@ -54,43 +50,44 @@ REAL check(REAL*A, REAL*B, int n)
         diffsum += fabs(A[i] - B[i]);
         sum += fabs(B[i]);
     }
-    return diffsum/sum;
+    return diffsum;
 }
 
 int main(int argc, char *argv[])
 {
   int n;
-  REAL *x;
-  REAL *result_cuda;
+  REAL *y_cuda, *y, *x;
+  REAL a = 123.456;
 
   n = VEC_LEN;
-  fprintf(stderr, "Usage: sum <n>\n");
+  fprintf(stderr, "Usage: axpy <n>\n");
   if (argc >= 2) {
     n = atoi(argv[1]);
   }
-  
+  y_cuda = (REAL *) malloc(n * sizeof(REAL));
+  y  = (REAL *) malloc(n * sizeof(REAL));
   x = (REAL *) malloc(n * sizeof(REAL));
-  result_cuda = (REAL*)malloc(((VEC_LEN + ThreadsPerBlock - 1) / ThreadsPerBlock) * sizeof(REAL));
 
   srand48(1<<12);
   init(x, n);
-  
-  volatile float answer = 0;
-  answer = sum(n, x);
+  init(y_cuda, n);
+  memcpy(y, y_cuda, n*sizeof(REAL));
+
+  axpy(x, y, n, a);
 
   int i;
   int num_runs = 10;
   /* cuda version */
   double elapsed = read_timer_ms();
-  for (i=0; i<num_runs; i++) sum_cuda(n, x, result_cuda);
-  
- 	for (int i = 1; i < ((VEC_LEN + ThreadsPerBlock - 1) / ThreadsPerBlock); ++i)
-  result_cuda[0] += result_cuda[i];
-
+  for (i=0; i<num_runs; i++) axpy_cuda(x, y_cuda, n, a);
   elapsed = (read_timer_ms() - elapsed)/num_runs;
-  printf("sum(%d): checksum: %g, time: %0.2fms\n", n, result_cuda[0]-answer, elapsed);
+
+  REAL checkresult = check(y_cuda, y, n);
+  printf("axpy(%d): checksum: %g, time: %0.2fms\n", n, checkresult, elapsed);
 
 
+  free(y_cuda);
+  free(y);
   free(x);
   return 0;
 }

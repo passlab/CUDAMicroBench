@@ -1,7 +1,4 @@
-// clang -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda LowAccessDensityTest_omp.c
-// Experimental test input for Accelerator directives
-//  simplest scalar*vector operations
-// Liao 1/15/2013
+// Experimental test for low memory access density using unified memory
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

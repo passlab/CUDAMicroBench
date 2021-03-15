@@ -1,3 +1,4 @@
+// Experimental tests for warp divergence
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
