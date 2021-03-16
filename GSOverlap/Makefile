@@ -265,16 +265,49 @@ ALL_CCFLAGS += $(addprefix -Xcompiler ,$(EXTRA_CCFLAGS))
 
 SAMPLE_ENABLED := 1
 
+# This sample is not supported on QNX
+ifeq ($(TARGET_OS),qnx)
+  $(info >>> WARNING - globalToShmemAsyncCopy is not supported on QNX - waiving sample <<<)
+  SAMPLE_ENABLED := 0
+endif
+
 ALL_LDFLAGS :=
 ALL_LDFLAGS += $(ALL_CCFLAGS)
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(EXTRA_LDFLAGS))
 
 # Common includes and paths for CUDA
-INCLUDES  := -I../../Common
+INCLUDES  := -I../Common
 LIBRARIES :=
 
 ################################################################################
+
+#Detect if installed version of GCC supports required C++11
+ifeq ($(TARGET_OS),linux)
+    empty :=
+    space := $(empty) $(empty)
+    GCCVERSIONSTRING := $(shell expr `$(HOST_COMPILER) -dumpversion`)
+#Create version number without "."
+    GCCVERSION := $(shell expr `echo $(GCCVERSIONSTRING)` | cut -f1 -d.)
+    GCCVERSION += $(shell expr `echo $(GCCVERSIONSTRING)` | cut -f2 -d.)
+    GCCVERSION += $(shell expr `echo $(GCCVERSIONSTRING)` | cut -f3 -d.)
+# Make sure the version number has at least 3 decimals
+    GCCVERSION += 00
+# Remove spaces from the version number
+    GCCVERSION := $(subst $(space),$(empty),$(GCCVERSION))
+# Crop the version number to 3 decimals.
+    GCCVERSION := $(shell expr `echo $(GCCVERSION)` | cut -b1-3)
+#$(warning $(GCCVERSION))
+
+    IS_MIN_VERSION := $(shell expr `echo $(GCCVERSION)` \>= 500)
+
+    ifeq ($(IS_MIN_VERSION), 1)
+        $(info >>> GCC Version is greater or equal to  5.0.0 <<<)
+    else
+        $(info >>> Waiving build. Minimum GCC version required is  5.0.0<<<)
+        SAMPLE_ENABLED := 0
+    endif
+endif
 
 # Gencode arguments
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),armv7l aarch64))
@@ -299,7 +332,7 @@ GENCODE_FLAGS += -gencode arch=compute_$(HIGHEST_SM),code=compute_$(HIGHEST_SM)
 endif
 endif
 
-LIBRARIES += -lcublas_static -lcublasLt_static -lcusparse_static -lculibos
+ALL_CCFLAGS += --std=c++11
 
 ifeq ($(SAMPLE_ENABLED),0)
 EXEC ?= @echo "[@]"
@@ -310,7 +343,7 @@ endif
 # Target rules
 all: build
 
-build: conjugateGradientCudaGraphs
+build: globalToShmemAsyncCopy
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -319,19 +352,19 @@ else
 	@echo "Sample is ready - all dependencies have been met"
 endif
 
-conjugateGradientCudaGraphs.o:conjugateGradientCudaGraphs.cu
+globalToShmemAsyncCopy.o:globalToShmemAsyncCopy.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
-conjugateGradientCudaGraphs: conjugateGradientCudaGraphs.o
+globalToShmemAsyncCopy: globalToShmemAsyncCopy.o
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 	$(EXEC) mkdir -p ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
 	$(EXEC) cp $@ ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
 
 run: build
-	$(EXEC) ./conjugateGradientCudaGraphs
+	$(EXEC) ./globalToShmemAsyncCopy
 
 clean:
-	rm -f conjugateGradientCudaGraphs conjugateGradientCudaGraphs.o
-	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/conjugateGradientCudaGraphs
+	rm -f globalToShmemAsyncCopy globalToShmemAsyncCopy.o
+	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/globalToShmemAsyncCopy
 
 clobber: clean

@@ -72,9 +72,9 @@ endif
 # architecture
 HOST_ARCH   := $(shell uname -m)
 TARGET_ARCH ?= $(HOST_ARCH)
-ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le armv7l))
+ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 sbsa ppc64le armv7l))
     ifneq ($(TARGET_ARCH),$(HOST_ARCH))
-        ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le))
+        ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 sbsa ppc64le))
             TARGET_SIZE := 64
         else ifneq (,$(filter $(TARGET_ARCH),armv7l))
             TARGET_SIZE := 32
@@ -85,8 +85,17 @@ ifneq (,$(filter $(TARGET_ARCH),x86_64 aarch64 ppc64le armv7l))
 else
     $(error ERROR - unsupported value $(TARGET_ARCH) for TARGET_ARCH!)
 endif
+
+# sbsa and aarch64 systems look similar. Need to differentiate them at host level for now.
+ifeq ($(HOST_ARCH),aarch64)
+    ifeq ($(CUDA_PATH)/targets/sbsa-linux,$(shell ls -1d $(CUDA_PATH)/targets/sbsa-linux 2>/dev/null))
+        HOST_ARCH := sbsa
+        TARGET_ARCH := sbsa
+    endif
+endif
+
 ifneq ($(TARGET_ARCH),$(HOST_ARCH))
-    ifeq (,$(filter $(HOST_ARCH)-$(TARGET_ARCH),aarch64-armv7l x86_64-armv7l x86_64-aarch64 x86_64-ppc64le))
+    ifeq (,$(filter $(HOST_ARCH)-$(TARGET_ARCH),aarch64-armv7l x86_64-armv7l x86_64-aarch64 x86_64-sbsa x86_64-ppc64le))
         $(error ERROR - cross compiling from $(HOST_ARCH) to $(TARGET_ARCH) is not supported!)
     endif
 endif
@@ -137,10 +146,12 @@ else ifneq ($(TARGET_ARCH),$(HOST_ARCH))
             endif
             export QNX_HOST
             export QNX_TARGET
-            HOST_COMPILER ?= $(QNX_HOST)/usr/bin/aarch64-unknown-nto-qnx7.0.0-g++
+            HOST_COMPILER ?= $(QNX_HOST)/usr/bin/q++
         else ifeq ($(TARGET_OS), android)
             HOST_COMPILER ?= aarch64-linux-android-clang++
         endif
+    else ifeq ($(TARGET_ARCH),sbsa)
+        HOST_COMPILER ?= aarch64-linux-gnu-g++
     else ifeq ($(TARGET_ARCH),ppc64le)
         HOST_COMPILER ?= powerpc64le-linux-gnu-g++
     endif
@@ -185,19 +196,37 @@ ifneq ($(TARGET_ARCH),$(HOST_ARCH))
                 CCFLAGS += --sysroot=$(TARGET_FS)
             endif
             LDFLAGS += --sysroot=$(TARGET_FS)
-            LDFLAGS += -rpath-link=$(TARGET_FS)/lib -L $(TARGET_FS)/lib
-            LDFLAGS += -rpath-link=$(TARGET_FS)/usr/lib -L $(TARGET_FS)/usr/lib
-            LDFLAGS += -rpath-link=$(TARGET_FS)/usr/lib/aarch64-linux-gnu -L $(TARGET_FS)/usr/lib/aarch64-linux-gnu
+            LDFLAGS += -rpath-link=$(TARGET_FS)/lib -L$(TARGET_FS)/lib
+            LDFLAGS += -rpath-link=$(TARGET_FS)/lib/aarch64-linux-gnu -L$(TARGET_FS)/lib/aarch64-linux-gnu
+            LDFLAGS += -rpath-link=$(TARGET_FS)/usr/lib -L$(TARGET_FS)/usr/lib
+            LDFLAGS += -rpath-link=$(TARGET_FS)/usr/lib/aarch64-linux-gnu -L$(TARGET_FS)/usr/lib/aarch64-linux-gnu
             LDFLAGS += --unresolved-symbols=ignore-in-shared-libs
-            CCFLAGS += -isystem=$(TARGET_FS)/usr/include
-            CCFLAGS += -isystem=$(TARGET_FS)/usr/include/aarch64-linux-gnu
+            CCFLAGS += -isystem=$(TARGET_FS)/usr/include -I$(TARGET_FS)/usr/include -I$(TARGET_FS)/usr/include/libdrm
+            CCFLAGS += -isystem=$(TARGET_FS)/usr/include/aarch64-linux-gnu -I$(TARGET_FS)/usr/include/aarch64-linux-gnu
+        endif
+    endif
+    ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-qnx)
+        NVCCFLAGS += --qpp-config 5.4.0,gcc_ntoaarch64le
+        CCFLAGS += -DWIN_INTERFACE_CUSTOM -I/usr/include/aarch64-qnx-gnu
+        LDFLAGS += -lsocket
+        LDFLAGS += -L/usr/lib/aarch64-qnx-gnu
+        CCFLAGS += "-Wl\,-rpath-link\,/usr/lib/aarch64-qnx-gnu"
+        ifdef TARGET_OVERRIDE
+            LDFLAGS += -lslog2
+        endif
+
+        ifneq ($(TARGET_FS),)
+            LDFLAGS += -L$(TARGET_FS)/usr/lib
+            CCFLAGS += "-Wl\,-rpath-link\,$(TARGET_FS)/usr/lib"
+            LDFLAGS += -L$(TARGET_FS)/usr/libnvidia
+            CCFLAGS += "-Wl\,-rpath-link\,$(TARGET_FS)/usr/libnvidia"
+            CCFLAGS += -I$(TARGET_FS)/../include
         endif
     endif
 endif
 
-ifeq ($(TARGET_OS),qnx)
-    CCFLAGS += -DWIN_INTERFACE_CUSTOM
-    LDFLAGS += -lsocket
+ifdef TARGET_OVERRIDE # cuda toolkit targets override
+    NVCCFLAGS += -target-dir $(TARGET_OVERRIDE)
 endif
 
 # Install directory of different arch
@@ -206,6 +235,8 @@ ifeq ($(TARGET_ARCH)-$(TARGET_OS),armv7l-linux)
     CUDA_INSTALL_TARGET_DIR = targets/armv7-linux-gnueabihf/
 else ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-linux)
     CUDA_INSTALL_TARGET_DIR = targets/aarch64-linux/
+else ifeq ($(TARGET_ARCH)-$(TARGET_OS),sbsa-linux)
+    CUDA_INSTALL_TARGET_DIR = targets/sbsa-linux/
 else ifeq ($(TARGET_ARCH)-$(TARGET_OS),armv7l-android)
     CUDA_INSTALL_TARGET_DIR = targets/armv7-linux-androideabi/
 else ifeq ($(TARGET_ARCH)-$(TARGET_OS),aarch64-android)
@@ -240,16 +271,16 @@ ALL_LDFLAGS += $(addprefix -Xlinker ,$(LDFLAGS))
 ALL_LDFLAGS += $(addprefix -Xlinker ,$(EXTRA_LDFLAGS))
 
 # Common includes and paths for CUDA
-INCLUDES  := -I../../Common
+INCLUDES  := -I../Common
 LIBRARIES :=
 
 ################################################################################
 
 # Gencode arguments
 ifeq ($(TARGET_ARCH),$(filter $(TARGET_ARCH),armv7l aarch64))
-SMS ?= 30 35 37 50 52 60 61 70 72 75
+SMS ?= 35 37 50 52 60 61 70 72 75
 else
-SMS ?= 30 35 37 50 52 60 61 70 75
+SMS ?= 35 37 50 52 60 61 70 75
 endif
 
 ifeq ($(SMS),)
@@ -268,6 +299,8 @@ GENCODE_FLAGS += -gencode arch=compute_$(HIGHEST_SM),code=compute_$(HIGHEST_SM)
 endif
 endif
 
+LIBRARIES += -lcublas_static -lcublasLt_static -lcusparse_static -lculibos
+
 ifeq ($(SAMPLE_ENABLED),0)
 EXEC ?= @echo "[@]"
 endif
@@ -277,7 +310,7 @@ endif
 # Target rules
 all: build
 
-build: reduction.out
+build: conjugateGradientCudaGraphs
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -286,19 +319,19 @@ else
 	@echo "Sample is ready - all dependencies have been met"
 endif
 
-reduction.o:reduction.cpp
+conjugateGradientCudaGraphs.o:conjugateGradientCudaGraphs.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
-reduction_kernel.o:reduction_kernel.cu
-	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
-
-reduction.out: reduction.o reduction_kernel.o
+conjugateGradientCudaGraphs: conjugateGradientCudaGraphs.o
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+	$(EXEC) mkdir -p ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
+	$(EXEC) cp $@ ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
 
 run: build
-	$(EXEC) ./reduction
+	$(EXEC) ./conjugateGradientCudaGraphs
 
 clean:
-	rm -f reduction reduction.o reduction_kernel.o
+	rm -f conjugateGradientCudaGraphs conjugateGradientCudaGraphs.o
+	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/conjugateGradientCudaGraphs
 
 clobber: clean

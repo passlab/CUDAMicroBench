@@ -1,9 +1,0 @@
-./axpy_cuda 1024
-./axpy_cuda 4096
-./axpy_cuda 10240
-./axpy_cuda 20480
-./axpy_cuda 40960
-./axpy_cuda 102400
-./axpy_cuda 409600
-./axpy_cuda 1024000
-./axpy_cuda 4096000

@@ -1,6 +1,4 @@
-// Experimental test input for Accelerator directives
-//  simplest scalar*vector operations
-// Liao 1/15/2013
+// Experimental test for new function memcpy_async in CUDA11
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
