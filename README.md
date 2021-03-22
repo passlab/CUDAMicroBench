@@ -13,3 +13,9 @@ To execute microBenchmark, NVIDIA GPU and CUDA are needed. Some new features suc
     
 ## Experiment
 There are fourteen examples so far you can experiment. You can check the Makefile in each folder to see how they can be compiled and then excute it by using the .sh file.
+
+## [3-clause BSD License](LICENSE_BSD.txt) and Acknowledgement
+Copyright (c) 2016 - 2019 Yonghong Yan and PASSlab (https://passlab.github.io) 
+from University of South Carolina. All rights reserved. Funding for this research and 
+development was provided by the National Science Foundation 
+under award number CISE CCF-1833312, and CISE SHF-1551182. 
