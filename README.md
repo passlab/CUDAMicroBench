@@ -102,6 +102,10 @@ To execute microBenchmark, NVIDIA GPU and CUDA are needed. Some new features suc
 ## Experiment
 There are fourteen examples so far you can experiment. You can check the Makefile in each folder to see how they can be compiled and then excute it by using the .sh file.
 
+## Common folder
+
+Several benchmarks are derived from CUDA Samples, including GSOverlap, ConKernels and Taskgraph. Some header files required by these three benchmarks are stored in the common folder, which also comes from CUDA Samples.
+
 ## [3-clause BSD License](LICENSE_BSD.txt) and Acknowledgement
 Copyright (c) 2016 - 2019 Yonghong Yan and PASSlab (https://passlab.github.io) 
 from University of South Carolina. All rights reserved. Funding for this research and 
