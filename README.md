@@ -110,7 +110,7 @@ Several benchmarks are derived from CUDA Samples, including GSOverlap, ConKernel
 Copyright (c) 2020 - 2021 HPCAS Lab (https://passlab.github.io) 
 from University of North Carolina at Charlotte. All rights reserved. Funding for this research and 
 development was provided by the National Science Foundation 
-under award number CISE SHF-1551182 and CISE SHF-2015254. 
+under award number CISE SHF-1551182 and CISE SHF-2015254. The development is also funded by LLNL under Contract DE-AC52-07NA27344 and LLNL-LDRD Program under Project No.18-ERD-006 (LLNL-CONF-819919).
 
 
 
