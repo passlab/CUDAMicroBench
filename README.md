@@ -107,10 +107,10 @@ There are fourteen examples so far you can experiment. You can check the Makefil
 Several benchmarks are derived from CUDA Samples, including GSOverlap, ConKernels and Taskgraph. Some header files required by these three benchmarks are stored in the common folder, which also comes from CUDA Samples.
 
 ## [3-clause BSD License](LICENSE_BSD.txt) and Acknowledgement
-Copyright (c) 2016 - 2019 Yonghong Yan and PASSlab (https://passlab.github.io) 
-from University of South Carolina. All rights reserved. Funding for this research and 
+Copyright (c) 2020 - 2021 HPCAS Lab (https://passlab.github.io) 
+from University of North Carolina at Charlotte. All rights reserved. Funding for this research and 
 development was provided by the National Science Foundation 
-under award number CISE CCF-1833312, and CISE SHF-1551182. 
+under award number CISE SHF-1551182 and CISE SHF-2015254. 
 
 
 
