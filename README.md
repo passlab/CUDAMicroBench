@@ -116,13 +116,13 @@ Several benchmarks are derived from CUDA Samples, including GSOverlap, ConKernel
 
 ## Publication
 
-Yi, Xinyao, David Stokes, Yonghong Yan, and Chunhua Liao. "CUDAMicroBench: Microbenchmarks to Assist CUDA Performance Programming." In 2021 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW), pp. 397-406. IEEE, 2021. 
+Yi, Xinyao, David Stokes, Yonghong Yan, and Chunhua Liao. "CUDAMicroBench: Microbenchmarks to Assist CUDA Performance Programming." In 2021 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW), pp. 397-406. IEEE, 2021.  (LLNL-CONF-819919) 
 
 ## [3-clause BSD License](LICENSE_BSD.txt) and Acknowledgement
 Copyright (c) 2020 - 2021 HPCAS Lab (https://passlab.github.io) 
 from University of North Carolina at Charlotte. All rights reserved. Funding for this research and 
 development was provided by the National Science Foundation 
-under award number CISE SHF-1551182 and CISE SHF-2015254. The development is also funded by LLNL under Contract DE-AC52-07NA27344 and LLNL-LDRD Program under Project No.18-ERD-006 (LLNL-CONF-819919).
+under award number CISE SHF-1551182 and CISE SHF-2015254. The development is also funded by LLNL under Contract DE-AC52-07NA27344 and LLNL-LDRD Program under Project No.18-ERD-006.
 
 
 
