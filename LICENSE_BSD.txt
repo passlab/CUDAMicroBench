@@ -1,6 +1,12 @@
 Copyright (c) 2020 - 2021 HPCAS Lab (https://passlab.github.io) 
-from University of North Carolina at Charlotte. All rights reserved. Funding for this research and 
-development was provided by the National Science Foundation 
+from University of North Carolina at Charlotte, and 
+Lawrence Livermore National Laboratory, LLC.
+
+LLNL-CODE-
+
+All rights reserved. 
+
+Funding for this research and development was provided by the National Science Foundation 
 under award number CISE SHF-1551182 and CISE SHF-2015254. 
 
 Redistribution and use in source and binary forms, with or without modification, 
