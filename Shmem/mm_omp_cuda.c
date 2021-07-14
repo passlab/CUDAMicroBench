@@ -1,3 +1,8 @@
+//******************************************************************************************************************//
+// Copyright (c) 2021, University of North Carolina at Charlotte
+// and Lawrence Livermore National Security, LLC.
+// SPDX-License-Identifier: (BSD-3-Clause)
+//*****************************************************************************************************************//
 /*
  * Square matrix multiplication
  * A[N][N] * B[N][N] = C[N][N]

@@ -1,3 +1,8 @@
+//******************************************************************************************************************//
+// Copyright (c) 2021, University of North Carolina at Charlotte
+// and Lawrence Livermore National Security, LLC.
+// SPDX-License-Identifier: (BSD-3-Clause)
+//*****************************************************************************************************************//
 // Experimental tests for aligned memory access and unaligned memory access
 #include <stdio.h>
 #include <stdlib.h>

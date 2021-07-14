@@ -1,3 +1,8 @@
+//******************************************************************************************************************//
+// Copyright (c) 2021, University of North Carolina at Charlotte
+// and Lawrence Livermore National Security, LLC.
+// SPDX-License-Identifier: (BSD-3-Clause)
+//*****************************************************************************************************************//
 #include "SpMM.h"
 
 __global__ void spmm_csr_csr_warmingup(const int num_rows, const int *ptrA, const int * indicesA, const REAL *dataA, const int *ptrB, const int * indicesB, const REAL *dataB,  REAL* result, int nnzA, int nnzB)
