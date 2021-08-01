@@ -1,6 +1,14 @@
 
 # CUDAMicroBench
-Microbenchmarks to Assist CUDA Performance Programming
+
+Programming to achieve high performance for NVIDIA GPUs using CUDA has been known to be challenging. A GPU has hundreds or thousands of cores that a program
+must exhibit sufficient parallelism to achieve maximum GPU utilization. A system with GPU accelerators has a heterogeneous and deep memory system that programmers must effectively and correctly use to fully take advantage of the GPU’s parallelism capability. 
+
+We present CUDAMicroBench, a collection of fourteen microbenchmarks that demonstrate performance challenges in CUDA programming and techniques to optimize
+the CUDA programs to address these challenges. It also includes examples and techniques for using advanced CUDA features such as data shuffling between threads, dynamic parallelism, etc that can help users optimize the CUDA program for performance. 
+
+The microbenchmark can be used for evaluating the performance of GPU architectures, the memory systems of GPU itself and of the whole system architectures, and for evaluating the effectiveness of compiler and performance tools for performance analysis. It can be used to help users understand the complexity of heterogeneous GPU-accelerator systems through examples and guide users for performance optimization.
+
 ## Summary of the CUDAMicroBench microbenchmarks
 <table>
    <tr>
@@ -106,11 +114,15 @@ There are fourteen examples so far you can experiment. You can check the Makefil
 
 Several benchmarks are derived from CUDA Samples, including GSOverlap, ConKernels and Taskgraph. Some header files required by these three benchmarks are stored in the common folder, which also comes from CUDA Samples.
 
+## Publication
+
+Yi, Xinyao, David Stokes, Yonghong Yan, and Chunhua Liao. "CUDAMicroBench: Microbenchmarks to Assist CUDA Performance Programming." In 2021 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW), pp. 397-406. IEEE, 2021.  (LLNL-CONF-819919) 
+
 ## [3-clause BSD License](LICENSE_BSD.txt) and Acknowledgement
 Copyright (c) 2020 - 2021 HPCAS Lab (https://passlab.github.io) 
 from University of North Carolina at Charlotte. All rights reserved. Funding for this research and 
 development was provided by the National Science Foundation 
-under award number CISE SHF-1551182 and CISE SHF-2015254. The development is also funded by LLNL under Contract DE-AC52-07NA27344 and LLNL-LDRD Program under Project No.18-ERD-006 (LLNL-CONF-819919).
+under award number CISE SHF-1551182 and CISE SHF-2015254. The development is also funded by LLNL under Contract DE-AC52-07NA27344 and LLNL-LDRD Program under Project No.18-ERD-006.
 
 
 
