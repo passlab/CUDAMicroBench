@@ -2,199 +2,164 @@ Test on Carina
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
-xyi2@cci-carina:~/CUDAMemBench/warp_divergence$ sh test.sh
+xyi2@cci-carina:~/dissertation/CUDAMicroBench/WarpDivRedux$ bash ./test.sh
 Usage: warpDivergenceTest <n>
-==6491== NVPROF is profiling process 6491, command: ./warpDivergenceTest_cuda 1024000
+==329252== NVPROF is profiling process 329252, command: ./warpDivergenceTest_cuda 1024000
 check:0.000000
 check:0.000000
-==6491== Profiling application: ./warpDivergenceTest_cuda 1024000
-==6491== Profiling result:
+==329252== Profiling application: ./warpDivergenceTest_cuda 1024000
+==329252== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   52.20%  25.396ms        20  1.2698ms  1.1197ms  2.4665ms  [CUDA memcpy DtoH]
-                   45.62%  22.192ms        20  1.1096ms  1.0547ms  1.3520ms  [CUDA memcpy HtoD]
-                    0.73%  356.54us        10  35.653us  35.135us  36.127us  warmingup(float*, float*, float*)
-                    0.73%  355.23us        10  35.522us  35.136us  36.288us  warpDivergence(float*, float*, float*)
-                    0.71%  347.07us        10  34.706us  34.367us  34.880us  noWarpDivergence(float*, float*, float*)
-      API calls:   78.50%  309.07ms        40  7.7269ms  144.29us  302.86ms  cudaMalloc
-                   18.60%  73.230ms        40  1.8307ms  1.3268ms  4.5671ms  cudaMemcpy
-                    1.71%  6.7221ms        40  168.05us  144.38us  222.14us  cudaFree
-                    0.51%  2.0107ms        40  50.266us  38.116us  87.112us  cudaDeviceSynchronize
-                    0.40%  1.5926ms         1  1.5926ms  1.5926ms  1.5926ms  cuDeviceTotalMem
-                    0.15%  586.96us        97  6.0510us     177ns  235.96us  cuDeviceGetAttribute
-                    0.12%  461.52us        30  15.383us  8.2900us  48.319us  cudaLaunchKernel
-                    0.01%  53.591us         1  53.591us  53.591us  53.591us  cuDeviceGetName
-                    0.00%  3.9020us         1  3.9020us  3.9020us  3.9020us  cuDeviceGetPCIBusId
-                    0.00%  3.2790us         3  1.0930us     317ns  2.4440us  cuDeviceGetCount
-                    0.00%  1.4400us         2     720ns     217ns  1.2230us  cuDeviceGet
-                    0.00%     343ns         1     343ns     343ns     343ns  cuDeviceGetUuid
+ GPU activities:   48.99%  18.476ms        20  923.78us  890.23us  985.59us  [CUDA memcpy HtoD]
+                   48.42%  18.261ms        20  913.07us  760.86us  2.1204ms  [CUDA memcpy DtoH]
+                    0.96%  363.32us        10  36.332us  35.903us  37.184us  warmingup(float*, float*, float*)
+                    0.83%  312.86us        10  31.286us  30.815us  31.936us  warpDivergence(float*, float*, float*)
+                    0.79%  297.60us        10  29.759us  29.312us  30.112us  noWarpDivergence(float*, float*, float*)
+      API calls:   74.91%  184.80ms        40  4.6201ms  72.932us  179.67ms  cudaMalloc
+                   22.29%  55.002ms        40  1.3750ms  1.1113ms  3.9008ms  cudaMemcpy
+                    1.49%  3.6858ms        40  92.145us  72.696us  158.07us  cudaFree
+                    0.77%  1.8976ms        40  47.439us  32.986us  83.999us  cudaDeviceSynchronize
+                    0.36%  899.24us        30  29.974us  5.4330us  590.25us  cudaLaunchKernel
+                    0.15%  367.46us       114  3.2230us     298ns  117.73us  cuDeviceGetAttribute
+                    0.02%  42.139us         1  42.139us  42.139us  42.139us  cuDeviceGetName
+                    0.00%  11.059us         1  11.059us  11.059us  11.059us  cuDeviceGetPCIBusId
+                    0.00%  2.6120us         3     870ns     380ns  1.7930us  cuDeviceGetCount
+                    0.00%  1.6890us         2     844ns     378ns  1.3110us  cuDeviceGet
+                    0.00%  1.0280us         1  1.0280us  1.0280us  1.0280us  cuModuleGetLoadingMode
+                    0.00%     761ns         1     761ns     761ns     761ns  cuDeviceGetUuid
+                    0.00%     667ns         1     667ns     667ns     667ns  cuDeviceTotalMem
 Usage: warpDivergenceTest <n>
-==6504== NVPROF is profiling process 6504, command: ./warpDivergenceTest_cuda 1024000
-check:0.000000
-check:0.000000
-==6504== Profiling application: ./warpDivergenceTest_cuda 1024000
-==6504== Profiling result:
-==6504== Metric result:
-Invocations                               Metric Name                        Metric Description         Min         Max         Avg
-Device "Tesla V100-PCIE-32GB (0)"
-    Kernel: warmingup(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: warpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: noWarpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency     100.00%     100.00%     100.00%
+==329286== NVPROF is profiling process 329286, command: ./warpDivergenceTest_cuda 1024000
+==329286== Warning: ERR_NVGPUCTRPERM - The user does not have permission to profile on the target device. See the following link for instructions to enable permissions and get more information: https://developer.nvidia.com/ERR_NVGPUCTRPERM 
+==329286== Profiling application: ./warpDivergenceTest_cuda 1024000
+==329286== Profiling result:
+No events/metrics were profiled.
+==329286== Warning: Some profiling data are not recorded.
 Usage: warpDivergenceTest <n>
-==6516== NVPROF is profiling process 6516, command: ./warpDivergenceTest_cuda 4096000
+==329321== NVPROF is profiling process 329321, command: ./warpDivergenceTest_cuda 4096000
 check:0.000000
 check:0.000000
-==6516== Profiling application: ./warpDivergenceTest_cuda 4096000
-==6516== Profiling result:
+==329321== Profiling application: ./warpDivergenceTest_cuda 4096000
+==329321== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   57.01%  105.00ms        20  5.2500ms  4.5869ms  10.717ms  [CUDA memcpy DtoH]
-                   40.90%  75.320ms        20  3.7660ms  3.6894ms  3.8969ms  [CUDA memcpy HtoD]
-                    0.71%  1.3097ms        10  130.97us  130.21us  131.90us  warmingup(float*, float*, float*)
-                    0.70%  1.2888ms        10  128.88us  127.68us  129.79us  warpDivergence(float*, float*, float*)
-                    0.68%  1.2492ms        10  124.92us  124.29us  125.73us  noWarpDivergence(float*, float*, float*)
-      API calls:   54.07%  246.11ms        40  6.1527ms  122.72us  227.88ms  cudaMalloc
-                   43.09%  196.12ms        40  4.9029ms  3.8985ms  11.942ms  cudaMemcpy
-                    1.22%  5.5523ms        40  138.81us  123.06us  175.54us  cudaFree
-                    1.00%  4.5507ms        40  113.77us  58.818us  146.93us  cudaDeviceSynchronize
-                    0.40%  1.8180ms         1  1.8180ms  1.8180ms  1.8180ms  cuDeviceTotalMem
-                    0.13%  574.36us        97  5.9210us     181ns  233.61us  cuDeviceGetAttribute
-                    0.09%  398.26us        30  13.275us  6.4930us  36.127us  cudaLaunchKernel
-                    0.01%  50.379us         1  50.379us  50.379us  50.379us  cuDeviceGetName
-                    0.00%  4.1430us         1  4.1430us  4.1430us  4.1430us  cuDeviceGetPCIBusId
-                    0.00%  2.1460us         3     715ns     184ns  1.4710us  cuDeviceGetCount
-                    0.00%  1.3420us         2     671ns     202ns  1.1400us  cuDeviceGet
-                    0.00%     347ns         1     347ns     347ns     347ns  cuDeviceGetUuid
+ GPU activities:   54.39%  120.52ms        20  6.0262ms  4.8069ms  15.356ms  [CUDA memcpy DtoH]
+                   44.06%  97.634ms        20  4.8817ms  4.0781ms  6.1884ms  [CUDA memcpy HtoD]
+                    0.59%  1.2968ms        10  129.68us  128.10us  130.97us  warmingup(float*, float*, float*)
+                    0.50%  1.0978ms        10  109.78us  107.97us  111.23us  warpDivergence(float*, float*, float*)
+                    0.47%  1.0385ms        10  103.85us  102.11us  105.22us  noWarpDivergence(float*, float*, float*)
+      API calls:   62.00%  239.08ms        40  5.9769ms  4.3515ms  17.046ms  cudaMemcpy
+                   35.53%  137.02ms        40  3.4256ms  77.042us  133.39ms  cudaMalloc
+                    1.06%  4.1004ms        40  102.51us  57.640us  132.61us  cudaDeviceSynchronize
+                    1.05%  4.0406ms        40  101.02us  74.151us  178.06us  cudaFree
+                    0.27%  1.0240ms        30  34.132us  5.4380us  605.67us  cudaLaunchKernel
+                    0.08%  312.98us       114  2.7450us     297ns  111.69us  cuDeviceGetAttribute
+                    0.01%  30.819us         1  30.819us  30.819us  30.819us  cuDeviceGetName
+                    0.00%  10.206us         1  10.206us  10.206us  10.206us  cuDeviceGetPCIBusId
+                    0.00%  3.8130us         3  1.2710us     333ns  2.9690us  cuDeviceGetCount
+                    0.00%  2.0940us         2  1.0470us     772ns  1.3220us  cuDeviceGet
+                    0.00%  1.1110us         1  1.1110us  1.1110us  1.1110us  cuDeviceTotalMem
+                    0.00%  1.0140us         1  1.0140us  1.0140us  1.0140us  cuModuleGetLoadingMode
+                    0.00%     752ns         1     752ns     752ns     752ns  cuDeviceGetUuid
 Usage: warpDivergenceTest <n>
-==6529== NVPROF is profiling process 6529, command: ./warpDivergenceTest_cuda 4096000
-check:0.000000
-check:0.000000
-==6529== Profiling application: ./warpDivergenceTest_cuda 4096000
-==6529== Profiling result:
-==6529== Metric result:
-Invocations                               Metric Name                        Metric Description         Min         Max         Avg
-Device "Tesla V100-PCIE-32GB (0)"
-    Kernel: warmingup(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: warpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: noWarpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency     100.00%     100.00%     100.00%
+==329357== NVPROF is profiling process 329357, command: ./warpDivergenceTest_cuda 4096000
+==329357== Warning: ERR_NVGPUCTRPERM - The user does not have permission to profile on the target device. See the following link for instructions to enable permissions and get more information: https://developer.nvidia.com/ERR_NVGPUCTRPERM 
+==329357== Profiling application: ./warpDivergenceTest_cuda 4096000
+==329357== Profiling result:
+No events/metrics were profiled.
+==329357== Warning: Some profiling data are not recorded.
 Usage: warpDivergenceTest <n>
-==6541== NVPROF is profiling process 6541, command: ./warpDivergenceTest_cuda 10240000
+==329395== NVPROF is profiling process 329395, command: ./warpDivergenceTest_cuda 10240000
 check:0.000000
 check:0.000000
-==6541== Profiling application: ./warpDivergenceTest_cuda 10240000
-==6541== Profiling result:
+==329395== Profiling application: ./warpDivergenceTest_cuda 10240000
+==329395== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   55.09%  280.01ms        20  14.001ms  12.321ms  28.747ms  [CUDA memcpy DtoH]
-                   43.06%  218.88ms        20  10.944ms  10.690ms  11.743ms  [CUDA memcpy HtoD]
-                    0.63%  3.1812ms        10  318.12us  317.18us  319.23us  warmingup(float*, float*, float*)
-                    0.62%  3.1560ms        10  315.60us  315.00us  316.64us  warpDivergence(float*, float*, float*)
-                    0.60%  3.0529ms        10  305.29us  304.67us  306.27us  noWarpDivergence(float*, float*, float*)
-      API calls:   64.23%  517.78ms        40  12.944ms  11.219ms  29.540ms  cudaMemcpy
-                   33.13%  267.02ms        40  6.6754ms  149.69us  232.74ms  cudaMalloc
-                    1.27%  10.241ms        40  256.02us  72.666us  322.78us  cudaDeviceSynchronize
-                    1.00%  8.0266ms        40  200.67us  147.34us  351.65us  cudaFree
-                    0.22%  1.8067ms         1  1.8067ms  1.8067ms  1.8067ms  cuDeviceTotalMem
-                    0.07%  596.97us        30  19.898us  7.3200us  46.773us  cudaLaunchKernel
-                    0.07%  563.72us        97  5.8110us     179ns  228.20us  cuDeviceGetAttribute
-                    0.01%  51.689us         1  51.689us  51.689us  51.689us  cuDeviceGetName
-                    0.00%  3.1250us         1  3.1250us  3.1250us  3.1250us  cuDeviceGetPCIBusId
-                    0.00%  2.9210us         3     973ns     289ns  2.1290us  cuDeviceGetCount
-                    0.00%  1.3130us         2     656ns     199ns  1.1140us  cuDeviceGet
-                    0.00%     331ns         1     331ns     331ns     331ns  cuDeviceGetUuid
+ GPU activities:   54.38%  313.12ms        20  15.656ms  12.384ms  41.563ms  [CUDA memcpy DtoH]
+                   44.17%  254.35ms        20  12.718ms  10.709ms  16.460ms  [CUDA memcpy HtoD]
+                    0.54%  3.1339ms        10  313.39us  312.45us  314.36us  warmingup(float*, float*, float*)
+                    0.46%  2.6658ms        10  266.58us  265.79us  267.77us  warpDivergence(float*, float*, float*)
+                    0.44%  2.5389ms        10  253.89us  253.15us  254.62us  noWarpDivergence(float*, float*, float*)
+      API calls:   77.73%  588.22ms        40  14.705ms  10.985ms  42.758ms  cudaMemcpy
+                   20.07%  151.85ms        40  3.7963ms  77.280us  147.46ms  cudaMalloc
+                    1.21%  9.1320ms        40  228.30us  64.568us  314.73us  cudaDeviceSynchronize
+                    0.79%  5.9689ms        40  149.22us  87.283us  321.13us  cudaFree
+                    0.16%  1.2016ms        30  40.052us  6.9380us  622.54us  cudaLaunchKernel
+                    0.04%  265.27us       114  2.3260us     255ns  99.412us  cuDeviceGetAttribute
+                    0.01%  41.351us         1  41.351us  41.351us  41.351us  cuDeviceGetName
+                    0.00%  11.612us         1  11.612us  11.612us  11.612us  cuDeviceGetPCIBusId
+                    0.00%  3.1700us         3  1.0560us     389ns  2.2340us  cuDeviceGetCount
+                    0.00%  1.6590us         2     829ns     410ns  1.2490us  cuDeviceGet
+                    0.00%  1.0720us         1  1.0720us  1.0720us  1.0720us  cuModuleGetLoadingMode
+                    0.00%     706ns         1     706ns     706ns     706ns  cuDeviceTotalMem
+                    0.00%     492ns         1     492ns     492ns     492ns  cuDeviceGetUuid
 Usage: warpDivergenceTest <n>
-==6554== NVPROF is profiling process 6554, command: ./warpDivergenceTest_cuda 10240000
-check:0.000000
-check:0.000000
-==6554== Profiling application: ./warpDivergenceTest_cuda 10240000
-==6554== Profiling result:
-==6554== Metric result:
-Invocations                               Metric Name                        Metric Description         Min         Max         Avg
-Device "Tesla V100-PCIE-32GB (0)"
-    Kernel: warmingup(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: warpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: noWarpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency     100.00%     100.00%     100.00%
+==329428== NVPROF is profiling process 329428, command: ./warpDivergenceTest_cuda 10240000
+==329428== Warning: ERR_NVGPUCTRPERM - The user does not have permission to profile on the target device. See the following link for instructions to enable permissions and get more information: https://developer.nvidia.com/ERR_NVGPUCTRPERM 
+==329428== Profiling application: ./warpDivergenceTest_cuda 10240000
+==329428== Profiling result:
+No events/metrics were profiled.
+==329428== Warning: Some profiling data are not recorded.
 Usage: warpDivergenceTest <n>
-==6567== NVPROF is profiling process 6567, command: ./warpDivergenceTest_cuda 40960000
+==329465== NVPROF is profiling process 329465, command: ./warpDivergenceTest_cuda 40960000
 check:0.000000
 check:0.000000
-==6567== Profiling application: ./warpDivergenceTest_cuda 40960000
-==6567== Profiling result:
+==329465== Profiling application: ./warpDivergenceTest_cuda 40960000
+==329465== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   50.68%  1.18780s        20  59.390ms  49.670ms  116.48ms  [CUDA memcpy DtoH]
-                   47.85%  1.12156s        20  56.078ms  43.830ms  152.12ms  [CUDA memcpy HtoD]
-                    0.50%  11.685ms        10  1.1685ms  1.1526ms  1.1824ms  warmingup(float*, float*, float*)
-                    0.50%  11.662ms        10  1.1662ms  1.1514ms  1.1823ms  warpDivergence(float*, float*, float*)
-                    0.48%  11.146ms        10  1.1146ms  1.0974ms  1.1313ms  noWarpDivergence(float*, float*, float*)
-      API calls:   86.96%  2.33327s        40  58.332ms  44.112ms  153.14ms  cudaMemcpy
-                   10.96%  294.02ms        40  7.3506ms  238.57us  259.64ms  cudaMalloc
-                    1.44%  38.609ms        40  965.23us  13.656us  4.8445ms  cudaDeviceSynchronize
-                    0.53%  14.132ms        40  353.30us  228.75us  805.63us  cudaFree
-                    0.06%  1.7157ms         1  1.7157ms  1.7157ms  1.7157ms  cuDeviceTotalMem
-                    0.03%  688.72us        30  22.957us  6.9360us  103.29us  cudaLaunchKernel
-                    0.02%  586.48us        97  6.0460us     177ns  239.60us  cuDeviceGetAttribute
-                    0.00%  52.609us         1  52.609us  52.609us  52.609us  cuDeviceGetName
-                    0.00%  3.7290us         3  1.2430us     324ns  2.9120us  cuDeviceGetCount
-                    0.00%  3.2720us         1  3.2720us  3.2720us  3.2720us  cuDeviceGetPCIBusId
-                    0.00%  1.0410us         2     520ns     196ns     845ns  cuDeviceGet
-                    0.00%     289ns         1     289ns     289ns     289ns  cuDeviceGetUuid
+ GPU activities:   55.77%  1.29845s        20  64.922ms  50.656ms  168.57ms  [CUDA memcpy DtoH]
+                   42.85%  997.71ms        20  49.886ms  43.427ms  58.762ms  [CUDA memcpy HtoD]
+                    0.52%  12.061ms        10  1.2061ms  1.1837ms  1.2291ms  warmingup(float*, float*, float*)
+                    0.44%  10.306ms        10  1.0306ms  1.0082ms  1.0529ms  warpDivergence(float*, float*, float*)
+                    0.42%  9.7729ms        10  977.29us  957.85us  997.53us  noWarpDivergence(float*, float*, float*)
+      API calls:   92.95%  2.32209s        40  58.052ms  43.686ms  169.78ms  cudaMemcpy
+                    5.36%  133.77ms        40  3.3443ms  74.458us  129.91ms  cudaMalloc
+                    1.30%  32.448ms        40  811.19us  18.236us  1.2292ms  cudaDeviceSynchronize
+                    0.33%  8.3023ms        40  207.56us  132.23us  534.06us  cudaFree
+                    0.05%  1.1592ms        30  38.638us  5.3620us  531.86us  cudaLaunchKernel
+                    0.01%  263.74us       114  2.3130us     262ns  90.484us  cuDeviceGetAttribute
+                    0.00%  27.805us         1  27.805us  27.805us  27.805us  cuDeviceGetName
+                    0.00%  8.8130us         1  8.8130us  8.8130us  8.8130us  cuDeviceGetPCIBusId
+                    0.00%  3.4140us         3  1.1380us     328ns  2.4770us  cuDeviceGetCount
+                    0.00%  1.5160us         2     758ns     317ns  1.1990us  cuDeviceGet
+                    0.00%     972ns         1     972ns     972ns     972ns  cuDeviceTotalMem
+                    0.00%     869ns         1     869ns     869ns     869ns  cuModuleGetLoadingMode
+                    0.00%     487ns         1     487ns     487ns     487ns  cuDeviceGetUuid
 Usage: warpDivergenceTest <n>
-==6580== NVPROF is profiling process 6580, command: ./warpDivergenceTest_cuda 40960000
-check:0.000000
-check:0.000000
-==6580== Profiling application: ./warpDivergenceTest_cuda 40960000
-==6580== Profiling result:
-==6580== Metric result:
-Invocations                               Metric Name                        Metric Description         Min         Max         Avg
-Device "Tesla V100-PCIE-32GB (0)"
-    Kernel: warmingup(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: warpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: noWarpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency     100.00%     100.00%     100.00%
+==329500== NVPROF is profiling process 329500, command: ./warpDivergenceTest_cuda 40960000
+==329500== Warning: ERR_NVGPUCTRPERM - The user does not have permission to profile on the target device. See the following link for instructions to enable permissions and get more information: https://developer.nvidia.com/ERR_NVGPUCTRPERM 
+==329500== Profiling application: ./warpDivergenceTest_cuda 40960000
+==329500== Profiling result:
+No events/metrics were profiled.
+==329500== Warning: Some profiling data are not recorded.
 Usage: warpDivergenceTest <n>
-==6592== NVPROF is profiling process 6592, command: ./warpDivergenceTest_cuda 102400000
+==329535== NVPROF is profiling process 329535, command: ./warpDivergenceTest_cuda 102400000
 check:0.000000
 check:0.000000
-==6592== Profiling application: ./warpDivergenceTest_cuda 102400000
-==6592== Profiling result:
+==329535== Profiling application: ./warpDivergenceTest_cuda 102400000
+==329535== Profiling result:
             Type  Time(%)      Time     Calls       Avg       Min       Max  Name
- GPU activities:   51.76%  2.98788s        20  149.39ms  125.74ms  286.40ms  [CUDA memcpy DtoH]
-                   46.77%  2.70005s        20  135.00ms  107.64ms  215.32ms  [CUDA memcpy HtoD]
-                    0.50%  28.855ms        10  2.8855ms  2.8782ms  2.8892ms  warmingup(float*, float*, float*)
-                    0.50%  28.778ms        10  2.8778ms  2.8726ms  2.8813ms  warpDivergence(float*, float*, float*)
-                    0.47%  27.301ms        10  2.7301ms  2.7266ms  2.7343ms  noWarpDivergence(float*, float*, float*)
-      API calls:   93.90%  5.71272s        40  142.82ms  107.91ms  287.60ms  cudaMemcpy
-                    4.22%  256.55ms        40  6.4138ms  429.09us  218.96ms  cudaMalloc
-                    1.41%  85.540ms        40  2.1385ms  36.831us  2.8919ms  cudaDeviceSynchronize
-                    0.42%  25.608ms        40  640.20us  410.84us  1.4827ms  cudaFree
-                    0.03%  1.8113ms         1  1.8113ms  1.8113ms  1.8113ms  cuDeviceTotalMem
-                    0.01%  700.84us        30  23.361us  7.9570us  77.884us  cudaLaunchKernel
-                    0.01%  582.44us        97  6.0040us     178ns  229.24us  cuDeviceGetAttribute
-                    0.00%  51.164us         1  51.164us  51.164us  51.164us  cuDeviceGetName
-                    0.00%  3.6700us         1  3.6700us  3.6700us  3.6700us  cuDeviceGetPCIBusId
-                    0.00%  2.1080us         3     702ns     181ns  1.4610us  cuDeviceGetCount
-                    0.00%  1.3030us         2     651ns     198ns  1.1050us  cuDeviceGet
-                    0.00%     347ns         1     347ns     347ns     347ns  cuDeviceGetUuid
+ GPU activities:   50.37%  3.04776s        20  152.39ms  127.78ms  436.71ms  [CUDA memcpy DtoH]
+                   48.37%  2.92718s        20  146.36ms  109.68ms  648.54ms  [CUDA memcpy HtoD]
+                    0.47%  28.693ms        10  2.8693ms  2.8503ms  2.9229ms  warmingup(float*, float*, float*)
+                    0.40%  24.359ms        10  2.4359ms  2.4206ms  2.4846ms  warpDivergence(float*, float*, float*)
+                    0.38%  23.218ms        10  2.3218ms  2.3054ms  2.3688ms  noWarpDivergence(float*, float*, float*)
+      API calls:   96.61%  5.99887s        40  149.97ms  109.96ms  649.44ms  cudaMemcpy
+                    1.90%  118.08ms        40  2.9520ms  100.23us  113.55ms  cudaMalloc
+                    1.24%  76.763ms        40  1.9191ms  31.667us  2.9232ms  cudaDeviceSynchronize
+                    0.23%  14.117ms        40  352.92us  234.13us  798.84us  cudaFree
+                    0.02%  1.1292ms        30  37.641us  5.6160us  450.74us  cudaLaunchKernel
+                    0.00%  173.48us       114  1.5210us     154ns  63.885us  cuDeviceGetAttribute
+                    0.00%  23.965us         1  23.965us  23.965us  23.965us  cuDeviceGetName
+                    0.00%  10.843us         1  10.843us  10.843us  10.843us  cuDeviceGetPCIBusId
+                    0.00%  1.2230us         3     407ns     147ns     778ns  cuDeviceGetCount
+                    0.00%     676ns         2     338ns     175ns     501ns  cuDeviceGet
+                    0.00%     548ns         1     548ns     548ns     548ns  cuDeviceTotalMem
+                    0.00%     503ns         1     503ns     503ns     503ns  cuModuleGetLoadingMode
+                    0.00%     468ns         1     468ns     468ns     468ns  cuDeviceGetUuid
 Usage: warpDivergenceTest <n>
-==6605== NVPROF is profiling process 6605, command: ./warpDivergenceTest_cuda 102400000
-check:0.000000
-check:0.000000
-==6605== Profiling application: ./warpDivergenceTest_cuda 102400000
-==6605== Profiling result:
-==6605== Metric result:
-Invocations                               Metric Name                        Metric Description         Min         Max         Avg
-Device "Tesla V100-PCIE-32GB (0)"
-    Kernel: warmingup(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: warpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency      85.71%      85.71%      85.71%
-    Kernel: noWarpDivergence(float*, float*, float*)
-         10                         branch_efficiency                         Branch Efficiency     100.00%     100.00%     100.00%
+==329580== NVPROF is profiling process 329580, command: ./warpDivergenceTest_cuda 102400000
+==329580== Warning: ERR_NVGPUCTRPERM - The user does not have permission to profile on the target device. See the following link for instructions to enable permissions and get more information: https://developer.nvidia.com/ERR_NVGPUCTRPERM 
+==329580== Profiling application: ./warpDivergenceTest_cuda 102400000
+==329580== Profiling result:
+No events/metrics were profiled.
+==329580== Warning: Some profiling data are not recorded.
